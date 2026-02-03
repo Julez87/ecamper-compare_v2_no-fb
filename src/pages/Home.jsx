@@ -181,14 +181,13 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (
-                <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
-                  <ProductCard
-                    product={product}
-                    onCompare={handleCompare}
-                    isInCompare={compareList.some(p => p.id === product.id)}
-                    onClick={() => {}}
-                  />
-                </Link>
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onCompare={handleCompare}
+                  isInCompare={compareList.some(p => p.id === product.id)}
+                  onClick={() => window.location.href = createPageUrl('ProductDetail') + `?id=${product.id}`}
+                />
               ))}
             </div>
           )}
