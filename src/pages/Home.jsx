@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,12 +17,16 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-  const navigate = useNavigate();
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
@@ -51,7 +55,9 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+      const rentPrice = p.rent_from_price || 0;
+      return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1] &&
+             rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
     });
 
     switch (filters.sortBy) {
@@ -89,7 +95,8 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -138,7 +145,8 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxPrice={maxPrice} />
+          maxBuyPrice={maxBuyPrice}
+          maxRentPrice={maxRentPrice} />
 
 
         <div className="mt-6">
@@ -182,13 +190,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onCompare={handleCompare}
-                  isInCompare={compareList.some((p) => p.id === product.id)}
-                  onClick={() => navigate(createPageUrl('ProductDetail') + `?id=${product.id}`)}
-                />
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
+                  <ProductCard
+                product={product}
+                onCompare={handleCompare}
+                isInCompare={compareList.some((p) => p.id === product.id)}
+                onClick={() => {}} />
+
+                </Link>
             )}
             </div>
           }
