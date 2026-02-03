@@ -124,10 +124,12 @@ export default function RequestProductModal({ isOpen, onClose }) {
                   <Label htmlFor="product_url">Product URL (optional)</Label>
                   <Input
                     id="product_url"
-                    type="url"
-                    placeholder="https://..."
+                    type="text"
+                    placeholder="example.com or www.example.de"
                     value={formData.product_url}
                     onChange={(e) => setFormData(prev => ({ ...prev, product_url: e.target.value }))}
+                    pattern="^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/.*)?$"
+                    title="Please enter a valid domain (e.g., example.com or www.example.de)"
                     className="mt-1.5"
                   />
                 </div>
