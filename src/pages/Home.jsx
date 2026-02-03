@@ -15,7 +15,7 @@ import { motion } from 'framer-motion';
 export default function Home() {
   const [filters, setFilters] = useState({
     search: '',
-    category: 'All',
+    sizeCategory: 'All',
     brand: 'All',
     priceRange: [0, 5000],
     sortBy: 'featured'
@@ -34,36 +34,40 @@ export default function Home() {
     if (filters.search) {
       const search = filters.search.toLowerCase();
       result = result.filter(p => 
-        p.name?.toLowerCase().includes(search) || 
-        p.brand?.toLowerCase().includes(search) ||
+        p.model_name?.toLowerCase().includes(search) || 
+        p.base_vehicle?.brand?.toLowerCase().includes(search) ||
         p.description?.toLowerCase().includes(search)
       );
     }
 
-    if (filters.category !== 'All') {
-      result = result.filter(p => p.category === filters.category);
+    if (filters.sizeCategory !== 'All') {
+      result = result.filter(p => p.size_category === filters.sizeCategory);
     }
 
     if (filters.brand !== 'All') {
-      result = result.filter(p => p.brand === filters.brand);
+      result = result.filter(p => p.base_vehicle?.brand === filters.brand);
     }
 
-    result = result.filter(p => 
-      p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
-    );
+    result = result.filter(p => {
+      const buyPrice = p.buy_from_price || 0;
+      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+    });
 
     switch (filters.sortBy) {
-      case 'price-low':
-        result.sort((a, b) => (a.price || 0) - (b.price || 0));
+      case 'price-buy-low':
+        result.sort((a, b) => (a.buy_from_price || 0) - (b.buy_from_price || 0));
         break;
-      case 'price-high':
-        result.sort((a, b) => (b.price || 0) - (a.price || 0));
+      case 'price-buy-high':
+        result.sort((a, b) => (b.buy_from_price || 0) - (a.buy_from_price || 0));
         break;
-      case 'rating':
-        result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      case 'price-rent-low':
+        result.sort((a, b) => (a.rent_from_price || 0) - (b.rent_from_price || 0));
         break;
-      case 'newest':
-        result.sort((a, b) => (b.release_year || 0) - (a.release_year || 0));
+      case 'price-rent-high':
+        result.sort((a, b) => (b.rent_from_price || 0) - (a.rent_from_price || 0));
+        break;
+      case 'range':
+        result.sort((a, b) => (b.camper_data?.camper_range_km || 0) - (a.camper_data?.camper_range_km || 0));
         break;
       case 'featured':
       default:
@@ -84,7 +88,7 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map(p => p.price || 0), 5000);
+  const maxPrice = Math.max(...products.map(p => p.buy_from_price || 0), 150000);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -102,18 +106,18 @@ export default function Home() {
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
               Find Your Perfect
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400"> Tech</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"> Electric Camper</span>
             </h1>
             <p className="text-lg text-slate-300 mb-8 max-w-xl mx-auto">
-              Compare specs, prices, and features across hundreds of products. Make informed decisions with our comprehensive comparison tool.
+              Compare specs, prices, and features across electric camper vans. Make informed decisions with our comprehensive comparison tool.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-violet-600 hover:bg-violet-700 text-white rounded-full px-8"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8"
                 onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Browse Products <ArrowRight className="w-5 h-5 ml-2" />
+                Browse Campers <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button 
                 size="lg" 
@@ -121,7 +125,7 @@ export default function Home() {
                 className="border-white/30 text-white hover:bg-white/10 rounded-full px-8"
                 onClick={() => setIsRequestModalOpen(true)}
               >
-                <PlusCircle className="w-5 h-5 mr-2" /> Request a Product
+                <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
               </Button>
             </div>
           </motion.div>
@@ -139,7 +143,7 @@ export default function Home() {
         <div className="mt-6">
           <div className="flex items-center justify-between mb-6">
             <p className="text-slate-600">
-              <span className="font-semibold text-slate-900">{filteredProducts.length}</span> products found
+              <span className="font-semibold text-slate-900">{filteredProducts.length}</span> campers found
             </p>
           </div>
 
@@ -163,15 +167,15 @@ export default function Home() {
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20">
               <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-10 h-10 text-slate-400" />
+                <span className="text-4xl">🚐</span>
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">No products found</h3>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">No campers found</h3>
               <p className="text-slate-600 mb-6">Try adjusting your filters or search terms</p>
               <Button 
                 variant="outline"
                 onClick={() => setIsRequestModalOpen(true)}
               >
-                <PlusCircle className="w-4 h-4 mr-2" /> Request a Product
+                <PlusCircle className="w-4 h-4 mr-2" /> Request a Camper
               </Button>
             </div>
           ) : (

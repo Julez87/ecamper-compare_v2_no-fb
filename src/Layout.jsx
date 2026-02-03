@@ -13,10 +13,10 @@ export default function Layout({ children, currentPageName }) {
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center justify-between h-16">
               <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-                <div className="w-9 h-9 bg-gradient-to-br from-violet-600 to-violet-700 rounded-xl flex items-center justify-center">
+                <div className="w-9 h-9 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl flex items-center justify-center">
                   <Scale className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-bold text-xl text-slate-900">CompareHub</span>
+                <span className="font-bold text-xl text-slate-900">⚡ CamperCompare</span>
               </Link>
 
               <div className="flex items-center gap-2">
