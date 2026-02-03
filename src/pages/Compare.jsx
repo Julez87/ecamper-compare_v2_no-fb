@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Plus, X, Trophy, Scale } from 'lucide-react';
+import { ArrowLeft, Plus, X, Trophy, Scale, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Compare() {
