@@ -9,8 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
-  ArrowLeft, Star, Check, X, Scale, Share2, Car, Zap, Home, Battery, 
-  BedDouble, Utensils, Droplet, Thermometer, Smartphone
+  ArrowLeft, Scale, Share2, Car, Home, Battery, 
+  Utensils, Smartphone
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
