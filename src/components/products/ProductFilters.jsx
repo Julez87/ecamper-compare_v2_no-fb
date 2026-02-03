@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Search, X, SlidersHorizontal } from 'lucide-react';
+import { Search, X, SlidersHorizontal, Wind, Leaf, Users } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const SIZE_CATEGORIES = ["All", "Compact", "Standard", "Large", "XL"];
@@ -20,12 +20,15 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
       sizeCategory: 'All',
       brand: 'All',
       priceRange: [0, maxPrice],
-      sortBy: 'featured'
+      sortBy: 'featured',
+      gasFree: false,
+      ecoMaterials: false,
+      familyFriendly: false
     });
   };
 
   const hasActiveFilters = filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' || 
-    filters.priceRange[0] > 0 || filters.priceRange[1] < maxPrice;
+    filters.priceRange[0] > 0 || filters.priceRange[1] < maxPrice || filters.gasFree || filters.ecoMaterials || filters.familyFriendly;
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -100,7 +103,7 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
   );
 
   return (
-    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4">
+    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 space-y-3">
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -110,6 +113,34 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
             onChange={(e) => updateFilter('search', e.target.value)}
             className="pl-10 bg-slate-50 border-0 focus-visible:ring-violet-500"
           />
+        </div>
+
+        {/* Quick Filters Pills */}
+        <div className="hidden md:flex items-center gap-2 ml-auto">
+          <Button 
+            variant={filters.gasFree ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateFilter('gasFree', !filters.gasFree)}
+            className={filters.gasFree ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+          >
+            <Wind className="w-4 h-4 mr-1" /> Gas-Free
+          </Button>
+          <Button 
+            variant={filters.ecoMaterials ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateFilter('ecoMaterials', !filters.ecoMaterials)}
+            className={filters.ecoMaterials ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+          >
+            <Leaf className="w-4 h-4 mr-1" /> Eco Materials
+          </Button>
+          <Button 
+            variant={filters.familyFriendly ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateFilter('familyFriendly', !filters.familyFriendly)}
+            className={filters.familyFriendly ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+          >
+            <Users className="w-4 h-4 mr-1" /> Family Friendly
+          </Button>
         </div>
 
         {/* Desktop Filters */}
@@ -157,11 +188,11 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
           )}
         </div>
 
-        {/* Mobile Filters */}
+        {/* Mobile Filter Button */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden border-slate-200">
-              <SlidersHorizontal className="w-5 h-5" />
+            <Button variant="outline" className="lg:hidden border-slate-200">
+              <SlidersHorizontal className="w-5 h-5 mr-2" /> Filters
             </Button>
           </SheetTrigger>
           <SheetContent>
@@ -173,6 +204,34 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
             </div>
           </SheetContent>
         </Sheet>
+      </div>
+
+      {/* Mobile Quick Filters */}
+      <div className="flex md:hidden items-center gap-2 overflow-x-auto pb-1">
+        <Button 
+          variant={filters.gasFree ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateFilter('gasFree', !filters.gasFree)}
+          className={filters.gasFree ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+        >
+          <Wind className="w-4 h-4 mr-1" /> Gas-Free
+        </Button>
+        <Button 
+          variant={filters.ecoMaterials ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateFilter('ecoMaterials', !filters.ecoMaterials)}
+          className={filters.ecoMaterials ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+        >
+          <Leaf className="w-4 h-4 mr-1" /> Eco Materials
+        </Button>
+        <Button 
+          variant={filters.familyFriendly ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateFilter('familyFriendly', !filters.familyFriendly)}
+          className={filters.familyFriendly ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+        >
+          <Users className="w-4 h-4 mr-1" /> Family Friendly
+        </Button>
       </div>
     </div>
   );
