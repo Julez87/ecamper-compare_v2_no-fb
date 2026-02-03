@@ -9,18 +9,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from 'lucide-react';
 
-const LabeledInput = ({ label, value, onChange, ...props }) => (
+const LabeledInput = ({ label, value, onChange, type, ...props }) => (
   <div className="relative">
     {value && (
       <>
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>
-        <span className="absolute right-12 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
+        <span className="absolute right-[2.25em] top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
       </>
     )}
     <Input 
+      type={type}
       value={value} 
       onChange={onChange} 
-      className={value ? 'text-transparent text-right pr-12' : 'text-right pr-12'} 
+      className={value ? 'text-transparent text-right' : 'text-right'} 
       {...props} 
     />
   </div>
