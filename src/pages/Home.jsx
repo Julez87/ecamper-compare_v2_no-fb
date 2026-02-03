@@ -18,13 +18,7 @@ export default function Home() {
     sizeCategory: 'All',
     brand: 'All',
     priceRange: [0, 5000],
-    purchasePrice: [0, 150000],
-    rentalPrice: [0, 250],
-    sortBy: 'featured',
-    gasFree: false,
-    ecoMaterials: false,
-    familyFriendly: false,
-    advanced: {}
+    sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -56,7 +50,7 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+      return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
     });
 
     switch (filters.sortBy) {
