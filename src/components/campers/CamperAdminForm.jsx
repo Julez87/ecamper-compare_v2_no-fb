@@ -9,6 +9,30 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from 'lucide-react';
 
+const LabeledInput = ({ label, value, onChange, ...props }) => (
+  <div className="relative">
+    {value && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>}
+    <Input 
+      value={value} 
+      onChange={onChange} 
+      className={value ? 'pl-[calc(3rem+' + label.length * 6 + 'px)]' : ''} 
+      {...props} 
+    />
+  </div>
+);
+
+const LabeledSelect = ({ label, value, onValueChange, children, placeholder }) => (
+  <div className="relative">
+    {value && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none z-10">{label}:</span>}
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={value ? 'pl-[calc(3rem+' + label.length * 6 + 'px)]' : ''}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      {children}
+    </Select>
+  </div>
+);
+
 const SIZE_CATEGORIES = ["Compact", "Standard", "Large", "XL"];
 const BRANDS = ["VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
 const YEARS = Array.from({length: 10}, (_, i) => 2020 + i);
@@ -160,64 +184,57 @@ export default function CamperAdminForm({ formData, setFormData }) {
 
         <TabsContent value="vehicle" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
-            <Select value={formData.base_vehicle?.brand || ''} onValueChange={(v) => updateNested('base_vehicle', 'brand', v)}>
-              <SelectTrigger><SelectValue placeholder="Brand" /></SelectTrigger>
+            <LabeledSelect label="Brand" value={formData.base_vehicle?.brand || ''} onValueChange={(v) => updateNested('base_vehicle', 'brand', v)} placeholder="Brand">
               <SelectContent>{BRANDS.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input placeholder="Model" value={formData.base_vehicle?.model || ''} onChange={(e) => updateNested('base_vehicle', 'model', e.target.value)} />
-            <Input placeholder="Version" value={formData.base_vehicle?.version || ''} onChange={(e) => updateNested('base_vehicle', 'version', e.target.value)} />
-            <Select value={formData.base_vehicle?.model_year?.toString() || ''} onValueChange={(v) => updateNested('base_vehicle', 'model_year', parseInt(v))}>
-              <SelectTrigger><SelectValue placeholder="Model Year" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="Model" placeholder="Model" value={formData.base_vehicle?.model || ''} onChange={(e) => updateNested('base_vehicle', 'model', e.target.value)} />
+            <LabeledInput label="Version" placeholder="Version" value={formData.base_vehicle?.version || ''} onChange={(e) => updateNested('base_vehicle', 'version', e.target.value)} />
+            <LabeledSelect label="Year" value={formData.base_vehicle?.model_year?.toString() || ''} onValueChange={(v) => updateNested('base_vehicle', 'model_year', parseInt(v))} placeholder="Model Year">
               <SelectContent>{YEARS.map(y => <SelectItem key={y} value={y.toString()}>{y}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input type="number" placeholder="WLTP Range (km)" value={formData.base_vehicle?.wltp_range_km || ''} onChange={(e) => updateNested('base_vehicle', 'wltp_range_km', parseInt(e.target.value))} />
-            <Input type="number" placeholder="kW" value={formData.base_vehicle?.kw || ''} onChange={(e) => updateNested('base_vehicle', 'kw', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Battery Size (kWh)" value={formData.base_vehicle?.battery_size_kwh || ''} onChange={(e) => updateNested('base_vehicle', 'battery_size_kwh', parseInt(e.target.value))} />
-            <Input type="number" step="0.1" placeholder="Consumption kWh/100km" value={formData.base_vehicle?.consumption_kwh_100km || ''} onChange={(e) => updateNested('base_vehicle', 'consumption_kwh_100km', parseFloat(e.target.value))} />
-            <Input type="number" placeholder="AC Charging (kW)" value={formData.base_vehicle?.charging_speed_ac_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_ac_kw', parseInt(e.target.value))} />
-            <Input type="number" placeholder="DC Charging (kW)" value={formData.base_vehicle?.charging_speed_dc_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_dc_kw', parseInt(e.target.value))} />
-            <Select value={formData.base_vehicle?.charger_types || ''} onValueChange={(v) => updateNested('base_vehicle', 'charger_types', v)}>
-              <SelectTrigger><SelectValue placeholder="Charger Types" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="WLTP Range" type="number" placeholder="WLTP Range (km)" value={formData.base_vehicle?.wltp_range_km || ''} onChange={(e) => updateNested('base_vehicle', 'wltp_range_km', parseInt(e.target.value))} />
+            <LabeledInput label="kW" type="number" placeholder="kW" value={formData.base_vehicle?.kw || ''} onChange={(e) => updateNested('base_vehicle', 'kw', parseInt(e.target.value))} />
+            <LabeledInput label="Battery" type="number" placeholder="Battery Size (kWh)" value={formData.base_vehicle?.battery_size_kwh || ''} onChange={(e) => updateNested('base_vehicle', 'battery_size_kwh', parseInt(e.target.value))} />
+            <LabeledInput label="Consumption" type="number" step="0.1" placeholder="Consumption kWh/100km" value={formData.base_vehicle?.consumption_kwh_100km || ''} onChange={(e) => updateNested('base_vehicle', 'consumption_kwh_100km', parseFloat(e.target.value))} />
+            <LabeledInput label="AC Charge" type="number" placeholder="AC Charging (kW)" value={formData.base_vehicle?.charging_speed_ac_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_ac_kw', parseInt(e.target.value))} />
+            <LabeledInput label="DC Charge" type="number" placeholder="DC Charging (kW)" value={formData.base_vehicle?.charging_speed_dc_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_dc_kw', parseInt(e.target.value))} />
+            <LabeledSelect label="Charger" value={formData.base_vehicle?.charger_types || ''} onValueChange={(v) => updateNested('base_vehicle', 'charger_types', v)} placeholder="Charger Types">
               <SelectContent>{CHARGER_TYPES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input type="number" placeholder="Charging 20-80% (min)" value={formData.base_vehicle?.charging_20_80_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_20_80_min', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Charging 10-80% (min)" value={formData.base_vehicle?.charging_10_80_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_10_80_min', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Charging 10-90% (min)" value={formData.base_vehicle?.charging_10_90_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_10_90_min', parseInt(e.target.value))} />
-            <Select value={formData.base_vehicle?.drive || ''} onValueChange={(v) => updateNested('base_vehicle', 'drive', v)}>
-              <SelectTrigger><SelectValue placeholder="Drive" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="20-80%" type="number" placeholder="Charging 20-80% (min)" value={formData.base_vehicle?.charging_20_80_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_20_80_min', parseInt(e.target.value))} />
+            <LabeledInput label="10-80%" type="number" placeholder="Charging 10-80% (min)" value={formData.base_vehicle?.charging_10_80_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_10_80_min', parseInt(e.target.value))} />
+            <LabeledInput label="10-90%" type="number" placeholder="Charging 10-90% (min)" value={formData.base_vehicle?.charging_10_90_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_10_90_min', parseInt(e.target.value))} />
+            <LabeledSelect label="Drive" value={formData.base_vehicle?.drive || ''} onValueChange={(v) => updateNested('base_vehicle', 'drive', v)} placeholder="Drive">
               <SelectContent>{DRIVE_OPTIONS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input type="number" placeholder="Weight Empty (kg)" value={formData.base_vehicle?.weight_empty_kg || ''} onChange={(e) => updateNested('base_vehicle', 'weight_empty_kg', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Max Additional Weight (kg)" value={formData.base_vehicle?.max_additional_weight_kg || ''} onChange={(e) => updateNested('base_vehicle', 'max_additional_weight_kg', parseInt(e.target.value))} />
-            <Select value={formData.base_vehicle?.b_license_approved || ''} onValueChange={(v) => updateNested('base_vehicle', 'b_license_approved', v)}>
-              <SelectTrigger><SelectValue placeholder="B-License (3.5t)" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="Weight" type="number" placeholder="Weight Empty (kg)" value={formData.base_vehicle?.weight_empty_kg || ''} onChange={(e) => updateNested('base_vehicle', 'weight_empty_kg', parseInt(e.target.value))} />
+            <LabeledInput label="Max Weight" type="number" placeholder="Max Additional Weight (kg)" value={formData.base_vehicle?.max_additional_weight_kg || ''} onChange={(e) => updateNested('base_vehicle', 'max_additional_weight_kg', parseInt(e.target.value))} />
+            <LabeledSelect label="B-License" value={formData.base_vehicle?.b_license_approved || ''} onValueChange={(v) => updateNested('base_vehicle', 'b_license_approved', v)} placeholder="B-License (3.5t)">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
+            </LabeledSelect>
           </div>
         </TabsContent>
 
         <TabsContent value="camper" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
-            <Input type="number" placeholder="Camper Range (km)" value={formData.camper_data?.camper_range_km || ''} onChange={(e) => updateNested('camper_data', 'camper_range_km', parseInt(e.target.value))} />
-            <Input type="number" step="0.01" placeholder="Length (m)" value={formData.camper_data?.length_m || ''} onChange={(e) => updateNested('camper_data', 'length_m', parseFloat(e.target.value))} />
-            <Input type="number" step="0.01" placeholder="Height (m)" value={formData.camper_data?.height_m || ''} onChange={(e) => updateNested('camper_data', 'height_m', parseFloat(e.target.value))} />
-            <Input type="number" step="0.01" placeholder="Width (m)" value={formData.camper_data?.width_m || ''} onChange={(e) => updateNested('camper_data', 'width_m', parseFloat(e.target.value))} />
-            <Input type="number" placeholder="Seats" value={formData.camper_data?.seats || ''} onChange={(e) => updateNested('camper_data', 'seats', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Storage Total (l)" value={formData.camper_data?.storage_total_l || ''} onChange={(e) => updateNested('camper_data', 'storage_total_l', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Storage Shelves (l)" value={formData.camper_data?.storage_shelves_l || ''} onChange={(e) => updateNested('camper_data', 'storage_shelves_l', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Sleeps" value={formData.sleeping?.sleeps || ''} onChange={(e) => updateNested('sleeping', 'sleeps', parseInt(e.target.value))} />
-            <Input placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
-            <Input placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
-            <Select value={formData.sleeping?.rooftop_mosquito_nets || ''} onValueChange={(v) => updateNested('sleeping', 'rooftop_mosquito_nets', v)}>
-              <SelectTrigger><SelectValue placeholder="Rooftop Mosquito Nets" /></SelectTrigger>
+            <LabeledInput label="Range" type="number" placeholder="Camper Range (km)" value={formData.camper_data?.camper_range_km || ''} onChange={(e) => updateNested('camper_data', 'camper_range_km', parseInt(e.target.value))} />
+            <LabeledInput label="Length" type="number" step="0.01" placeholder="Length (m)" value={formData.camper_data?.length_m || ''} onChange={(e) => updateNested('camper_data', 'length_m', parseFloat(e.target.value))} />
+            <LabeledInput label="Height" type="number" step="0.01" placeholder="Height (m)" value={formData.camper_data?.height_m || ''} onChange={(e) => updateNested('camper_data', 'height_m', parseFloat(e.target.value))} />
+            <LabeledInput label="Width" type="number" step="0.01" placeholder="Width (m)" value={formData.camper_data?.width_m || ''} onChange={(e) => updateNested('camper_data', 'width_m', parseFloat(e.target.value))} />
+            <LabeledInput label="Seats" type="number" placeholder="Seats" value={formData.camper_data?.seats || ''} onChange={(e) => updateNested('camper_data', 'seats', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Total" type="number" placeholder="Storage Total (l)" value={formData.camper_data?.storage_total_l || ''} onChange={(e) => updateNested('camper_data', 'storage_total_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Shelves" type="number" placeholder="Storage Shelves (l)" value={formData.camper_data?.storage_shelves_l || ''} onChange={(e) => updateNested('camper_data', 'storage_shelves_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Other" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Trunk" type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
+            <LabeledInput label="Sleeps" type="number" placeholder="Sleeps" value={formData.sleeping?.sleeps || ''} onChange={(e) => updateNested('sleeping', 'sleeps', parseInt(e.target.value))} />
+            <LabeledInput label="Bed Bottom" placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
+            <LabeledInput label="Bed Rooftop" placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
+            <LabeledSelect label="Mosquito Nets" value={formData.sleeping?.rooftop_mosquito_nets || ''} onValueChange={(v) => updateNested('sleeping', 'rooftop_mosquito_nets', v)} placeholder="Rooftop Mosquito Nets">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sleeping?.ventilation || ''} onValueChange={(v) => updateNested('sleeping', 'ventilation', v)}>
-              <SelectTrigger><SelectValue placeholder="Ventilation" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Ventilation" value={formData.sleeping?.ventilation || ''} onValueChange={(v) => updateNested('sleeping', 'ventilation', v)} placeholder="Ventilation">
               <SelectContent>{VENTILATION_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
+            </LabeledSelect>
           </div>
         </TabsContent>
 
