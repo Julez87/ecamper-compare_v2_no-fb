@@ -7,15 +7,6 @@ import { Scale, Settings, Home } from 'lucide-react';
 export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-slate-50">
-      <style>{`
-        :root { 
-          --input-trailing-gutter: 5.00em; 
-        }
-        
-        input[type="number"], input[data-numeric] {
-          padding-right: var(--input-trailing-gutter);
-        }
-      `}</style>
       {/* Top Navigation */}
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4">
