@@ -11,11 +11,16 @@ import { Plus, X } from 'lucide-react';
 
 const LabeledInput = ({ label, value, onChange, ...props }) => (
   <div className="relative">
-    {value && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>}
+    {value && (
+      <>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none">{value}</span>
+      </>
+    )}
     <Input 
       value={value} 
       onChange={onChange} 
-      className={value ? 'pl-[calc(3rem+' + label.length * 6 + 'px)]' : ''} 
+      className={value ? 'text-transparent' : ''} 
       {...props} 
     />
   </div>
@@ -23,9 +28,14 @@ const LabeledInput = ({ label, value, onChange, ...props }) => (
 
 const LabeledSelect = ({ label, value, onValueChange, children, placeholder }) => (
   <div className="relative">
-    {value && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none z-10">{label}:</span>}
+    {value && (
+      <>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none z-10">{label}:</span>
+        <span className="absolute right-10 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none z-10">{value}</span>
+      </>
+    )}
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={value ? 'pl-[calc(3rem+' + label.length * 6 + 'px)]' : ''}>
+      <SelectTrigger className={value ? '[&>span]:text-transparent' : ''}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       {children}
