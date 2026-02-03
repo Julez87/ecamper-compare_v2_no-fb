@@ -9,9 +9,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink, Building2 } from 'lucide-react';
 import { format } from 'date-fns';
 import CamperAdminForm from '../components/campers/CamperAdminForm';
+import RentalCompanyForm from '../components/rental/RentalCompanyForm';
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,6 +20,9 @@ export default function Admin() {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [productForm, setProductForm] = useState({});
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
+  const [editingCompany, setEditingCompany] = useState(null);
+  const [companyForm, setCompanyForm] = useState({});
 
   const queryClient = useQueryClient();
 
@@ -31,6 +35,12 @@ export default function Admin() {
   const { data: requests = [], isLoading: requestsLoading } = useQuery({
     queryKey: ['requests'],
     queryFn: () => base44.entities.ProductRequest.list(),
+    enabled: isAuthenticated,
+  });
+
+  const { data: companies = [], isLoading: companiesLoading } = useQuery({
+    queryKey: ['companies'],
+    queryFn: () => base44.entities.RentalCompany.list(),
     enabled: isAuthenticated,
   });
 
@@ -60,6 +70,27 @@ export default function Admin() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests'] })
   });
 
+  const createCompany = useMutation({
+    mutationFn: (data) => base44.entities.RentalCompany.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+      closeCompanyModal();
+    }
+  });
+
+  const updateCompany = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.RentalCompany.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+      closeCompanyModal();
+    }
+  });
+
+  const deleteCompany = useMutation({
+    mutationFn: (id) => base44.entities.RentalCompany.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['companies'] })
+  });
+
   const openProductModal = (product = null) => {
     if (product) {
       setEditingProduct(product);
@@ -76,6 +107,22 @@ export default function Admin() {
     setEditingProduct(null);
   };
 
+  const openCompanyModal = (company = null) => {
+    if (company) {
+      setEditingCompany(company);
+      setCompanyForm(company);
+    } else {
+      setEditingCompany(null);
+      setCompanyForm({});
+    }
+    setIsCompanyModalOpen(true);
+  };
+
+  const closeCompanyModal = () => {
+    setIsCompanyModalOpen(false);
+    setEditingCompany(null);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -83,6 +130,16 @@ export default function Admin() {
       updateProduct.mutate({ id: editingProduct.id, data: productForm });
     } else {
       createProduct.mutate(productForm);
+    }
+  };
+
+  const handleCompanySubmit = (e) => {
+    e.preventDefault();
+    
+    if (editingCompany) {
+      updateCompany.mutate({ id: editingCompany.id, data: companyForm });
+    } else {
+      createCompany.mutate(companyForm);
     }
   };
 
@@ -145,10 +202,13 @@ export default function Admin() {
               <Package className="w-4 h-4 mr-2" /> Campers ({products.length})
             </TabsTrigger>
             <TabsTrigger value="requests" className="rounded-lg px-6 data-[state=active]:bg-emerald-900 data-[state=active]:text-white">
-              <MessageSquare className="w-4 h-4 mr-2" /> Requests
+              <MessageSquare className="w-4 h-4 mr-2" /> Camper Requests
               {pendingRequests.length > 0 && (
                 <Badge className="ml-2 bg-emerald-600">{pendingRequests.length}</Badge>
               )}
+            </TabsTrigger>
+            <TabsTrigger value="companies" className="rounded-lg px-6 data-[state=active]:bg-emerald-900 data-[state=active]:text-white">
+              <Building2 className="w-4 h-4 mr-2" /> Rental Companies ({companies.length})
             </TabsTrigger>
           </TabsList>
 
@@ -275,6 +335,67 @@ export default function Admin() {
               </Table>
             </Card>
           </TabsContent>
+
+          <TabsContent value="companies">
+            <Card className="border-0 shadow-sm">
+              <div className="p-4 border-b flex justify-between items-center">
+                <h2 className="font-semibold text-slate-900">Rental Companies</h2>
+                <Button onClick={() => openCompanyModal()} className="bg-emerald-600 hover:bg-emerald-700">
+                  <Plus className="w-4 h-4 mr-2" /> Add Company
+                </Button>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Countries</TableHead>
+                    <TableHead>Cities</TableHead>
+                    <TableHead>Campers</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {companiesLoading ? (
+                    <TableRow><TableCell colSpan={5} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
+                  ) : companies.length === 0 ? (
+                    <TableRow><TableCell colSpan={5} className="text-center py-8 text-slate-500">No rental companies yet</TableCell></TableRow>
+                  ) : companies.map(company => (
+                    <TableRow key={company.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          {company.logo_url ? (
+                            <img src={company.logo_url} alt="" className="w-10 h-10 object-contain rounded" />
+                          ) : (
+                            <div className="w-10 h-10 bg-slate-100 rounded flex items-center justify-center">
+                              <Building2 className="w-5 h-5 text-slate-400" />
+                            </div>
+                          )}
+                          <span className="font-medium">{company.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{company.countries?.length || 0}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {Object.values(company.locations || {}).reduce((acc, cities) => acc + cities.length, 0)} locations
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{company.available_campers?.length || 0} campers</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => openCompanyModal(company)}>
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteCompany.mutate(company.id)}>
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -292,6 +413,26 @@ export default function Admin() {
               <Button type="submit" className="flex-1 bg-emerald-600 hover:bg-emerald-700" disabled={createProduct.isPending || updateProduct.isPending}>
                 {(createProduct.isPending || updateProduct.isPending) ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                 {editingProduct ? 'Update Camper' : 'Create Camper'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Company Modal */}
+      <Dialog open={isCompanyModalOpen} onOpenChange={closeCompanyModal}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingCompany ? 'Edit Rental Company' : 'Add New Rental Company'}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCompanySubmit} className="mt-4">
+            <RentalCompanyForm formData={companyForm} setFormData={setCompanyForm} />
+            
+            <div className="flex gap-3 pt-6 border-t mt-6">
+              <Button type="button" variant="outline" onClick={closeCompanyModal} className="flex-1">Cancel</Button>
+              <Button type="submit" className="flex-1 bg-emerald-600 hover:bg-emerald-700" disabled={createCompany.isPending || updateCompany.isPending}>
+                {(createCompany.isPending || updateCompany.isPending) ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {editingCompany ? 'Update Company' : 'Create Company'}
               </Button>
             </div>
           </form>
