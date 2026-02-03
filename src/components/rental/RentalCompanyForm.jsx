@@ -148,6 +148,29 @@ export default function RentalCompanyForm({ formData, setFormData }) {
             className="mt-1.5" 
           />
         </div>
+        <div className="col-span-2">
+          <Label>Website URL</Label>
+          <Input 
+            value={formData.website_url || ''} 
+            onChange={(e) => updateField('website_url', e.target.value)} 
+            placeholder="https://example.com"
+            className="mt-1.5" 
+          />
+        </div>
+        <div className="col-span-2">
+          <Label className="mb-2 block">Brand Color</Label>
+          <div className="grid grid-cols-6 gap-3">
+            {['#EF4444', '#F59E0B', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899', '#F97316', '#84CC16', '#14B8A6', '#6366F1', '#A855F7'].map(color => (
+              <button
+                key={color}
+                type="button"
+                onClick={() => updateField('color', color)}
+                className={`w-12 h-12 rounded-lg transition-all ${formData.color === color ? 'ring-4 ring-slate-900 ring-offset-2 scale-110' : 'hover:scale-105'}`}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Countries */}

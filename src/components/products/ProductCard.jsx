@@ -4,18 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Check, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const RENTAL_COLORS = {
-  "Roadsurfer": "bg-orange-600 hover:bg-orange-700",
-  "Indie Campers": "bg-blue-600 hover:bg-blue-700",
-  "Campanda": "bg-green-600 hover:bg-green-700",
-  "McRent": "bg-red-600 hover:bg-red-700",
-  "Outbase": "bg-purple-600 hover:bg-purple-700",
-  "Tonke": "bg-teal-600 hover:bg-teal-700",
-  "Ventje": "bg-indigo-600 hover:bg-indigo-700"
-};
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 
 export default function ProductCard({ product, onCompare, isInCompare, onClick }) {
+  const { data: allCompanies = [] } = useQuery({
+    queryKey: ['rentalCompanies'],
+    queryFn: () => base44.entities.RentalCompany.list()
+  });
+
+  const productCompanies = allCompanies.filter(company => 
+    company.available_campers?.some(c => c.camper_id === product.id)
+  );
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -87,19 +87,30 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           </div>
           
           {/* Rental Companies */}
-          {product.rental_companies?.length > 0 && (
+          {productCompanies.length > 0 && (
             <div className="space-y-2 mb-4 pt-3 border-t">
               <p className="text-xs text-slate-500 font-medium">Available at:</p>
               <div className="flex flex-wrap gap-2">
-                {product.rental_companies.map((company, i) => (
-                  <button
-                    key={i}
-                    onClick={(e) => e.stopPropagation()}
-                    className={`text-xs text-white px-3 py-1.5 rounded-full font-medium transition-colors ${RENTAL_COLORS[company] || 'bg-slate-600 hover:bg-slate-700'}`}
-                  >
-                    {company}
-                  </button>
-                ))}
+                {productCompanies.map((company) => {
+                  const companyData = company.available_campers?.find(c => c.camper_id === product.id);
+                  return (
+                    <button
+                      key={company.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (company.website_url) window.open(company.website_url, '_blank');
+                      }}
+                      className="text-xs text-white px-3 py-1.5 rounded-full font-medium transition-all hover:scale-105 hover:shadow-md"
+                      style={{ backgroundColor: company.color || '#3B82F6' }}
+                      title={companyData?.rent_price ? `€${companyData.rent_price}/day` : company.name}
+                    >
+                      {company.name}
+                      {companyData?.rent_price && (
+                        <span className="ml-1 opacity-90">€{companyData.rent_price}</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
