@@ -327,7 +327,7 @@ export default function ProductDetail() {
                     {product.camper_data?.seats && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Seats</p>
-                        <p className="font-semibold text-slate-900">{product.camper_data.seats}</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.seats} persons</p>
                       </div>
                     )}
                     {product.camper_data?.storage_total_l && (
@@ -357,19 +357,19 @@ export default function ProductDetail() {
                     {product.sleeping?.sleeps && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Sleeps</p>
-                        <p className="font-semibold text-slate-900">{product.sleeping.sleeps}</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.sleeps} persons</p>
                       </div>
                     )}
                     {product.sleeping?.bed_size_bottom_cm && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Bed Bottom</p>
-                        <p className="font-semibold text-slate-900">{product.sleeping.bed_size_bottom_cm} cm</p>
+                        <p className="text-xs text-slate-500 uppercase">Bed Bottom (w x l)</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.bed_size_bottom_cm}</p>
                       </div>
                     )}
                     {product.sleeping?.bed_size_rooftop_cm && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Bed Rooftop</p>
-                        <p className="font-semibold text-slate-900">{product.sleeping.bed_size_rooftop_cm} cm</p>
+                        <p className="text-xs text-slate-500 uppercase">Bed Rooftop (w x l)</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.bed_size_rooftop_cm}</p>
                       </div>
                     )}
                     {product.sleeping?.rooftop_mosquito_nets && (
@@ -568,7 +568,7 @@ export default function ProductDetail() {
                     )}
                     {product.energy?.battery_output_plugs_ac && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">AC Plugs</p>
+                        <p className="text-xs text-slate-500 uppercase">AC Plugs (230V Schuko)</p>
                         <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_ac}</p>
                       </div>
                     )}
@@ -580,19 +580,19 @@ export default function ProductDetail() {
                     )}
                     {product.energy?.battery_output_plugs_dc && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">DC Plugs</p>
+                        <p className="text-xs text-slate-500 uppercase">DC Plugs (12V)</p>
                         <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_dc}</p>
                       </div>
                     )}
                     {product.energy?.usb_c_plugs_front && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">USB-C Front</p>
+                        <p className="text-xs text-slate-500 uppercase">USB(-C) plugs Cockpit</p>
                         <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_front}</p>
                       </div>
                     )}
                     {product.energy?.usb_c_plugs_livingroom && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">USB-C Living Room</p>
+                        <p className="text-xs text-slate-500 uppercase">USB(-C) plugs Living</p>
                         <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_livingroom}</p>
                       </div>
                     )}
@@ -605,7 +605,7 @@ export default function ProductDetail() {
                   <div className="grid grid-cols-2 gap-4">
                     {product.climate?.ac && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">A/C</p>
+                        <p className="text-xs text-slate-500 uppercase">Air Conditioning</p>
                         <p className="font-semibold text-slate-900 capitalize">{product.climate.ac}</p>
                       </div>
                     )}
