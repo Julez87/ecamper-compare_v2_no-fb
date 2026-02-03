@@ -6,8 +6,8 @@ import { Slider } from "@/components/ui/slider";
 import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-const CATEGORIES = ["All", "Smartphones", "Laptops", "Tablets", "Headphones", "Cameras", "Smartwatches", "TVs", "Gaming Consoles"];
-const BRANDS = ["All", "Apple", "Samsung", "Google", "Sony", "Microsoft", "Dell", "HP", "Lenovo", "Asus", "LG", "Bose", "Canon", "Nikon", "Nintendo", "Other"];
+const SIZE_CATEGORIES = ["All", "Compact", "Standard", "Large", "XL"];
+const BRANDS = ["All", "VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
 
 export default function ProductFilters({ filters, setFilters, maxPrice = 5000 }) {
   const updateFilter = (key, value) => {
@@ -17,26 +17,26 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
   const clearFilters = () => {
     setFilters({
       search: '',
-      category: 'All',
+      sizeCategory: 'All',
       brand: 'All',
       priceRange: [0, maxPrice],
       sortBy: 'featured'
     });
   };
 
-  const hasActiveFilters = filters.search || filters.category !== 'All' || filters.brand !== 'All' || 
+  const hasActiveFilters = filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' || 
     filters.priceRange[0] > 0 || filters.priceRange[1] < maxPrice;
 
   const FilterContent = () => (
     <div className="space-y-6">
       <div>
-        <label className="text-sm font-medium text-slate-700 mb-2 block">Category</label>
-        <Select value={filters.category} onValueChange={(v) => updateFilter('category', v)}>
+        <label className="text-sm font-medium text-slate-700 mb-2 block">Size Category</label>
+        <Select value={filters.sizeCategory} onValueChange={(v) => updateFilter('sizeCategory', v)}>
           <SelectTrigger className="w-full bg-white border-slate-200">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {CATEGORIES.map(cat => (
+            {SIZE_CATEGORIES.map(cat => (
               <SelectItem key={cat} value={cat}>{cat}</SelectItem>
             ))}
           </SelectContent>
@@ -78,10 +78,11 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="featured">Featured</SelectItem>
-            <SelectItem value="price-low">Price: Low to High</SelectItem>
-            <SelectItem value="price-high">Price: High to Low</SelectItem>
-            <SelectItem value="rating">Highest Rated</SelectItem>
-            <SelectItem value="newest">Newest</SelectItem>
+            <SelectItem value="price-buy-low">Buy Price: Low to High</SelectItem>
+            <SelectItem value="price-buy-high">Buy Price: High to Low</SelectItem>
+            <SelectItem value="price-rent-low">Rent Price: Low to High</SelectItem>
+            <SelectItem value="price-rent-high">Rent Price: High to Low</SelectItem>
+            <SelectItem value="range">Longest Range</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -113,12 +114,12 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
 
         {/* Desktop Filters */}
         <div className="hidden lg:flex items-center gap-3">
-          <Select value={filters.category} onValueChange={(v) => updateFilter('category', v)}>
-            <SelectTrigger className="w-40 bg-white border-slate-200">
-              <SelectValue placeholder="Category" />
+          <Select value={filters.sizeCategory} onValueChange={(v) => updateFilter('sizeCategory', v)}>
+            <SelectTrigger className="w-36 bg-white border-slate-200">
+              <SelectValue placeholder="Size" />
             </SelectTrigger>
             <SelectContent>
-              {CATEGORIES.map(cat => (
+              {SIZE_CATEGORIES.map(cat => (
                 <SelectItem key={cat} value={cat}>{cat}</SelectItem>
               ))}
             </SelectContent>
@@ -136,15 +137,16 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
           </Select>
 
           <Select value={filters.sortBy} onValueChange={(v) => updateFilter('sortBy', v)}>
-            <SelectTrigger className="w-44 bg-white border-slate-200">
+            <SelectTrigger className="w-48 bg-white border-slate-200">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="featured">Featured</SelectItem>
-              <SelectItem value="price-low">Price: Low to High</SelectItem>
-              <SelectItem value="price-high">Price: High to Low</SelectItem>
-              <SelectItem value="rating">Highest Rated</SelectItem>
-              <SelectItem value="newest">Newest</SelectItem>
+              <SelectItem value="price-buy-low">Buy: Low to High</SelectItem>
+              <SelectItem value="price-buy-high">Buy: High to Low</SelectItem>
+              <SelectItem value="price-rent-low">Rent: Low to High</SelectItem>
+              <SelectItem value="price-rent-high">Rent: High to Low</SelectItem>
+              <SelectItem value="range">Longest Range</SelectItem>
             </SelectContent>
           </Select>
 
