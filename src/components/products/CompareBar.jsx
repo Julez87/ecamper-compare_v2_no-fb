@@ -33,24 +33,24 @@ export default function CompareBar({ compareList, onRemove, onClear }) {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
-                  className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 flex-shrink-0"
+                  className="flex flex-col items-center gap-2 bg-slate-50 rounded-lg p-3 flex-shrink-0 relative"
                 >
-                  {product.image_url ? (
-                    <img src={product.image_url} alt="" className="w-8 h-8 object-contain" />
-                  ) : (
-                    <div className="w-8 h-8 bg-slate-200 rounded flex items-center justify-center text-xs font-bold text-slate-400">
-                      {product.brand?.[0]}
-                    </div>
-                  )}
-                  <span className="text-sm font-medium text-slate-700 max-w-[120px] truncate">
-                    {product.name}
-                  </span>
                   <button 
                     onClick={() => onRemove(product.id)}
-                    className="p-1 hover:bg-slate-200 rounded-full transition-colors"
+                    className="absolute -top-1 -right-1 p-1 bg-white hover:bg-slate-100 rounded-full shadow-sm transition-colors border border-slate-200"
                   >
                     <X className="w-3 h-3 text-slate-500" />
                   </button>
+                  {product.image_url ? (
+                    <img src={product.image_url} alt="" className="w-16 h-16 object-cover rounded-full border-2 border-slate-200" />
+                  ) : (
+                    <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center text-sm font-bold text-slate-400 border-2 border-slate-200">
+                      {product.model_name?.[0] || product.brand?.[0]}
+                    </div>
+                  )}
+                  <span className="text-xs font-medium text-slate-700 max-w-[80px] truncate text-center">
+                    {product.model_name?.replace(/^(VW|Mercedes|Fiat|Peugeot|Citroën|Ford|Renault)\s+/i, '') || product.name}
+                  </span>
                 </motion.div>
               ))}
             </div>
