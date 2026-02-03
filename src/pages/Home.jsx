@@ -17,8 +17,7 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    purchasePrice: [0, 150000],
-    rentalPrice: [0, 250],
+    priceRange: [0, 5000],
     sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
@@ -49,15 +48,55 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
+    // Price filters
+    if (filters.purchasePrice) {
+      result = result.filter((p) => {
+        const buyPrice = p.buy_from_price || 0;
+        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
+      });
+    }
+
+    if (filters.rentalPrice) {
+      result = result.filter((p) => {
+        const rentPrice = p.rent_from_price || 0;
+        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
+      });
+    }
+
+    // Gas-Free filter
+    if (filters.gasFree) {
+      result = result.filter((p) => {
+        const stoveIsGasFree = !p.kitchen?.stove_type || p.kitchen.stove_type === 'no' || p.kitchen.stove_type === 'electric';
+        const fridgeIsGasFree = !p.kitchen?.fridge_type || p.kitchen.fridge_type === 'no' || p.kitchen.fridge_type === 'electric';
+        const vehicleHeatingIsGasFree = !p.climate?.vehicle_heating || p.climate.vehicle_heating === 'no' || p.climate.vehicle_heating === 'electric';
+        const standHeatingIsGasFree = !p.climate?.stand_heating || p.climate.stand_heating === 'no' || p.climate.stand_heating === 'electric';
+        return stoveIsGasFree && fridgeIsGasFree && vehicleHeatingIsGasFree && standHeatingIsGasFree;
+      });
+    }
+
+    // Eco Materials filter
+    if (filters.ecoMaterials) {
+      result = result.filter((p) => {
+        return p.eco_scoring?.furniture_materials_eco ||
+               p.eco_scoring?.flooring_material_eco ||
+               p.eco_scoring?.insulation_material_eco ||
+               p.eco_scoring?.textile_material_eco;
+      });
+    }
+
+    // Family Friendly filter
+    if (filters.familyFriendly) {
+      result = result.filter((p) => {
+        const hasEnoughSeats = (p.camper_data?.seats || 0) >= 4;
+        const hasEnoughBeds = (p.sleeping?.sleeps || 0) >= 4;
+        const hasIsoFix = p.sit_lounge?.iso_fix && p.sit_lounge.iso_fix !== 'no';
+        return hasEnoughSeats && hasEnoughBeds && hasIsoFix;
+      });
+    }
+
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      const rentPrice = p.rent_from_price || 0;
-      return (
-        buyPrice >= filters.purchasePrice[0] &&
-        buyPrice <= filters.purchasePrice[1] &&
-        rentPrice >= filters.rentalPrice[0] &&
-        rentPrice <= filters.rentalPrice[1]
-      );
+      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
     });
 
     switch (filters.sortBy) {
@@ -95,8 +134,7 @@ export default function Home() {
     });
   };
 
-  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
-  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
+  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -145,8 +183,7 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxBuyPrice={maxBuyPrice}
-          maxRentPrice={maxRentPrice} />
+          maxPrice={maxPrice} />
 
 
         <div className="mt-6">
