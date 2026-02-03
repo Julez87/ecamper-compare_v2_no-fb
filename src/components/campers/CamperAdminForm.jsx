@@ -203,12 +203,12 @@ export default function CamperAdminForm({ formData, setFormData }) {
               <SelectContent>{YEARS.map(y => <SelectItem key={y} value={y.toString()}>{y}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledInput label="WLTP Range" type="number" placeholder="WLTP Range (km)" value={formData.base_vehicle?.wltp_range_km || ''} onChange={(e) => updateNested('base_vehicle', 'wltp_range_km', parseInt(e.target.value))} />
-            <LabeledInput label="kW" type="number" placeholder="kW" value={formData.base_vehicle?.kw || ''} onChange={(e) => updateNested('base_vehicle', 'kw', parseInt(e.target.value))} />
-            <LabeledInput label="Battery" type="number" placeholder="Battery Size (kWh)" value={formData.base_vehicle?.battery_size_kwh || ''} onChange={(e) => updateNested('base_vehicle', 'battery_size_kwh', parseInt(e.target.value))} />
-            <LabeledInput label="Consumption" type="number" step="0.1" placeholder="Consumption kWh/100km" value={formData.base_vehicle?.consumption_kwh_100km || ''} onChange={(e) => updateNested('base_vehicle', 'consumption_kwh_100km', parseFloat(e.target.value))} />
-            <LabeledInput label="AC Charge" type="number" placeholder="AC Charging (kW)" value={formData.base_vehicle?.charging_speed_ac_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_ac_kw', parseInt(e.target.value))} />
-            <LabeledInput label="DC Charge" type="number" placeholder="DC Charging (kW)" value={formData.base_vehicle?.charging_speed_dc_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_dc_kw', parseInt(e.target.value))} />
-            <LabeledSelect label="Charger" value={formData.base_vehicle?.charger_types || ''} onValueChange={(v) => updateNested('base_vehicle', 'charger_types', v)} placeholder="Charger Types">
+            <LabeledInput label="Engine (in kW)" type="number" placeholder="kW" value={formData.base_vehicle?.kw || ''} onChange={(e) => updateNested('base_vehicle', 'kw', parseInt(e.target.value))} />
+            <LabeledInput label="Battery Size (in kW)" type="number" placeholder="Battery Size (kWh)" value={formData.base_vehicle?.battery_size_kwh || ''} onChange={(e) => updateNested('base_vehicle', 'battery_size_kwh', parseInt(e.target.value))} />
+            <LabeledInput label="Consumption (in kW/100km)" type="number" step="0.1" placeholder="Consumption kWh/100km" value={formData.base_vehicle?.consumption_kwh_100km || ''} onChange={(e) => updateNested('base_vehicle', 'consumption_kwh_100km', parseFloat(e.target.value))} />
+            <LabeledInput label="AC Slow-Charge (max. kW)" type="number" placeholder="AC Charging (kW)" value={formData.base_vehicle?.charging_speed_ac_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_ac_kw', parseInt(e.target.value))} />
+            <LabeledInput label="DC Fast-Charge (max. kW)" type="number" placeholder="DC Charging (kW)" value={formData.base_vehicle?.charging_speed_dc_kw || ''} onChange={(e) => updateNested('base_vehicle', 'charging_speed_dc_kw', parseInt(e.target.value))} />
+            <LabeledSelect label="Charger Types" value={formData.base_vehicle?.charger_types || ''} onValueChange={(v) => updateNested('base_vehicle', 'charger_types', v)} placeholder="Charger Types">
               <SelectContent>{CHARGER_TYPES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledInput label="20-80%" type="number" placeholder="Charging 20-80% (min)" value={formData.base_vehicle?.charging_20_80_min || ''} onChange={(e) => updateNested('base_vehicle', 'charging_20_80_min', parseInt(e.target.value))} />
@@ -232,13 +232,13 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledInput label="Height" type="number" step="0.01" placeholder="Height (m)" value={formData.camper_data?.height_m || ''} onChange={(e) => updateNested('camper_data', 'height_m', parseFloat(e.target.value))} />
             <LabeledInput label="Width" type="number" step="0.01" placeholder="Width (m)" value={formData.camper_data?.width_m || ''} onChange={(e) => updateNested('camper_data', 'width_m', parseFloat(e.target.value))} />
             <LabeledInput label="Seats" type="number" placeholder="Seats" value={formData.camper_data?.seats || ''} onChange={(e) => updateNested('camper_data', 'seats', parseInt(e.target.value))} />
-            <LabeledInput label="Storage Total" type="number" placeholder="Storage Total (l)" value={formData.camper_data?.storage_total_l || ''} onChange={(e) => updateNested('camper_data', 'storage_total_l', parseInt(e.target.value))} />
-            <LabeledInput label="Storage Shelves" type="number" placeholder="Storage Shelves (l)" value={formData.camper_data?.storage_shelves_l || ''} onChange={(e) => updateNested('camper_data', 'storage_shelves_l', parseInt(e.target.value))} />
-            <LabeledInput label="Storage Other" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
-            <LabeledInput label="Storage Trunk" type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Total (in l)" type="number" placeholder="Storage Total (l)" value={formData.camper_data?.storage_total_l || ''} onChange={(e) => updateNested('camper_data', 'storage_total_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Shelves (in l)" type="number" placeholder="Storage Shelves (l)" value={formData.camper_data?.storage_shelves_l || ''} onChange={(e) => updateNested('camper_data', 'storage_shelves_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Other (in l)" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Trunk (in l)" type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
             <LabeledInput label="Sleeps" type="number" placeholder="Sleeps" value={formData.sleeping?.sleeps || ''} onChange={(e) => updateNested('sleeping', 'sleeps', parseInt(e.target.value))} />
-            <LabeledInput label="Bed Bottom" placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
-            <LabeledInput label="Bed Rooftop" placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
+            <LabeledInput label="Bed Bottom (in cm)" placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
+            <LabeledInput label="Bed Rooftop (in cm)" placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
             <LabeledSelect label="Mosquito Nets" value={formData.sleeping?.rooftop_mosquito_nets || ''} onValueChange={(v) => updateNested('sleeping', 'rooftop_mosquito_nets', v)} placeholder="Rooftop Mosquito Nets">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
@@ -282,7 +282,7 @@ export default function CamperAdminForm({ formData, setFormData }) {
               <SelectContent>{STOVE_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledInput label="Stove Plates" type="number" placeholder="Stove Plates" value={formData.kitchen?.stove_plates || ''} onChange={(e) => updateNested('kitchen', 'stove_plates', parseInt(e.target.value))} />
-            <LabeledInput label="Stove Energy" type="number" placeholder="Stove Energy (W)" value={formData.kitchen?.stove_energy_w || ''} onChange={(e) => updateNested('kitchen', 'stove_energy_w', parseInt(e.target.value))} />
+            <LabeledInput label="Stove Energy (in W)" type="number" placeholder="Stove Energy (W)" value={formData.kitchen?.stove_energy_w || ''} onChange={(e) => updateNested('kitchen', 'stove_energy_w', parseInt(e.target.value))} />
             <LabeledSelect label="Indoor Cooking" value={formData.kitchen?.indoor_cooking || ''} onValueChange={(v) => updateNested('kitchen', 'indoor_cooking', v)} placeholder="Indoor Cooking">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
@@ -306,12 +306,12 @@ export default function CamperAdminForm({ formData, setFormData }) {
 
         <TabsContent value="energy" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
-            <LabeledInput label="Camping Battery" type="number" placeholder="Camping Battery (Wh)" value={formData.energy?.camping_battery_wh || ''} onChange={(e) => updateNested('energy', 'camping_battery_wh', parseInt(e.target.value))} />
-            <LabeledInput label="Solar Panel Max" type="number" placeholder="Solar Panel Max (W)" value={formData.energy?.solar_panel_max_w || ''} onChange={(e) => updateNested('energy', 'solar_panel_max_w', parseInt(e.target.value))} />
-            <LabeledInput label="Charge Solar" type="number" placeholder="Battery Charging Solar (Wh)" value={formData.energy?.battery_charging_solar_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_solar_wh', parseInt(e.target.value))} />
-            <LabeledInput label="Charge HV" type="number" placeholder="Battery Charging HV (Wh)" value={formData.energy?.battery_charging_hv_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_hv_wh', parseInt(e.target.value))} />
-            <LabeledInput label="Charge Driving" type="number" placeholder="Battery Charging Driving (Wh)" value={formData.energy?.battery_charging_driving_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_driving_wh', parseInt(e.target.value))} />
-            <LabeledInput label="Charge Landline" type="number" placeholder="Battery Charging Landline (Wh)" value={formData.energy?.battery_charging_landline_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_landline_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Camping Battery (in kWh)" type="number" placeholder="Camping Battery (Wh)" value={formData.energy?.camping_battery_wh || ''} onChange={(e) => updateNested('energy', 'camping_battery_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Solar Panel (max. kW)" type="number" placeholder="Solar Panel Max (W)" value={formData.energy?.solar_panel_max_w || ''} onChange={(e) => updateNested('energy', 'solar_panel_max_w', parseInt(e.target.value))} />
+            <LabeledInput label="Charge via Solar (in kW)" type="number" placeholder="Battery Charging Solar (Wh)" value={formData.energy?.battery_charging_solar_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_solar_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Charge via Vehicle Battery (in kW)" type="number" placeholder="Battery Charging HV (Wh)" value={formData.energy?.battery_charging_hv_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_hv_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Charge while driving (in kW)" type="number" placeholder="Battery Charging Driving (Wh)" value={formData.energy?.battery_charging_driving_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_driving_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Charge via Landline (in kW)" type="number" placeholder="Battery Charging Landline (Wh)" value={formData.energy?.battery_charging_landline_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_landline_wh', parseInt(e.target.value))} />
             <LabeledInput label="Max Output AC" type="number" placeholder="Max Output AC 12V (W)" value={formData.energy?.max_battery_output_ac_12v_w || ''} onChange={(e) => updateNested('energy', 'max_battery_output_ac_12v_w', parseInt(e.target.value))} />
             <LabeledInput label="Plugs AC" type="number" placeholder="Output Plugs AC" value={formData.energy?.battery_output_plugs_ac || ''} onChange={(e) => updateNested('energy', 'battery_output_plugs_ac', parseInt(e.target.value))} />
             <LabeledInput label="Max Output DC" type="number" placeholder="Max Output DC 230V" value={formData.energy?.max_battery_output_dc_230v || ''} onChange={(e) => updateNested('energy', 'max_battery_output_dc_230v', parseInt(e.target.value))} />
