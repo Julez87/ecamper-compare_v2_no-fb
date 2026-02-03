@@ -18,10 +18,7 @@ export default function Home() {
     sizeCategory: 'All',
     brand: 'All',
     priceRange: [0, 5000],
-    sortBy: 'featured',
-    gasFree: false,
-    ecoMaterials: false,
-    familyFriendly: false
+    sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -53,33 +50,13 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+      return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
     });
 
-    if (filters.gasFree) {
-      result = result.filter((p) => {
-        const hasGas = 
-          p.kitchen?.stove_type?.toLowerCase().includes('gas') ||
-          p.kitchen?.fridge_type?.toLowerCase().includes('gas') ||
-          p.climate?.stand_heating?.toLowerCase() === 'yes';
-        return !hasGas;
-      });
-    }
-
-    if (filters.ecoMaterials) {
-      result = result.filter((p) => {
-        return p.eco_scoring?.furniture_materials_eco || 
-               p.eco_scoring?.flooring_material_eco || 
-               p.eco_scoring?.insulation_material_eco || 
-               p.eco_scoring?.textile_material_eco;
-      });
-    }
-
-    if (filters.familyFriendly) {
-      result = result.filter((p) => {
-        return (p.sleeping?.sleeps || 0) >= 4 && p.sit_lounge?.iso_fix !== 'no';
-      });
-    }
+    result = result.filter((p) => {
+      const rentPrice = p.rent_from_price || 0;
+      return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
+    });
 
     switch (filters.sortBy) {
       case 'price-buy-low':
@@ -116,7 +93,8 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -165,7 +143,8 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxPrice={maxPrice} />
+          maxBuyPrice={maxBuyPrice}
+          maxRentPrice={maxRentPrice} />
 
 
         <div className="mt-6">

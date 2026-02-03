@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Search, X, SlidersHorizontal, Wind, Leaf, Users } from 'lucide-react';
+import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const SIZE_CATEGORIES = ["All", "Compact", "Standard", "Large", "XL"];
 const BRANDS = ["All", "VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
 
-export default function ProductFilters({ filters, setFilters, maxPrice = 5000 }) {
+export default function ProductFilters({ filters, setFilters, maxBuyPrice = 150000, maxRentPrice = 250 }) {
   const updateFilter = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
@@ -19,16 +20,21 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
       search: '',
       sizeCategory: 'All',
       brand: 'All',
-      priceRange: [0, maxPrice],
+      purchasePrice: [0, maxBuyPrice],
+      rentalPrice: [0, maxRentPrice],
       sortBy: 'featured',
       gasFree: false,
       ecoMaterials: false,
-      familyFriendly: false
+      familyFriendly: false,
+      advanced: {}
     });
   };
 
   const hasActiveFilters = filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' || 
-    filters.priceRange[0] > 0 || filters.priceRange[1] < maxPrice || filters.gasFree || filters.ecoMaterials || filters.familyFriendly;
+    filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxBuyPrice || 
+    filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < maxRentPrice ||
+    filters.gasFree || filters.ecoMaterials || filters.familyFriendly ||
+    Object.keys(filters.advanced || {}).length > 0;
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -62,13 +68,26 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
 
       <div>
         <label className="text-sm font-medium text-slate-700 mb-3 block">
-          Price Range: ${filters.priceRange[0]} - ${filters.priceRange[1]}
+          Purchasing Price Range: €{filters.purchasePrice[0].toLocaleString()} - €{filters.purchasePrice[1].toLocaleString()}
         </label>
         <Slider
-          value={filters.priceRange}
-          onValueChange={(v) => updateFilter('priceRange', v)}
-          max={maxPrice}
-          step={50}
+          value={filters.purchasePrice}
+          onValueChange={(v) => updateFilter('purchasePrice', v)}
+          max={maxBuyPrice}
+          step={2500}
+          className="py-2"
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-medium text-slate-700 mb-3 block">
+          Rental Price Range: €{filters.rentalPrice[0]} - €{filters.rentalPrice[1]}/day
+        </label>
+        <Slider
+          value={filters.rentalPrice}
+          onValueChange={(v) => updateFilter('rentalPrice', v)}
+          max={maxRentPrice}
+          step={5}
           className="py-2"
         />
       </div>
@@ -89,6 +108,220 @@ export default function ProductFilters({ filters, setFilters, maxPrice = 5000 })
           </SelectContent>
         </Select>
       </div>
+
+      {/* Advanced Filters */}
+      <Collapsible>
+        <CollapsibleTrigger asChild>
+          <Button variant="outline" className="w-full justify-between">
+            Advanced Filters
+            <ChevronDown className="w-4 h-4" />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4 space-y-4">
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Vehicle</div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Model Year</label>
+            <Input 
+              type="number" 
+              placeholder="e.g. 2024"
+              value={filters.advanced?.model_year || ''}
+              onChange={(e) => updateFilter('advanced', {...filters.advanced, model_year: e.target.value})}
+              className="bg-white"
+            />
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Min Range (km)</label>
+            <Input 
+              type="number" 
+              placeholder="e.g. 300"
+              value={filters.advanced?.min_range || ''}
+              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_range: e.target.value})}
+              className="bg-white"
+            />
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Min Battery (kWh)</label>
+            <Input 
+              type="number" 
+              placeholder="e.g. 75"
+              value={filters.advanced?.min_battery || ''}
+              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_battery: e.target.value})}
+              className="bg-white"
+            />
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Drive Type</label>
+            <Select 
+              value={filters.advanced?.drive || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, drive: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="front">Front</SelectItem>
+                <SelectItem value="rear">Rear</SelectItem>
+                <SelectItem value="4x4">4x4</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Camper</div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Min Sleeps</label>
+            <Input 
+              type="number" 
+              placeholder="e.g. 2"
+              value={filters.advanced?.min_sleeps || ''}
+              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_sleeps: e.target.value})}
+              className="bg-white"
+            />
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Min Storage (L)</label>
+            <Input 
+              type="number" 
+              placeholder="e.g. 500"
+              value={filters.advanced?.min_storage || ''}
+              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_storage: e.target.value})}
+              className="bg-white"
+            />
+          </div>
+
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Kitchen</div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Stove Type</label>
+            <Select 
+              value={filters.advanced?.stove_type || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, stove_type: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="Electric">Electric</SelectItem>
+                <SelectItem value="Gas">Gas</SelectItem>
+                <SelectItem value="Electric & Gas">Electric & Gas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Min Fridge Size (L)</label>
+            <Input 
+              type="number" 
+              placeholder="e.g. 40"
+              value={filters.advanced?.min_fridge || ''}
+              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_fridge: e.target.value})}
+              className="bg-white"
+            />
+          </div>
+
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Bathroom</div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Toilet Type</label>
+            <Select 
+              value={filters.advanced?.toilet_type || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, toilet_type: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="chemical">Chemical</SelectItem>
+                <SelectItem value="separation">Separation</SelectItem>
+                <SelectItem value="no">No Toilet</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Shower</label>
+            <Select 
+              value={filters.advanced?.shower || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, shower: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Climate</div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Air Conditioning</label>
+            <Select 
+              value={filters.advanced?.ac || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, ac: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Stand Heating</label>
+            <Select 
+              value={filters.advanced?.stand_heating || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, stand_heating: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Smart & Connected</div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Apple CarPlay / Android Auto</label>
+            <Select 
+              value={filters.advanced?.carplay || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, carplay: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="text-sm text-slate-600 mb-1.5 block">Rear Camera</label>
+            <Select 
+              value={filters.advanced?.rear_camera || 'all'}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, rear_camera: v === 'all' ? undefined : v})}
+            >
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {hasActiveFilters && (
         <Button 
