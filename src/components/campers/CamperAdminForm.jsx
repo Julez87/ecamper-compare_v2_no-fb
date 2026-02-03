@@ -250,186 +250,149 @@ export default function CamperAdminForm({ formData, setFormData }) {
 
         <TabsContent value="interior" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
-            <Select value={formData.sit_lounge?.indoor_table || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_table', v)}>
-              <SelectTrigger><SelectValue placeholder="Indoor Table" /></SelectTrigger>
+            <LabeledSelect label="Indoor Table" value={formData.sit_lounge?.indoor_table || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_table', v)} placeholder="Indoor Table">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.outdoor_table || ''} onValueChange={(v) => updateNested('sit_lounge', 'outdoor_table', v)}>
-              <SelectTrigger><SelectValue placeholder="Outdoor Table" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Outdoor Table" value={formData.sit_lounge?.outdoor_table || ''} onValueChange={(v) => updateNested('sit_lounge', 'outdoor_table', v)} placeholder="Outdoor Table">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.swivel_front_seats || ''} onValueChange={(v) => updateNested('sit_lounge', 'swivel_front_seats', v)}>
-              <SelectTrigger><SelectValue placeholder="Swivel Front Seats" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Swivel Seats" value={formData.sit_lounge?.swivel_front_seats || ''} onValueChange={(v) => updateNested('sit_lounge', 'swivel_front_seats', v)} placeholder="Swivel Front Seats">
               <SelectContent>{SWIVEL_SEATS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.indoor_lights || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_lights', v)}>
-              <SelectTrigger><SelectValue placeholder="Indoor Lights" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Indoor Lights" value={formData.sit_lounge?.indoor_lights || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_lights', v)} placeholder="Indoor Lights">
               <SelectContent>{LIGHTS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.curtains || ''} onValueChange={(v) => updateNested('sit_lounge', 'curtains', v)}>
-              <SelectTrigger><SelectValue placeholder="Curtains" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Curtains" value={formData.sit_lounge?.curtains || ''} onValueChange={(v) => updateNested('sit_lounge', 'curtains', v)} placeholder="Curtains">
               <SelectContent>{CURTAINS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.awning || ''} onValueChange={(v) => updateNested('sit_lounge', 'awning', v)}>
-              <SelectTrigger><SelectValue placeholder="Awning" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Awning" value={formData.sit_lounge?.awning || ''} onValueChange={(v) => updateNested('sit_lounge', 'awning', v)} placeholder="Awning">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.tinted_windows || ''} onValueChange={(v) => updateNested('sit_lounge', 'tinted_windows', v)}>
-              <SelectTrigger><SelectValue placeholder="Tinted Windows" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Tinted Windows" value={formData.sit_lounge?.tinted_windows || ''} onValueChange={(v) => updateNested('sit_lounge', 'tinted_windows', v)} placeholder="Tinted Windows">
               <SelectContent>{TINTED_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.sit_lounge?.iso_fix || ''} onValueChange={(v) => updateNested('sit_lounge', 'iso_fix', v)}>
-              <SelectTrigger><SelectValue placeholder="ISO-Fix" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="ISO-Fix" value={formData.sit_lounge?.iso_fix || ''} onValueChange={(v) => updateNested('sit_lounge', 'iso_fix', v)} placeholder="ISO-Fix">
               <SelectContent>{ISO_FIX_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input type="number" placeholder="Fridge (l)" value={formData.kitchen?.fridge_l || ''} onChange={(e) => updateNested('kitchen', 'fridge_l', parseInt(e.target.value))} />
-            <Select value={formData.kitchen?.fridge_type || ''} onValueChange={(v) => updateNested('kitchen', 'fridge_type', v)}>
-              <SelectTrigger><SelectValue placeholder="Fridge Type" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="Fridge" type="number" placeholder="Fridge (l)" value={formData.kitchen?.fridge_l || ''} onChange={(e) => updateNested('kitchen', 'fridge_l', parseInt(e.target.value))} />
+            <LabeledSelect label="Fridge Type" value={formData.kitchen?.fridge_type || ''} onValueChange={(v) => updateNested('kitchen', 'fridge_type', v)} placeholder="Fridge Type">
               <SelectContent>{FRIDGE_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.kitchen?.stove_type || ''} onValueChange={(v) => updateNested('kitchen', 'stove_type', v)}>
-              <SelectTrigger><SelectValue placeholder="Stove Type" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Stove Type" value={formData.kitchen?.stove_type || ''} onValueChange={(v) => updateNested('kitchen', 'stove_type', v)} placeholder="Stove Type">
               <SelectContent>{STOVE_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input type="number" placeholder="Stove Plates" value={formData.kitchen?.stove_plates || ''} onChange={(e) => updateNested('kitchen', 'stove_plates', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Stove Energy (W)" value={formData.kitchen?.stove_energy_w || ''} onChange={(e) => updateNested('kitchen', 'stove_energy_w', parseInt(e.target.value))} />
-            <Select value={formData.kitchen?.indoor_cooking || ''} onValueChange={(v) => updateNested('kitchen', 'indoor_cooking', v)}>
-              <SelectTrigger><SelectValue placeholder="Indoor Cooking" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="Stove Plates" type="number" placeholder="Stove Plates" value={formData.kitchen?.stove_plates || ''} onChange={(e) => updateNested('kitchen', 'stove_plates', parseInt(e.target.value))} />
+            <LabeledInput label="Stove Energy" type="number" placeholder="Stove Energy (W)" value={formData.kitchen?.stove_energy_w || ''} onChange={(e) => updateNested('kitchen', 'stove_energy_w', parseInt(e.target.value))} />
+            <LabeledSelect label="Indoor Cooking" value={formData.kitchen?.indoor_cooking || ''} onValueChange={(v) => updateNested('kitchen', 'indoor_cooking', v)} placeholder="Indoor Cooking">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.kitchen?.outdoor_cooking || ''} onValueChange={(v) => updateNested('kitchen', 'outdoor_cooking', v)}>
-              <SelectTrigger><SelectValue placeholder="Outdoor Cooking" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Outdoor Cooking" value={formData.kitchen?.outdoor_cooking || ''} onValueChange={(v) => updateNested('kitchen', 'outdoor_cooking', v)} placeholder="Outdoor Cooking">
               <SelectContent>{OUTDOOR_COOKING.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.bathroom?.toilet_type || ''} onValueChange={(v) => updateNested('bathroom', 'toilet_type', v)}>
-              <SelectTrigger><SelectValue placeholder="Toilet Type" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Toilet Type" value={formData.bathroom?.toilet_type || ''} onValueChange={(v) => updateNested('bathroom', 'toilet_type', v)} placeholder="Toilet Type">
               <SelectContent>{TOILET_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input type="number" placeholder="Fresh Water (l)" value={formData.bathroom?.fresh_water_l || ''} onChange={(e) => updateNested('bathroom', 'fresh_water_l', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Waste Water (l)" value={formData.bathroom?.waste_water_l || ''} onChange={(e) => updateNested('bathroom', 'waste_water_l', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Warm Water (l)" value={formData.bathroom?.warm_water_l || ''} onChange={(e) => updateNested('bathroom', 'warm_water_l', parseInt(e.target.value))} />
-            <Select value={formData.bathroom?.shower || ''} onValueChange={(v) => updateNested('bathroom', 'shower', v)}>
-              <SelectTrigger><SelectValue placeholder="Shower" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledInput label="Fresh Water" type="number" placeholder="Fresh Water (l)" value={formData.bathroom?.fresh_water_l || ''} onChange={(e) => updateNested('bathroom', 'fresh_water_l', parseInt(e.target.value))} />
+            <LabeledInput label="Waste Water" type="number" placeholder="Waste Water (l)" value={formData.bathroom?.waste_water_l || ''} onChange={(e) => updateNested('bathroom', 'waste_water_l', parseInt(e.target.value))} />
+            <LabeledInput label="Warm Water" type="number" placeholder="Warm Water (l)" value={formData.bathroom?.warm_water_l || ''} onChange={(e) => updateNested('bathroom', 'warm_water_l', parseInt(e.target.value))} />
+            <LabeledSelect label="Shower" value={formData.bathroom?.shower || ''} onValueChange={(v) => updateNested('bathroom', 'shower', v)} placeholder="Shower">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.bathroom?.warm_shower || ''} onValueChange={(v) => updateNested('bathroom', 'warm_shower', v)}>
-              <SelectTrigger><SelectValue placeholder="Warm Shower" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Warm Shower" value={formData.bathroom?.warm_shower || ''} onValueChange={(v) => updateNested('bathroom', 'warm_shower', v)} placeholder="Warm Shower">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
+            </LabeledSelect>
           </div>
         </TabsContent>
 
         <TabsContent value="energy" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
-            <Input type="number" placeholder="Camping Battery (Wh)" value={formData.energy?.camping_battery_wh || ''} onChange={(e) => updateNested('energy', 'camping_battery_wh', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Solar Panel Max (W)" value={formData.energy?.solar_panel_max_w || ''} onChange={(e) => updateNested('energy', 'solar_panel_max_w', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Battery Charging Solar (Wh)" value={formData.energy?.battery_charging_solar_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_solar_wh', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Battery Charging HV (Wh)" value={formData.energy?.battery_charging_hv_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_hv_wh', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Battery Charging Driving (Wh)" value={formData.energy?.battery_charging_driving_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_driving_wh', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Battery Charging Landline (Wh)" value={formData.energy?.battery_charging_landline_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_landline_wh', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Max Output AC 12V (W)" value={formData.energy?.max_battery_output_ac_12v_w || ''} onChange={(e) => updateNested('energy', 'max_battery_output_ac_12v_w', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Output Plugs AC" value={formData.energy?.battery_output_plugs_ac || ''} onChange={(e) => updateNested('energy', 'battery_output_plugs_ac', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Max Output DC 230V" value={formData.energy?.max_battery_output_dc_230v || ''} onChange={(e) => updateNested('energy', 'max_battery_output_dc_230v', parseInt(e.target.value))} />
-            <Input type="number" placeholder="Output Plugs DC" value={formData.energy?.battery_output_plugs_dc || ''} onChange={(e) => updateNested('energy', 'battery_output_plugs_dc', parseInt(e.target.value))} />
-            <Input type="number" placeholder="USB-C Plugs Front" value={formData.energy?.usb_c_plugs_front || ''} onChange={(e) => updateNested('energy', 'usb_c_plugs_front', parseInt(e.target.value))} />
-            <Input type="number" placeholder="USB-C Plugs Living" value={formData.energy?.usb_c_plugs_livingroom || ''} onChange={(e) => updateNested('energy', 'usb_c_plugs_livingroom', parseInt(e.target.value))} />
+            <LabeledInput label="Camping Battery" type="number" placeholder="Camping Battery (Wh)" value={formData.energy?.camping_battery_wh || ''} onChange={(e) => updateNested('energy', 'camping_battery_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Solar Panel Max" type="number" placeholder="Solar Panel Max (W)" value={formData.energy?.solar_panel_max_w || ''} onChange={(e) => updateNested('energy', 'solar_panel_max_w', parseInt(e.target.value))} />
+            <LabeledInput label="Charge Solar" type="number" placeholder="Battery Charging Solar (Wh)" value={formData.energy?.battery_charging_solar_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_solar_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Charge HV" type="number" placeholder="Battery Charging HV (Wh)" value={formData.energy?.battery_charging_hv_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_hv_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Charge Driving" type="number" placeholder="Battery Charging Driving (Wh)" value={formData.energy?.battery_charging_driving_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_driving_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Charge Landline" type="number" placeholder="Battery Charging Landline (Wh)" value={formData.energy?.battery_charging_landline_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_landline_wh', parseInt(e.target.value))} />
+            <LabeledInput label="Max Output AC" type="number" placeholder="Max Output AC 12V (W)" value={formData.energy?.max_battery_output_ac_12v_w || ''} onChange={(e) => updateNested('energy', 'max_battery_output_ac_12v_w', parseInt(e.target.value))} />
+            <LabeledInput label="Plugs AC" type="number" placeholder="Output Plugs AC" value={formData.energy?.battery_output_plugs_ac || ''} onChange={(e) => updateNested('energy', 'battery_output_plugs_ac', parseInt(e.target.value))} />
+            <LabeledInput label="Max Output DC" type="number" placeholder="Max Output DC 230V" value={formData.energy?.max_battery_output_dc_230v || ''} onChange={(e) => updateNested('energy', 'max_battery_output_dc_230v', parseInt(e.target.value))} />
+            <LabeledInput label="Plugs DC" type="number" placeholder="Output Plugs DC" value={formData.energy?.battery_output_plugs_dc || ''} onChange={(e) => updateNested('energy', 'battery_output_plugs_dc', parseInt(e.target.value))} />
+            <LabeledInput label="USB-C Front" type="number" placeholder="USB-C Plugs Front" value={formData.energy?.usb_c_plugs_front || ''} onChange={(e) => updateNested('energy', 'usb_c_plugs_front', parseInt(e.target.value))} />
+            <LabeledInput label="USB-C Living" type="number" placeholder="USB-C Plugs Living" value={formData.energy?.usb_c_plugs_livingroom || ''} onChange={(e) => updateNested('energy', 'usb_c_plugs_livingroom', parseInt(e.target.value))} />
           </div>
         </TabsContent>
 
         <TabsContent value="features" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
-            <Select value={formData.climate?.ac || ''} onValueChange={(v) => updateNested('climate', 'ac', v)}>
-              <SelectTrigger><SelectValue placeholder="A/C" /></SelectTrigger>
+            <LabeledSelect label="A/C" value={formData.climate?.ac || ''} onValueChange={(v) => updateNested('climate', 'ac', v)} placeholder="A/C">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.vehicle_climate_programming || ''} onValueChange={(v) => updateNested('climate', 'vehicle_climate_programming', v)}>
-              <SelectTrigger><SelectValue placeholder="Climate Programming" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Climate Program" value={formData.climate?.vehicle_climate_programming || ''} onValueChange={(v) => updateNested('climate', 'vehicle_climate_programming', v)} placeholder="Climate Programming">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.vehicle_heating || ''} onValueChange={(v) => updateNested('climate', 'vehicle_heating', v)}>
-              <SelectTrigger><SelectValue placeholder="Vehicle Heating" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Vehicle Heating" value={formData.climate?.vehicle_heating || ''} onValueChange={(v) => updateNested('climate', 'vehicle_heating', v)} placeholder="Vehicle Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.vehicle_cooling || ''} onValueChange={(v) => updateNested('climate', 'vehicle_cooling', v)}>
-              <SelectTrigger><SelectValue placeholder="Vehicle Cooling" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Vehicle Cooling" value={formData.climate?.vehicle_cooling || ''} onValueChange={(v) => updateNested('climate', 'vehicle_cooling', v)} placeholder="Vehicle Cooling">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.stand_heating || ''} onValueChange={(v) => updateNested('climate', 'stand_heating', v)}>
-              <SelectTrigger><SelectValue placeholder="Stand Heating" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Stand Heating" value={formData.climate?.stand_heating || ''} onValueChange={(v) => updateNested('climate', 'stand_heating', v)} placeholder="Stand Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.living_room_heating || ''} onValueChange={(v) => updateNested('climate', 'living_room_heating', v)}>
-              <SelectTrigger><SelectValue placeholder="Living Room Heating" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Living Heating" value={formData.climate?.living_room_heating || ''} onValueChange={(v) => updateNested('climate', 'living_room_heating', v)} placeholder="Living Room Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.insulation || ''} onValueChange={(v) => updateNested('climate', 'insulation', v)}>
-              <SelectTrigger><SelectValue placeholder="Insulation" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Insulation" value={formData.climate?.insulation || ''} onValueChange={(v) => updateNested('climate', 'insulation', v)} placeholder="Insulation">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.seat_heating || ''} onValueChange={(v) => updateNested('climate', 'seat_heating', v)}>
-              <SelectTrigger><SelectValue placeholder="Seat Heating" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Seat Heating" value={formData.climate?.seat_heating || ''} onValueChange={(v) => updateNested('climate', 'seat_heating', v)} placeholder="Seat Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.steering_wheel_heating || ''} onValueChange={(v) => updateNested('climate', 'steering_wheel_heating', v)}>
-              <SelectTrigger><SelectValue placeholder="Steering Wheel Heating" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Wheel Heating" value={formData.climate?.steering_wheel_heating || ''} onValueChange={(v) => updateNested('climate', 'steering_wheel_heating', v)} placeholder="Steering Wheel Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.front_windows_opening_electric || ''} onValueChange={(v) => updateNested('climate', 'front_windows_opening_electric', v)}>
-              <SelectTrigger><SelectValue placeholder="Front Windows (Electric)" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Front Windows" value={formData.climate?.front_windows_opening_electric || ''} onValueChange={(v) => updateNested('climate', 'front_windows_opening_electric', v)} placeholder="Front Windows (Electric)">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.rear_windows_opening || ''} onValueChange={(v) => updateNested('climate', 'rear_windows_opening', v)}>
-              <SelectTrigger><SelectValue placeholder="Rear Windows Opening" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Rear Windows" value={formData.climate?.rear_windows_opening || ''} onValueChange={(v) => updateNested('climate', 'rear_windows_opening', v)} placeholder="Rear Windows Opening">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.climate?.back_window_opening || ''} onValueChange={(v) => updateNested('climate', 'back_window_opening', v)}>
-              <SelectTrigger><SelectValue placeholder="Back Window Opening" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Back Window" value={formData.climate?.back_window_opening || ''} onValueChange={(v) => updateNested('climate', 'back_window_opening', v)} placeholder="Back Window Opening">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.remote_app_access || ''} onValueChange={(v) => updateNested('smart_connected', 'remote_app_access', v)}>
-              <SelectTrigger><SelectValue placeholder="Remote App Access" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Remote App" value={formData.smart_connected?.remote_app_access || ''} onValueChange={(v) => updateNested('smart_connected', 'remote_app_access', v)} placeholder="Remote App Access">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.apple_carplay_android_auto || ''} onValueChange={(v) => updateNested('smart_connected', 'apple_carplay_android_auto', v)}>
-              <SelectTrigger><SelectValue placeholder="CarPlay/Android Auto" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="CarPlay/Auto" value={formData.smart_connected?.apple_carplay_android_auto || ''} onValueChange={(v) => updateNested('smart_connected', 'apple_carplay_android_auto', v)} placeholder="CarPlay/Android Auto">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.navigation_software || ''} onValueChange={(v) => updateNested('smart_connected', 'navigation_software', v)}>
-              <SelectTrigger><SelectValue placeholder="Navigation" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Navigation" value={formData.smart_connected?.navigation_software || ''} onValueChange={(v) => updateNested('smart_connected', 'navigation_software', v)} placeholder="Navigation">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.acc || ''} onValueChange={(v) => updateNested('smart_connected', 'acc', v)}>
-              <SelectTrigger><SelectValue placeholder="ACC" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="ACC" value={formData.smart_connected?.acc || ''} onValueChange={(v) => updateNested('smart_connected', 'acc', v)} placeholder="ACC">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.lane_assist || ''} onValueChange={(v) => updateNested('smart_connected', 'lane_assist', v)}>
-              <SelectTrigger><SelectValue placeholder="Lane Assist" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Lane Assist" value={formData.smart_connected?.lane_assist || ''} onValueChange={(v) => updateNested('smart_connected', 'lane_assist', v)} placeholder="Lane Assist">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.sign_recognition || ''} onValueChange={(v) => updateNested('smart_connected', 'sign_recognition', v)}>
-              <SelectTrigger><SelectValue placeholder="Sign Recognition" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Sign Recognition" value={formData.smart_connected?.sign_recognition || ''} onValueChange={(v) => updateNested('smart_connected', 'sign_recognition', v)} placeholder="Sign Recognition">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.smart_connected?.rear_camera || ''} onValueChange={(v) => updateNested('smart_connected', 'rear_camera', v)}>
-              <SelectTrigger><SelectValue placeholder="Rear Camera" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Rear Camera" value={formData.smart_connected?.rear_camera || ''} onValueChange={(v) => updateNested('smart_connected', 'rear_camera', v)} placeholder="Rear Camera">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.extras?.trailer_hitch || ''} onValueChange={(v) => updateNested('extras', 'trailer_hitch', v)}>
-              <SelectTrigger><SelectValue placeholder="Trailer Hitch" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Trailer Hitch" value={formData.extras?.trailer_hitch || ''} onValueChange={(v) => updateNested('extras', 'trailer_hitch', v)} placeholder="Trailer Hitch">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.extras?.sliding_doors || ''} onValueChange={(v) => updateNested('extras', 'sliding_doors', v)}>
-              <SelectTrigger><SelectValue placeholder="Sliding Doors" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Sliding Doors" value={formData.extras?.sliding_doors || ''} onValueChange={(v) => updateNested('extras', 'sliding_doors', v)} placeholder="Sliding Doors">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={formData.extras?.backdoor || ''} onValueChange={(v) => updateNested('extras', 'backdoor', v)}>
-              <SelectTrigger><SelectValue placeholder="Backdoor" /></SelectTrigger>
+            </LabeledSelect>
+            <LabeledSelect label="Backdoor" value={formData.extras?.backdoor || ''} onValueChange={(v) => updateNested('extras', 'backdoor', v)} placeholder="Backdoor">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input placeholder="Furniture Materials" value={formData.eco_scoring?.furniture_materials || ''} onChange={(e) => updateNested('eco_scoring', 'furniture_materials', e.target.value)} />
-            <Input placeholder="Flooring Material" value={formData.eco_scoring?.flooring_material || ''} onChange={(e) => updateNested('eco_scoring', 'flooring_material', e.target.value)} />
-            <Input placeholder="Insulation Material" value={formData.eco_scoring?.insulation_material || ''} onChange={(e) => updateNested('eco_scoring', 'insulation_material', e.target.value)} />
-            <Input placeholder="Textile Material" value={formData.eco_scoring?.textile_material || ''} onChange={(e) => updateNested('eco_scoring', 'textile_material', e.target.value)} />
+            </LabeledSelect>
+            <LabeledInput label="Furniture" placeholder="Furniture Materials" value={formData.eco_scoring?.furniture_materials || ''} onChange={(e) => updateNested('eco_scoring', 'furniture_materials', e.target.value)} />
+            <LabeledInput label="Flooring" placeholder="Flooring Material" value={formData.eco_scoring?.flooring_material || ''} onChange={(e) => updateNested('eco_scoring', 'flooring_material', e.target.value)} />
+            <LabeledInput label="Insulation Mat" placeholder="Insulation Material" value={formData.eco_scoring?.insulation_material || ''} onChange={(e) => updateNested('eco_scoring', 'insulation_material', e.target.value)} />
+            <LabeledInput label="Textile" placeholder="Textile Material" value={formData.eco_scoring?.textile_material || ''} onChange={(e) => updateNested('eco_scoring', 'textile_material', e.target.value)} />
           </div>
         </TabsContent>
       </Tabs>
