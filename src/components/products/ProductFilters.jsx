@@ -428,11 +428,11 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
               <SlidersHorizontal className="w-5 h-5 mr-2" /> Filters
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="overflow-y-auto">
             <SheetHeader>
               <SheetTitle>Filters</SheetTitle>
             </SheetHeader>
-            <div className="mt-6">
+            <div className="mt-6 pb-6">
               <FilterContent />
             </div>
           </SheetContent>
