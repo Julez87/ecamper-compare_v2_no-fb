@@ -9,19 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from 'lucide-react';
 
-const LabeledInput = ({ label, value, onChange, type, ...props }) => (
+const LabeledInput = ({ label, value, onChange, ...props }) => (
   <div className="relative">
     {value && (
       <>
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>
-        <span className="absolute right-[2.25em] top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
       </>
     )}
     <Input 
-      type={type}
       value={value} 
       onChange={onChange} 
-      className={value ? 'text-transparent text-right' : 'text-right'} 
+      className={value ? 'text-transparent text-right pr-3' : 'text-right'} 
       {...props} 
     />
   </div>
@@ -65,21 +64,6 @@ const RENTAL_COMPANIES = ["Roadsurfer", "Indie Campers", "Campanda", "McRent", "
 export default function CamperAdminForm({ formData, setFormData }) {
   const [newFeature, setNewFeature] = useState('');
   const [newRentalCompany, setNewRentalCompany] = useState('');
-
-  React.useEffect(() => {
-    const styleEl = document.createElement('style');
-    styleEl.textContent = `
-      :root {
-        --input-trailing-gutter: 2.25em;
-      }
-      
-      input[type="number"], input[data-numeric] {
-        padding-right: var(--input-trailing-gutter);
-      }
-    `;
-    document.head.appendChild(styleEl);
-    return () => document.head.removeChild(styleEl);
-  }, []);
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
