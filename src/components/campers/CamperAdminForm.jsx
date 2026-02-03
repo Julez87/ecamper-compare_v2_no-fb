@@ -66,6 +66,21 @@ export default function CamperAdminForm({ formData, setFormData }) {
   const [newFeature, setNewFeature] = useState('');
   const [newRentalCompany, setNewRentalCompany] = useState('');
 
+  React.useEffect(() => {
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+      :root {
+        --input-trailing-gutter: 2.25em;
+      }
+      
+      input[type="number"], input[data-numeric] {
+        padding-right: var(--input-trailing-gutter);
+      }
+    `;
+    document.head.appendChild(styleEl);
+    return () => document.head.removeChild(styleEl);
+  }, []);
+
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
