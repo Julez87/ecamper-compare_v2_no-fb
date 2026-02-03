@@ -14,13 +14,13 @@ const LabeledInput = ({ label, value, onChange, ...props }) => (
     {value && (
       <>
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none">{value}</span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
       </>
     )}
     <Input 
       value={value} 
       onChange={onChange} 
-      className={value ? 'text-transparent' : ''} 
+      className={value ? 'text-transparent text-right pr-3' : 'text-right'} 
       {...props} 
     />
   </div>
@@ -31,11 +31,11 @@ const LabeledSelect = ({ label, value, onValueChange, children, placeholder }) =
     {value && (
       <>
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none z-10">{label}:</span>
-        <span className="absolute right-10 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none z-10">{value}</span>
+        <span className="absolute right-12 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none z-10 text-right">{value}</span>
       </>
     )}
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={value ? '[&>span]:text-transparent' : ''}>
+      <SelectTrigger className={value ? '[&>span]:text-transparent text-right' : 'text-right'}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       {children}
