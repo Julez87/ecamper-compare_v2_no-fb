@@ -9,20 +9,10 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
-  ArrowLeft, Star, Check, X, Scale, Share2, ExternalLink,
-  Cpu, HardDrive, Battery, Monitor, Wifi, Weight
+  ArrowLeft, Star, Check, X, Scale, Share2, Car, Zap, Home, Battery, 
+  BedDouble, Utensils, Droplet, Thermometer, Smartphone
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const specIcons = {
-  processor: Cpu,
-  storage: HardDrive,
-  battery_life: Battery,
-  display_size: Monitor,
-  connectivity: Wifi,
-  weight: Weight,
-  ram: HardDrive
-};
 
 export default function ProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -38,12 +28,12 @@ export default function ProductDetail() {
   });
 
   const { data: relatedProducts = [] } = useQuery({
-    queryKey: ['relatedProducts', product?.category],
+    queryKey: ['relatedProducts', product?.size_category],
     queryFn: async () => {
-      const products = await base44.entities.Product.filter({ category: product.category });
+      const products = await base44.entities.Product.filter({ size_category: product.size_category });
       return products.filter(p => p.id !== productId).slice(0, 4);
     },
-    enabled: !!product?.category
+    enabled: !!product?.size_category
   });
 
   if (isLoading) {
@@ -117,36 +107,36 @@ export default function ProductDetail() {
           >
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Badge className="bg-slate-900 text-white">{product.category}</Badge>
+                <Badge className="bg-slate-900 text-white">{product.size_category}</Badge>
                 {product.is_featured && (
                   <Badge className="bg-violet-600 text-white">Featured</Badge>
                 )}
               </div>
-              <p className="text-slate-500 font-medium uppercase tracking-wide text-sm">{product.brand}</p>
-              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mt-1">{product.name}</h1>
+              <p className="text-slate-500 font-medium uppercase tracking-wide text-sm">
+                {product.base_vehicle?.brand} {product.base_vehicle?.model}
+              </p>
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mt-1">{product.model_name}</h1>
             </div>
 
-            <div className="flex items-center gap-4">
-              {product.rating && (
-                <div className="flex items-center gap-2">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} 
-                      />
-                    ))}
-                  </div>
-                  <span className="font-semibold text-slate-900">{product.rating}</span>
+            <div className="flex flex-wrap gap-3">
+              {product.top_features?.map((feature, i) => (
+                <Badge key={i} variant="secondary" className="bg-amber-50 text-amber-700">{feature}</Badge>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {product.buy_from_price && (
+                <div>
+                  <p className="text-sm text-slate-500">Buy from</p>
+                  <p className="text-2xl font-bold text-slate-900">€{product.buy_from_price?.toLocaleString()}</p>
                 </div>
               )}
-              {product.release_year && (
-                <span className="text-slate-500">Released {product.release_year}</span>
+              {product.rent_from_price && (
+                <div>
+                  <p className="text-sm text-slate-500">Rent from</p>
+                  <p className="text-2xl font-bold text-emerald-600">€{product.rent_from_price}/day</p>
+                </div>
               )}
-            </div>
-
-            <div className="text-4xl font-bold text-slate-900">
-              ${product.price?.toLocaleString()}
             </div>
 
             {product.description && (
@@ -164,70 +154,195 @@ export default function ProductDetail() {
               </Button>
             </div>
 
+            {/* Rental Companies */}
+            {product.rental_companies?.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-slate-700 mb-2">Available at:</p>
+                <div className="flex flex-wrap gap-2">
+                  {product.rental_companies.map((company, i) => (
+                    <Badge key={i} variant="outline" className="px-3 py-1">{company}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Tabs */}
-            <Tabs defaultValue="specs" className="mt-8">
-              <TabsList className="bg-slate-100 p-1 rounded-full">
-                <TabsTrigger value="specs" className="rounded-full px-6">Specifications</TabsTrigger>
-                <TabsTrigger value="pros-cons" className="rounded-full px-6">Pros & Cons</TabsTrigger>
+            <Tabs defaultValue="vehicle" className="mt-8">
+              <TabsList className="bg-slate-100 p-1">
+                <TabsTrigger value="vehicle"><Car className="w-4 h-4 mr-1" /> Vehicle</TabsTrigger>
+                <TabsTrigger value="camper"><Home className="w-4 h-4 mr-1" /> Camper</TabsTrigger>
+                <TabsTrigger value="interior"><Utensils className="w-4 h-4 mr-1" /> Interior</TabsTrigger>
+                <TabsTrigger value="energy"><Battery className="w-4 h-4 mr-1" /> Energy</TabsTrigger>
+                <TabsTrigger value="features"><Smartphone className="w-4 h-4 mr-1" /> Features</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="specs" className="mt-6">
-                <Card className="p-6 border-0 shadow-sm">
-                  <div className="grid grid-cols-2 gap-4">
-                    {product.specs && Object.entries(product.specs).map(([key, value]) => {
-                      if (!value || value === 'N/A') return null;
-                      const Icon = specIcons[key] || Monitor;
-                      return (
-                        <div key={key} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                            <Icon className="w-5 h-5 text-violet-600" />
+              <TabsContent value="vehicle" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  {product.base_vehicle && (
+                    <>
+                      <div className="grid grid-cols-2 gap-4">
+                        {product.base_vehicle.wltp_range_km && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">WLTP Range</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.wltp_range_km} km</p>
                           </div>
-                          <div>
-                            <p className="text-xs text-slate-500 uppercase tracking-wide">
-                              {key.replace(/_/g, ' ')}
-                            </p>
-                            <p className="font-semibold text-slate-900">{value}</p>
+                        )}
+                        {product.base_vehicle.battery_size_kwh && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Battery Size</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.battery_size_kwh} kWh</p>
                           </div>
+                        )}
+                        {product.base_vehicle.kw && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Engine Power</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.kw} kW</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.consumption_kwh_100km && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Consumption</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.consumption_kwh_100km} kWh/100km</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.charging_speed_dc_kw && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">DC Fast Charging</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_dc_kw} kW</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.weight_empty_kg && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Weight</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.weight_empty_kg} kg</p>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="camper" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  {product.camper_data && (
+                    <div className="grid grid-cols-2 gap-4">
+                      {product.camper_data.length_m && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Length</p>
+                          <p className="font-semibold text-slate-900">{product.camper_data.length_m} m</p>
                         </div>
-                      );
-                    })}
+                      )}
+                      {product.camper_data.height_m && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Height</p>
+                          <p className="font-semibold text-slate-900">{product.camper_data.height_m} m</p>
+                        </div>
+                      )}
+                      {product.camper_data.seats && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Seats</p>
+                          <p className="font-semibold text-slate-900">{product.camper_data.seats}</p>
+                        </div>
+                      )}
+                      {product.sleeping?.sleeps && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Sleeps</p>
+                          <p className="font-semibold text-slate-900">{product.sleeping.sleeps}</p>
+                        </div>
+                      )}
+                      {product.camper_data.storage_total_l && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Storage</p>
+                          <p className="font-semibold text-slate-900">{product.camper_data.storage_total_l} L</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="interior" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.kitchen?.fridge_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Fridge</p>
+                        <p className="font-semibold text-slate-900">{product.kitchen.fridge_l} L</p>
+                      </div>
+                    )}
+                    {product.kitchen?.stove_plates && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Stove Plates</p>
+                        <p className="font-semibold text-slate-900">{product.kitchen.stove_plates}</p>
+                      </div>
+                    )}
+                    {product.bathroom?.fresh_water_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Fresh Water</p>
+                        <p className="font-semibold text-slate-900">{product.bathroom.fresh_water_l} L</p>
+                      </div>
+                    )}
+                    {product.bathroom?.toilet_type && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Toilet</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.bathroom.toilet_type}</p>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </TabsContent>
 
-              <TabsContent value="pros-cons" className="mt-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  {product.pros?.length > 0 && (
-                    <Card className="p-6 border-0 shadow-sm">
-                      <h3 className="font-semibold text-green-700 mb-4 flex items-center gap-2">
-                        <Check className="w-5 h-5" /> Pros
-                      </h3>
-                      <ul className="space-y-2">
-                        {product.pros.map((pro, i) => (
-                          <li key={i} className="flex items-start gap-2 text-slate-700">
-                            <Check className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
-                            {pro}
-                          </li>
-                        ))}
-                      </ul>
-                    </Card>
+              <TabsContent value="energy" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  {product.energy && (
+                    <div className="grid grid-cols-2 gap-4">
+                      {product.energy.camping_battery_wh && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Camping Battery</p>
+                          <p className="font-semibold text-slate-900">{product.energy.camping_battery_wh} Wh</p>
+                        </div>
+                      )}
+                      {product.energy.solar_panel_max_w && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
+                          <p className="font-semibold text-slate-900">{product.energy.solar_panel_max_w} W</p>
+                        </div>
+                      )}
+                      {product.energy.usb_c_plugs_livingroom && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">USB-C Ports</p>
+                          <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_livingroom}</p>
+                        </div>
+                      )}
+                    </div>
                   )}
-                  {product.cons?.length > 0 && (
-                    <Card className="p-6 border-0 shadow-sm">
-                      <h3 className="font-semibold text-red-700 mb-4 flex items-center gap-2">
-                        <X className="w-5 h-5" /> Cons
-                      </h3>
-                      <ul className="space-y-2">
-                        {product.cons.map((con, i) => (
-                          <li key={i} className="flex items-start gap-2 text-slate-700">
-                            <X className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
-                            {con}
-                          </li>
-                        ))}
-                      </ul>
-                    </Card>
-                  )}
-                </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="features" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.climate?.ac && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">A/C</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.ac}</p>
+                      </div>
+                    )}
+                    {product.smart_connected?.apple_carplay_android_auto && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">CarPlay/Auto</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.apple_carplay_android_auto}</p>
+                      </div>
+                    )}
+                    {product.smart_connected?.rear_camera && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Rear Camera</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.rear_camera}</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
               </TabsContent>
             </Tabs>
           </motion.div>
@@ -251,9 +366,11 @@ export default function ProductDetail() {
                       )}
                     </div>
                     <div className="p-4">
-                      <p className="text-xs text-slate-500">{p.brand}</p>
-                      <p className="font-medium text-slate-900 truncate">{p.name}</p>
-                      <p className="font-bold text-slate-900 mt-1">${p.price?.toLocaleString()}</p>
+                      <p className="text-xs text-slate-500">{p.base_vehicle?.brand} {p.base_vehicle?.model}</p>
+                      <p className="font-medium text-slate-900 truncate">{p.model_name}</p>
+                      {p.rent_from_price && (
+                        <p className="font-bold text-emerald-600 mt-1">€{p.rent_from_price}/day</p>
+                      )}
                     </div>
                   </Card>
                 </Link>

@@ -8,18 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Plus, X, Star, Check, Trophy, Scale } from 'lucide-react';
+import { ArrowLeft, Plus, X, Trophy, Scale } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const SPEC_LABELS = {
-  display_size: 'Display Size',
-  storage: 'Storage',
-  ram: 'RAM',
-  battery_life: 'Battery Life',
-  processor: 'Processor',
-  connectivity: 'Connectivity',
-  weight: 'Weight'
-};
 
 export default function Compare() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -60,24 +50,28 @@ export default function Compare() {
 
   const availableProducts = allProducts.filter(p => !selectedIds.includes(p.id));
 
-  const getBestValue = (key) => {
+  const getBestValue = (key, higherIsBetter = true) => {
     if (compareProducts.length < 2) return null;
     
-    const values = compareProducts.map(p => {
-      if (key === 'price') return p.price;
-      if (key === 'rating') return p.rating;
-      return p.specs?.[key];
+    let values = [];
+    compareProducts.forEach(p => {
+      let value = null;
+      if (key === 'buy_from_price') value = p.buy_from_price;
+      else if (key === 'rent_from_price') value = p.rent_from_price;
+      else if (key === 'wltp_range_km') value = p.base_vehicle?.wltp_range_km;
+      else if (key === 'battery_size_kwh') value = p.base_vehicle?.battery_size_kwh;
+      else if (key === 'camping_battery_wh') value = p.energy?.camping_battery_wh;
+      else if (key === 'solar_panel_max_w') value = p.energy?.solar_panel_max_w;
+      else if (key === 'sleeps') value = p.sleeping?.sleeps;
+      else if (key === 'fridge_l') value = p.kitchen?.fridge_l;
+      values.push({ id: p.id, value });
     });
 
-    if (key === 'price') {
-      const min = Math.min(...values.filter(v => v != null));
-      return compareProducts.find(p => p.price === min)?.id;
-    }
-    if (key === 'rating') {
-      const max = Math.max(...values.filter(v => v != null));
-      return compareProducts.find(p => p.rating === max)?.id;
-    }
-    return null;
+    const validValues = values.filter(v => v.value != null).map(v => v.value);
+    if (validValues.length === 0) return null;
+
+    const target = higherIsBetter ? Math.max(...validValues) : Math.min(...validValues);
+    return values.find(v => v.value === target)?.id;
   };
 
   const emptySlots = Math.max(0, 2 - compareProducts.length);
@@ -113,7 +107,7 @@ export default function Compare() {
                 <SelectContent>
                   {availableProducts.map(p => (
                     <SelectItem key={p.id} value={p.id}>
-                      {p.brand} {p.name}
+                      {p.model_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -161,67 +155,128 @@ export default function Compare() {
                         )}
                       </div>
 
-                      <Badge className="bg-slate-900 text-white text-xs mb-2">{product.category}</Badge>
-                      <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{product.brand}</p>
-                      <h3 className="font-semibold text-slate-900 text-lg leading-tight">{product.name}</h3>
+                      <Badge className="bg-slate-900 text-white text-xs mb-2">{product.size_category}</Badge>
+                      <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">
+                        {product.base_vehicle?.brand} {product.base_vehicle?.model}
+                      </p>
+                      <h3 className="font-semibold text-slate-900 text-lg leading-tight">{product.model_name}</h3>
                     </div>
 
                     {/* Specs */}
                     <div className="divide-y divide-slate-100">
-                      {/* Price */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('price') === product.id ? 'bg-green-50' : ''}`}>
-                        <span className="text-sm text-slate-600">Price</span>
+                      {/* Buy Price */}
+                      {product.buy_from_price && (
+                        <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
+                          <span className="text-sm text-slate-600">Buy Price</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-900">€{product.buy_from_price?.toLocaleString()}</span>
+                            {getBestValue('buy_from_price', false) === product.id && (
+                              <Trophy className="w-4 h-4 text-green-600" />
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Rent Price */}
+                      {product.rent_from_price && (
+                        <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
+                          <span className="text-sm text-slate-600">Rent per Day</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-emerald-600">€{product.rent_from_price}</span>
+                            {getBestValue('rent_from_price', false) === product.id && (
+                              <Trophy className="w-4 h-4 text-green-600" />
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* WLTP Range */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('wltp_range_km') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">WLTP Range</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-lg text-slate-900">${product.price?.toLocaleString()}</span>
-                          {getBestValue('price') === product.id && (
+                          <span className="font-medium text-slate-900">{product.base_vehicle?.wltp_range_km || '—'} km</span>
+                          {getBestValue('wltp_range_km') === product.id && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
-                      {/* Rating */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('rating') === product.id ? 'bg-green-50' : ''}`}>
-                        <span className="text-sm text-slate-600">Rating</span>
+                      {/* Battery */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('battery_size_kwh') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Vehicle Battery</span>
                         <div className="flex items-center gap-2">
-                          {product.rating ? (
-                            <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                              <span className="font-semibold text-slate-900">{product.rating}</span>
-                            </div>
-                          ) : (
-                            <span className="text-slate-400">—</span>
-                          )}
-                          {getBestValue('rating') === product.id && (
+                          <span className="font-medium text-slate-900">{product.base_vehicle?.battery_size_kwh || '—'} kWh</span>
+                          {getBestValue('battery_size_kwh') === product.id && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
-                      {/* Release Year */}
+                      {/* Camping Battery */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Camping Battery</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">{product.energy?.camping_battery_wh || '—'} Wh</span>
+                          {getBestValue('camping_battery_wh') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Solar Panel */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Solar Panel</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">{product.energy?.solar_panel_max_w || '—'} W</span>
+                          {getBestValue('solar_panel_max_w') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Sleeps */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('sleeps') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Sleeps</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">{product.sleeping?.sleeps || '—'}</span>
+                          {getBestValue('sleeps') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Seats */}
                       <div className="p-4 flex justify-between items-center">
-                        <span className="text-sm text-slate-600">Release Year</span>
-                        <span className="font-medium text-slate-900">{product.release_year || '—'}</span>
+                        <span className="text-sm text-slate-600">Seats</span>
+                        <span className="font-medium text-slate-900">{product.camper_data?.seats || '—'}</span>
                       </div>
 
-                      {/* Specs */}
-                      {Object.entries(SPEC_LABELS).map(([key, label]) => (
-                        <div key={key} className="p-4 flex justify-between items-center">
-                          <span className="text-sm text-slate-600">{label}</span>
-                          <span className="font-medium text-slate-900 text-right">
-                            {product.specs?.[key] || '—'}
-                          </span>
+                      {/* Fridge */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('fridge_l') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Fridge Size</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">{product.kitchen?.fridge_l || '—'} L</span>
+                          {getBestValue('fridge_l') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
                         </div>
-                      ))}
+                      </div>
 
-                      {/* Pros */}
+                      {/* Fresh Water */}
+                      <div className="p-4 flex justify-between items-center">
+                        <span className="text-sm text-slate-600">Fresh Water</span>
+                        <span className="font-medium text-slate-900">{product.bathroom?.fresh_water_l || '—'} L</span>
+                      </div>
+
+                      {/* Features */}
                       <div className="p-4">
-                        <span className="text-sm text-slate-600 block mb-2">Pros</span>
-                        {product.pros?.length > 0 ? (
+                        <span className="text-sm text-slate-600 block mb-2">Top Features</span>
+                        {product.top_features?.length > 0 ? (
                           <ul className="space-y-1">
-                            {product.pros.slice(0, 3).map((pro, i) => (
+                            {product.top_features.slice(0, 3).map((feature, i) => (
                               <li key={i} className="text-sm flex items-start gap-1.5">
                                 <Check className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span className="text-slate-700">{pro}</span>
+                                <span className="text-slate-700">{feature}</span>
                               </li>
                             ))}
                           </ul>
@@ -230,18 +285,15 @@ export default function Compare() {
                         )}
                       </div>
 
-                      {/* Cons */}
+                      {/* Rental Companies */}
                       <div className="p-4">
-                        <span className="text-sm text-slate-600 block mb-2">Cons</span>
-                        {product.cons?.length > 0 ? (
-                          <ul className="space-y-1">
-                            {product.cons.slice(0, 3).map((con, i) => (
-                              <li key={i} className="text-sm flex items-start gap-1.5">
-                                <X className="w-3.5 h-3.5 text-red-500 mt-0.5 flex-shrink-0" />
-                                <span className="text-slate-700">{con}</span>
-                              </li>
+                        <span className="text-sm text-slate-600 block mb-2">Available at</span>
+                        {product.rental_companies?.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {product.rental_companies.map((company, i) => (
+                              <Badge key={i} variant="outline" className="text-xs">{company}</Badge>
                             ))}
-                          </ul>
+                          </div>
                         ) : (
                           <span className="text-slate-400 text-sm">—</span>
                         )}
