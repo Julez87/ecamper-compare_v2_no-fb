@@ -22,57 +22,16 @@ export default function Admin() {
 
   const queryClient = useQueryClient();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === 'admin00') {
-      setIsAuthenticated(true);
-    } else {
-      alert('Incorrect password');
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-0 shadow-lg">
-          <div className="p-8">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Package className="w-8 h-8 text-emerald-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-slate-900">Admin Access</h1>
-              <p className="text-slate-600 mt-2">Enter password to continue</p>
-            </div>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="mt-1"
-                />
-              </div>
-              <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700">
-                Login
-              </Button>
-            </form>
-          </div>
-        </Card>
-      </div>
-    );
-  }
-
   const { data: products = [], isLoading: productsLoading } = useQuery({
     queryKey: ['products'],
     queryFn: () => base44.entities.Product.list(),
+    enabled: isAuthenticated,
   });
 
   const { data: requests = [], isLoading: requestsLoading } = useQuery({
     queryKey: ['requests'],
     queryFn: () => base44.entities.ProductRequest.list(),
+    enabled: isAuthenticated,
   });
 
   const createProduct = useMutation({
@@ -127,7 +86,50 @@ export default function Admin() {
     }
   };
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === 'admin00') {
+      setIsAuthenticated(true);
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
   const pendingRequests = requests.filter(r => r.status === 'pending');
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md border-0 shadow-lg">
+          <div className="p-8">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Package className="w-8 h-8 text-emerald-600" />
+              </div>
+              <h1 className="text-2xl font-bold text-slate-900">Admin Access</h1>
+              <p className="text-slate-600 mt-2">Enter password to continue</p>
+            </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter admin password"
+                  className="mt-1"
+                />
+              </div>
+              <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700">
+                Login
+              </Button>
+            </form>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
