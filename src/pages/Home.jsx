@@ -18,7 +18,13 @@ export default function Home() {
     sizeCategory: 'All',
     brand: 'All',
     priceRange: [0, 5000],
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -180,15 +186,16 @@ export default function Home() {
             </div> :
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onCompare={handleCompare}
-                  isInCompare={compareList.some((p) => p.id === product.id)}
-                  onClick={() => window.location.href = createPageUrl('ProductDetail') + `?id=${product.id}`}
-                />
-              ))}
+              {filteredProducts.map((product) =>
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
+                  <ProductCard
+                product={product}
+                onCompare={handleCompare}
+                isInCompare={compareList.some((p) => p.id === product.id)}
+                onClick={() => {}} />
+
+                </Link>
+            )}
             </div>
           }
         </div>
