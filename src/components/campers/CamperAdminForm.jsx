@@ -14,13 +14,13 @@ const LabeledInput = ({ label, value, onChange, ...props }) => (
     {value && (
       <>
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{label}:</span>
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
+        <span className="absolute right-[2.5em] top-1/2 -translate-y-1/2 text-sm text-slate-900 font-medium pointer-events-none text-right">{value}</span>
       </>
     )}
     <Input 
       value={value} 
       onChange={onChange} 
-      className={value ? 'text-transparent text-right pr-3' : 'text-right'} 
+      className={value ? 'text-transparent text-right pr-[2.5em]' : 'text-right pr-[2.5em]'} 
       {...props} 
     />
   </div>
