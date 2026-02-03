@@ -17,7 +17,7 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
+    priceRange: [0, 150000],
     sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
