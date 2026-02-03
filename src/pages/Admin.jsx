@@ -13,6 +13,7 @@ import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, Extern
 import { format } from 'date-fns';
 import CamperAdminForm from '../components/campers/CamperAdminForm';
 import RentalCompanyForm from '../components/rental/RentalCompanyForm';
+import RequestDetailModal from '../components/requests/RequestDetailModal';
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,6 +24,8 @@ export default function Admin() {
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState(null);
   const [companyForm, setCompanyForm] = useState({});
+  const [viewingRequest, setViewingRequest] = useState(null);
+  const [isRequestDetailOpen, setIsRequestDetailOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -121,6 +124,18 @@ export default function Admin() {
   const closeCompanyModal = () => {
     setIsCompanyModalOpen(false);
     setEditingCompany(null);
+  };
+
+  const handleCopyToAddCamper = (request) => {
+    const expertData = request.expert_mode_data || {};
+    const newProductData = {
+      model_name: request.model_name,
+      size_category: request.size_category,
+      ...expertData
+    };
+    setProductForm(newProductData);
+    setEditingProduct(null);
+    setIsProductModalOpen(true);
   };
 
   const handleSubmit = (e) => {
@@ -291,20 +306,26 @@ export default function Admin() {
                   ) : requests.length === 0 ? (
                     <TableRow><TableCell colSpan={6} className="text-center py-8 text-slate-500">No requests yet</TableCell></TableRow>
                   ) : requests.map(request => (
-                    <TableRow key={request.id}>
-                      <TableCell>
-                        <div>
-                          <span className="font-medium">{request.model_name}</span>
-                          {request.product_url && (
-                            <a href={request.product_url} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex">
-                              <ExternalLink className="w-3 h-3 text-slate-400" />
-                            </a>
-                          )}
-                          {request.reason && (
-                            <p className="text-xs text-slate-500 mt-1 max-w-xs truncate">{request.reason}</p>
-                          )}
-                        </div>
-                      </TableCell>
+                   <TableRow key={request.id} className="cursor-pointer hover:bg-slate-50" onClick={() => {
+                     setViewingRequest(request);
+                     setIsRequestDetailOpen(true);
+                   }}>
+                     <TableCell>
+                       <div>
+                         <span className="font-medium">{request.model_name}</span>
+                         {request.expert_mode_data && Object.keys(request.expert_mode_data).length > 0 && (
+                           <Badge className="ml-2 bg-emerald-100 text-emerald-800 text-xs">Expert</Badge>
+                         )}
+                         {request.product_url && (
+                           <a href={request.product_url.startsWith('http') ? request.product_url : `https://${request.product_url}`} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex" onClick={(e) => e.stopPropagation()}>
+                             <ExternalLink className="w-3 h-3 text-slate-400" />
+                           </a>
+                         )}
+                         {request.reason && (
+                           <p className="text-xs text-slate-500 mt-1 max-w-xs truncate">{request.reason}</p>
+                         )}
+                       </div>
+                     </TableCell>
                       <TableCell>{request.size_category}</TableCell>
                       <TableCell>{request.requester_email || '—'}</TableCell>
                       <TableCell>{request.created_date ? format(new Date(request.created_date), 'MMM d, yyyy') : '—'}</TableCell>
@@ -317,7 +338,7 @@ export default function Admin() {
                           {request.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                         {request.status === 'pending' && (
                           <>
                             <Button variant="ghost" size="icon" onClick={() => updateRequest.mutate({ id: request.id, data: { status: 'approved' } })}>
@@ -418,6 +439,14 @@ export default function Admin() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Request Detail Modal */}
+      <RequestDetailModal
+        request={viewingRequest}
+        isOpen={isRequestDetailOpen}
+        onClose={() => setIsRequestDetailOpen(false)}
+        onCopyToAddCamper={handleCopyToAddCamper}
+      />
 
       {/* Company Modal */}
       <Dialog open={isCompanyModalOpen} onOpenChange={closeCompanyModal}>
