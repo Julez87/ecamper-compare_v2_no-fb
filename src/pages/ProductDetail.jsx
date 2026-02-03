@@ -168,12 +168,14 @@ export default function ProductDetail() {
 
             {/* Tabs */}
             <Tabs defaultValue="vehicle" className="mt-8">
-              <TabsList className="bg-slate-100 p-1">
+              <TabsList className="bg-slate-100 p-1 grid grid-cols-7">
                 <TabsTrigger value="vehicle"><Car className="w-4 h-4 mr-1" /> Vehicle</TabsTrigger>
                 <TabsTrigger value="camper"><Home className="w-4 h-4 mr-1" /> Camper</TabsTrigger>
                 <TabsTrigger value="interior"><Utensils className="w-4 h-4 mr-1" /> Interior</TabsTrigger>
                 <TabsTrigger value="energy"><Battery className="w-4 h-4 mr-1" /> Energy</TabsTrigger>
-                <TabsTrigger value="features"><Smartphone className="w-4 h-4 mr-1" /> Features</TabsTrigger>
+                <TabsTrigger value="climate"><Smartphone className="w-4 h-4 mr-1" /> Climate</TabsTrigger>
+                <TabsTrigger value="smart"><Smartphone className="w-4 h-4 mr-1" /> Smart</TabsTrigger>
+                <TabsTrigger value="extras"><Smartphone className="w-4 h-4 mr-1" /> Extras</TabsTrigger>
               </TabsList>
 
               <TabsContent value="vehicle" className="mt-6">
@@ -181,6 +183,30 @@ export default function ProductDetail() {
                   {product.base_vehicle && (
                     <>
                       <div className="grid grid-cols-2 gap-4">
+                        {product.base_vehicle.brand && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Brand</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.brand}</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.model && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Model</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.model}</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.version && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Version</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.version}</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.model_year && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Model Year</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.model_year}</p>
+                          </div>
+                        )}
                         {product.base_vehicle.wltp_range_km && (
                           <div className="p-3 bg-slate-50 rounded-xl">
                             <p className="text-xs text-slate-500 uppercase">WLTP Range</p>
@@ -205,16 +231,64 @@ export default function ProductDetail() {
                             <p className="font-semibold text-slate-900">{product.base_vehicle.consumption_kwh_100km} kWh/100km</p>
                           </div>
                         )}
+                        {product.base_vehicle.charging_speed_ac_kw && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">AC Charging</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_ac_kw} kW</p>
+                          </div>
+                        )}
                         {product.base_vehicle.charging_speed_dc_kw && (
                           <div className="p-3 bg-slate-50 rounded-xl">
                             <p className="text-xs text-slate-500 uppercase">DC Fast Charging</p>
                             <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_dc_kw} kW</p>
                           </div>
                         )}
+                        {product.base_vehicle.charger_types && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Charger Types</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charger_types}</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.charging_20_80_min && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Charging 20-80%</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_20_80_min} min</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.charging_10_80_min && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Charging 10-80%</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_10_80_min} min</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.charging_10_90_min && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Charging 10-90%</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_10_90_min} min</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.drive && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Drive</p>
+                            <p className="font-semibold text-slate-900 capitalize">{product.base_vehicle.drive}</p>
+                          </div>
+                        )}
                         {product.base_vehicle.weight_empty_kg && (
                           <div className="p-3 bg-slate-50 rounded-xl">
-                            <p className="text-xs text-slate-500 uppercase">Weight</p>
+                            <p className="text-xs text-slate-500 uppercase">Empty Weight</p>
                             <p className="font-semibold text-slate-900">{product.base_vehicle.weight_empty_kg} kg</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.max_additional_weight_kg && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Max Additional Weight</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.max_additional_weight_kg} kg</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.b_license_approved && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">B-License (3.5t)</p>
+                            <p className="font-semibold text-slate-900 capitalize">{product.base_vehicle.b_license_approved}</p>
                           </div>
                         )}
                       </div>
@@ -225,50 +299,162 @@ export default function ProductDetail() {
 
               <TabsContent value="camper" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-4">
-                  {product.camper_data && (
-                    <div className="grid grid-cols-2 gap-4">
-                      {product.camper_data.length_m && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Length</p>
-                          <p className="font-semibold text-slate-900">{product.camper_data.length_m} m</p>
-                        </div>
-                      )}
-                      {product.camper_data.height_m && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Height</p>
-                          <p className="font-semibold text-slate-900">{product.camper_data.height_m} m</p>
-                        </div>
-                      )}
-                      {product.camper_data.seats && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Seats</p>
-                          <p className="font-semibold text-slate-900">{product.camper_data.seats}</p>
-                        </div>
-                      )}
-                      {product.sleeping?.sleeps && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Sleeps</p>
-                          <p className="font-semibold text-slate-900">{product.sleeping.sleeps}</p>
-                        </div>
-                      )}
-                      {product.camper_data.storage_total_l && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Storage</p>
-                          <p className="font-semibold text-slate-900">{product.camper_data.storage_total_l} L</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.camper_data?.camper_range_km && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Camper Range</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.camper_range_km} km</p>
+                      </div>
+                    )}
+                    {product.camper_data?.length_m && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Length</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.length_m} m</p>
+                      </div>
+                    )}
+                    {product.camper_data?.height_m && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Height</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.height_m} m</p>
+                      </div>
+                    )}
+                    {product.camper_data?.width_m && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Width</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.width_m} m</p>
+                      </div>
+                    )}
+                    {product.camper_data?.seats && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Seats</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.seats}</p>
+                      </div>
+                    )}
+                    {product.camper_data?.storage_total_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Total Storage</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.storage_total_l} L</p>
+                      </div>
+                    )}
+                    {product.camper_data?.storage_shelves_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Shelf Storage</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.storage_shelves_l} L</p>
+                      </div>
+                    )}
+                    {product.camper_data?.storage_other_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Other Storage</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.storage_other_l} L</p>
+                      </div>
+                    )}
+                    {product.camper_data?.storage_trunk_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Trunk Storage</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.storage_trunk_l} L</p>
+                      </div>
+                    )}
+                    {product.sleeping?.sleeps && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Sleeps</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.sleeps}</p>
+                      </div>
+                    )}
+                    {product.sleeping?.bed_size_bottom_cm && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Bed Bottom</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.bed_size_bottom_cm} cm</p>
+                      </div>
+                    )}
+                    {product.sleeping?.bed_size_rooftop_cm && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Bed Rooftop</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.bed_size_rooftop_cm} cm</p>
+                      </div>
+                    )}
+                    {product.sleeping?.rooftop_mosquito_nets && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Mosquito Nets</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sleeping.rooftop_mosquito_nets}</p>
+                      </div>
+                    )}
+                    {product.sleeping?.ventilation && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Ventilation</p>
+                        <p className="font-semibold text-slate-900">{product.sleeping.ventilation}</p>
+                      </div>
+                    )}
+                  </div>
                 </Card>
               </TabsContent>
 
               <TabsContent value="interior" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-4">
                   <div className="grid grid-cols-2 gap-4">
+                    {product.sit_lounge?.indoor_table && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Indoor Table</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.indoor_table}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.outdoor_table && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Outdoor Table</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.outdoor_table}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.swivel_front_seats && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Swivel Seats</p>
+                        <p className="font-semibold text-slate-900">{product.sit_lounge.swivel_front_seats}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.indoor_lights && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Indoor Lights</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.indoor_lights}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.curtains && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Curtains</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.curtains}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.awning && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Awning</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.awning}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.tinted_windows && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Tinted Windows</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.tinted_windows}</p>
+                      </div>
+                    )}
+                    {product.sit_lounge?.iso_fix && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">ISO-Fix</p>
+                        <p className="font-semibold text-slate-900">{product.sit_lounge.iso_fix}</p>
+                      </div>
+                    )}
                     {product.kitchen?.fridge_l && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Fridge</p>
                         <p className="font-semibold text-slate-900">{product.kitchen.fridge_l} L</p>
+                      </div>
+                    )}
+                    {product.kitchen?.fridge_type && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Fridge Type</p>
+                        <p className="font-semibold text-slate-900">{product.kitchen.fridge_type}</p>
+                      </div>
+                    )}
+                    {product.kitchen?.stove_type && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Stove Type</p>
+                        <p className="font-semibold text-slate-900">{product.kitchen.stove_type}</p>
                       </div>
                     )}
                     {product.kitchen?.stove_plates && (
@@ -277,10 +463,22 @@ export default function ProductDetail() {
                         <p className="font-semibold text-slate-900">{product.kitchen.stove_plates}</p>
                       </div>
                     )}
-                    {product.bathroom?.fresh_water_l && (
+                    {product.kitchen?.stove_energy_w && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Fresh Water</p>
-                        <p className="font-semibold text-slate-900">{product.bathroom.fresh_water_l} L</p>
+                        <p className="text-xs text-slate-500 uppercase">Stove Energy</p>
+                        <p className="font-semibold text-slate-900">{product.kitchen.stove_energy_w} W</p>
+                      </div>
+                    )}
+                    {product.kitchen?.indoor_cooking && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Indoor Cooking</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.kitchen.indoor_cooking}</p>
+                      </div>
+                    )}
+                    {product.kitchen?.outdoor_cooking && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Outdoor Cooking</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.kitchen.outdoor_cooking}</p>
                       </div>
                     )}
                     {product.bathroom?.toilet_type && (
@@ -289,38 +487,120 @@ export default function ProductDetail() {
                         <p className="font-semibold text-slate-900 capitalize">{product.bathroom.toilet_type}</p>
                       </div>
                     )}
+                    {product.bathroom?.fresh_water_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Fresh Water</p>
+                        <p className="font-semibold text-slate-900">{product.bathroom.fresh_water_l} L</p>
+                      </div>
+                    )}
+                    {product.bathroom?.waste_water_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Waste Water</p>
+                        <p className="font-semibold text-slate-900">{product.bathroom.waste_water_l} L</p>
+                      </div>
+                    )}
+                    {product.bathroom?.warm_water_l && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Warm Water</p>
+                        <p className="font-semibold text-slate-900">{product.bathroom.warm_water_l} L</p>
+                      </div>
+                    )}
+                    {product.bathroom?.shower && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Shower</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.bathroom.shower}</p>
+                      </div>
+                    )}
+                    {product.bathroom?.warm_shower && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Warm Shower</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.bathroom.warm_shower}</p>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </TabsContent>
 
               <TabsContent value="energy" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-4">
-                  {product.energy && (
-                    <div className="grid grid-cols-2 gap-4">
-                      {product.energy.camping_battery_wh && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Camping Battery</p>
-                          <p className="font-semibold text-slate-900">{product.energy.camping_battery_wh} Wh</p>
-                        </div>
-                      )}
-                      {product.energy.solar_panel_max_w && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
-                          <p className="font-semibold text-slate-900">{product.energy.solar_panel_max_w} W</p>
-                        </div>
-                      )}
-                      {product.energy.usb_c_plugs_livingroom && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">USB-C Ports</p>
-                          <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_livingroom}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.energy?.camping_battery_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Camping Battery</p>
+                        <p className="font-semibold text-slate-900">{product.energy.camping_battery_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.solar_panel_max_w && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
+                        <p className="font-semibold text-slate-900">{product.energy.solar_panel_max_w} W</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_solar_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging via Solar</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_solar_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_hv_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging via HV</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_hv_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_driving_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging while Driving</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_driving_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_landline_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging via Landline</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_landline_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.max_battery_output_ac_12v_w && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Max Output AC 12V</p>
+                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_ac_12v_w} W</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_output_plugs_ac && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">AC Plugs</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_ac}</p>
+                      </div>
+                    )}
+                    {product.energy?.max_battery_output_dc_230v && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Max Output DC 230V</p>
+                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_dc_230v}</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_output_plugs_dc && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">DC Plugs</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_dc}</p>
+                      </div>
+                    )}
+                    {product.energy?.usb_c_plugs_front && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">USB-C Front</p>
+                        <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_front}</p>
+                      </div>
+                    )}
+                    {product.energy?.usb_c_plugs_livingroom && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">USB-C Living Room</p>
+                        <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_livingroom}</p>
+                      </div>
+                    )}
+                  </div>
                 </Card>
               </TabsContent>
 
-              <TabsContent value="features" className="mt-6">
+              <TabsContent value="climate" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     {product.climate?.ac && (
@@ -329,16 +609,180 @@ export default function ProductDetail() {
                         <p className="font-semibold text-slate-900 capitalize">{product.climate.ac}</p>
                       </div>
                     )}
+                    {product.climate?.vehicle_climate_programming && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Climate Programming</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.vehicle_climate_programming}</p>
+                      </div>
+                    )}
+                    {product.climate?.vehicle_heating && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Vehicle Heating</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.vehicle_heating}</p>
+                      </div>
+                    )}
+                    {product.climate?.vehicle_cooling && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Vehicle Cooling</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.vehicle_cooling}</p>
+                      </div>
+                    )}
+                    {product.climate?.stand_heating && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Stand Heating</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.stand_heating}</p>
+                      </div>
+                    )}
+                    {product.climate?.living_room_heating && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Living Room Heating</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.living_room_heating}</p>
+                      </div>
+                    )}
+                    {product.climate?.insulation && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Insulation</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.insulation}</p>
+                      </div>
+                    )}
+                    {product.climate?.seat_heating && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Seat Heating</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.seat_heating}</p>
+                      </div>
+                    )}
+                    {product.climate?.steering_wheel_heating && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Steering Wheel Heating</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.steering_wheel_heating}</p>
+                      </div>
+                    )}
+                    {product.climate?.front_windows_opening_electric && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Front Windows</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.front_windows_opening_electric}</p>
+                      </div>
+                    )}
+                    {product.climate?.rear_windows_opening && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Rear Windows</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.rear_windows_opening}</p>
+                      </div>
+                    )}
+                    {product.climate?.back_window_opening && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Back Window</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.climate.back_window_opening}</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="smart" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.smart_connected?.remote_app_access && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Remote App</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.remote_app_access}</p>
+                      </div>
+                    )}
                     {product.smart_connected?.apple_carplay_android_auto && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">CarPlay/Auto</p>
                         <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.apple_carplay_android_auto}</p>
                       </div>
                     )}
+                    {product.smart_connected?.navigation_software && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Navigation</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.navigation_software}</p>
+                      </div>
+                    )}
+                    {product.smart_connected?.acc && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">ACC</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.acc}</p>
+                      </div>
+                    )}
+                    {product.smart_connected?.lane_assist && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Lane Assist</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.lane_assist}</p>
+                      </div>
+                    )}
+                    {product.smart_connected?.sign_recognition && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Sign Recognition</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.sign_recognition}</p>
+                      </div>
+                    )}
                     {product.smart_connected?.rear_camera && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Rear Camera</p>
                         <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.rear_camera}</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="extras" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.extras?.trailer_hitch && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Trailer Hitch</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.extras.trailer_hitch}</p>
+                      </div>
+                    )}
+                    {product.extras?.sliding_doors && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Sliding Doors</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.extras.sliding_doors}</p>
+                      </div>
+                    )}
+                    {product.extras?.backdoor && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Backdoor</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.extras.backdoor}</p>
+                      </div>
+                    )}
+                    {product.eco_scoring?.furniture_materials && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Furniture Materials</p>
+                        <p className="font-semibold text-slate-900">
+                          {product.eco_scoring.furniture_materials}
+                          {product.eco_scoring.furniture_materials_eco && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                        </p>
+                      </div>
+                    )}
+                    {product.eco_scoring?.flooring_material && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Flooring Material</p>
+                        <p className="font-semibold text-slate-900">
+                          {product.eco_scoring.flooring_material}
+                          {product.eco_scoring.flooring_material_eco && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                        </p>
+                      </div>
+                    )}
+                    {product.eco_scoring?.insulation_material && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Insulation Material</p>
+                        <p className="font-semibold text-slate-900">
+                          {product.eco_scoring.insulation_material}
+                          {product.eco_scoring.insulation_material_eco && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                        </p>
+                      </div>
+                    )}
+                    {product.eco_scoring?.textile_material && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Textile Material</p>
+                        <p className="font-semibold text-slate-900">
+                          {product.eco_scoring.textile_material}
+                          {product.eco_scoring.textile_material_eco && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                        </p>
                       </div>
                     )}
                   </div>
