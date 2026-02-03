@@ -38,15 +38,15 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           )}
         </div>
         
-        <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 p-6 flex items-center justify-center">
+        <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
           {product.image_url ? (
             <img 
               src={product.image_url} 
               alt={product.model_name}
-              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
-            <div className="w-32 h-32 bg-slate-200 rounded-2xl flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center bg-slate-200">
               <span className="text-4xl font-bold text-slate-400">🚐</span>
             </div>
           )}
