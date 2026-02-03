@@ -237,8 +237,8 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledInput label="Storage Other (in l)" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
             <LabeledInput label="Storage Trunk (in l)" type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
             <LabeledInput label="Sleeps" type="number" placeholder="Sleeps" value={formData.sleeping?.sleeps || ''} onChange={(e) => updateNested('sleeping', 'sleeps', parseInt(e.target.value))} />
-            <LabeledInput label="Bed Bottom (in cm)" placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
-            <LabeledInput label="Bed Rooftop (in cm)" placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
+            <LabeledInput label="Bed Bottom (b x l in cm)" placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
+            <LabeledInput label="Bed Rooftop (b x l in cm)" placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
             <LabeledSelect label="Mosquito Nets" value={formData.sleeping?.rooftop_mosquito_nets || ''} onValueChange={(v) => updateNested('sleeping', 'rooftop_mosquito_nets', v)} placeholder="Rooftop Mosquito Nets">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
