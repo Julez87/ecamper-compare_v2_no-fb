@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 const SIZE_CATEGORIES = ["All", "Compact", "Standard", "Large", "XL"];
 const BRANDS = ["All", "VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
@@ -110,14 +111,13 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
       </div>
 
       {/* Advanced Filters */}
+      <Separator className="my-6" />
       <Collapsible>
-        <CollapsibleTrigger asChild>
-          <Button variant="outline" className="w-full justify-between">
-            Advanced Filters
-            <ChevronDown className="w-4 h-4" />
-          </Button>
+        <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
+          <span>Advanced Filters</span>
+          <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
-        <CollapsibleContent className="mt-4 space-y-4">
+        <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Vehicle</div>
           <div>
             <label className="text-sm text-slate-600 mb-1.5 block">Model Year</label>
