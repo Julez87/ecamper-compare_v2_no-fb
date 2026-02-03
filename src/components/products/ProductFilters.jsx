@@ -32,8 +32,8 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
   };
 
   const hasActiveFilters = filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' || 
-    filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxBuyPrice || 
-    filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < maxRentPrice ||
+    (filters.purchasePrice && (filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxBuyPrice)) || 
+    (filters.rentalPrice && (filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < maxRentPrice)) ||
     filters.gasFree || filters.ecoMaterials || filters.familyFriendly ||
     Object.keys(filters.advanced || {}).length > 0;
 
@@ -69,10 +69,10 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
 
       <div>
         <label className="text-sm font-medium text-slate-700 mb-3 block">
-          Purchasing Price Range: €{filters.purchasePrice[0].toLocaleString()} - €{filters.purchasePrice[1].toLocaleString()}
+          Purchasing Price Range: €{(filters.purchasePrice?.[0] || 0).toLocaleString()} - €{(filters.purchasePrice?.[1] || maxBuyPrice).toLocaleString()}
         </label>
         <Slider
-          value={filters.purchasePrice}
+          value={filters.purchasePrice || [0, maxBuyPrice]}
           onValueChange={(v) => updateFilter('purchasePrice', v)}
           max={maxBuyPrice}
           step={2500}
@@ -82,10 +82,10 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
 
       <div>
         <label className="text-sm font-medium text-slate-700 mb-3 block">
-          Rental Price Range: €{filters.rentalPrice[0]} - €{filters.rentalPrice[1]}/day
+          Rental Price Range: €{filters.rentalPrice?.[0] || 0} - €{filters.rentalPrice?.[1] || maxRentPrice}/day
         </label>
         <Slider
-          value={filters.rentalPrice}
+          value={filters.rentalPrice || [0, maxRentPrice]}
           onValueChange={(v) => updateFilter('rentalPrice', v)}
           max={maxRentPrice}
           step={5}
