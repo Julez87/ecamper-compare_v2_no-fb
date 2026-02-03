@@ -19,11 +19,7 @@ export default function Home() {
     brand: 'All',
     purchasePrice: [0, 150000],
     rentalPrice: [0, 250],
-    sortBy: 'featured',
-    gasFree: false,
-    ecoMaterials: false,
-    familyFriendly: false,
-    advanced: {}
+    sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -55,7 +51,13 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
+      const rentPrice = p.rent_from_price || 0;
+      return (
+        buyPrice >= filters.purchasePrice[0] &&
+        buyPrice <= filters.purchasePrice[1] &&
+        rentPrice >= filters.rentalPrice[0] &&
+        rentPrice <= filters.rentalPrice[1]
+      );
     });
 
     switch (filters.sortBy) {
@@ -93,7 +95,8 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -142,7 +145,8 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxBuyPrice={maxPrice} />
+          maxBuyPrice={maxBuyPrice}
+          maxRentPrice={maxRentPrice} />
 
 
         <div className="mt-6">
