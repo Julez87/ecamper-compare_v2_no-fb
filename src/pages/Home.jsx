@@ -64,21 +64,33 @@ export default function Home() {
       );
     });
 
-    // Quick filters
+    // Quick filters - matching ProductCard logic
     if (filters.gasFree) {
-      result = result.filter(p => p.kitchen?.stove_type !== 'gas' && p.kitchen?.fridge_type !== 'gas');
+      result = result.filter(p => {
+        const hasGas = 
+          p.kitchen?.stove_type?.toLowerCase() === 'gas' ||
+          p.kitchen?.fridge_type?.toLowerCase() === 'gas' ||
+          p.climate?.stand_heating?.toLowerCase() === 'gas' ||
+          p.climate?.vehicle_heating?.toLowerCase() === 'gas';
+        return !hasGas;
+      });
     }
     if (filters.ecoMaterials) {
-      result = result.filter(p => p.eco_scoring?.furniture_materials_eco === true);
+      result = result.filter(p => 
+        p.eco_scoring?.furniture_materials_eco || 
+        p.eco_scoring?.flooring_material_eco || 
+        p.eco_scoring?.insulation_material_eco || 
+        p.eco_scoring?.textile_material_eco
+      );
     }
     if (filters.familyFriendly) {
-      result = result.filter(p => (p.sleeping?.sleeps && p.sleeping.sleeps >= 4) || (p.sit_lounge?.iso_fix && p.sit_lounge.iso_fix !== 'no'));
+      result = result.filter(p => (p.sleeping?.sleeps || 0) >= 4);
     }
     if (filters.offGrid) {
-      result = result.filter(p => (p.energy?.solar_panel_max_w && p.energy.solar_panel_max_w > 0) && (p.energy?.camping_battery_wh && p.energy.camping_battery_wh > 0));
+      result = result.filter(p => (p.energy?.solar_panel_max_w || 0) >= 100 && (p.energy?.camping_battery_wh || 0) >= 1);
     }
     if (filters.winterReady) {
-      result = result.filter(p => (p.climate?.stand_heating && p.climate.stand_heating !== 'no') && (p.climate?.insulation === 'yes'));
+      result = result.filter(p => p.climate?.insulation === 'yes');
     }
 
     // Advanced filters
