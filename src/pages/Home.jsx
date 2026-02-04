@@ -13,20 +13,22 @@ import RequestProductModal from '@/components/products/RequestProductModal';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  const [filters, setFilters] = useState({
-    search: '',
-    sizeCategory: 'All',
-    brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured'
-  });
-  const [compareList, setCompareList] = useState([]);
-  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: () => base44.entities.Product.list()
   });
+
+  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+
+  const [filters, setFilters] = useState({
+    search: '',
+    sizeCategory: 'All',
+    brand: 'All',
+    priceRange: [0, maxPrice],
+    sortBy: 'featured'
+  });
+  const [compareList, setCompareList] = useState([]);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -50,9 +52,7 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      const minPrice = filters.priceRange?.[0] ?? 0;
-      const maxPrice = filters.priceRange?.[1] ?? Infinity;
-      return buyPrice >= minPrice && buyPrice <= maxPrice;
+      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
     });
 
     switch (filters.sortBy) {
@@ -89,8 +89,6 @@ export default function Home() {
       return [...prev, product];
     });
   };
-
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -183,14 +181,13 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
-            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
-                  <ProductCard
-                product={product}
-                onCompare={handleCompare}
-                isInCompare={compareList.some((p) => p.id === product.id)}
-                onClick={() => {}} />
-
-                </Link>
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onCompare={handleCompare}
+                  isInCompare={compareList.some((p) => p.id === product.id)}
+                  onClick={() => window.location.href = createPageUrl('ProductDetail') + `?id=${product.id}`}
+                />
             )}
             </div>
           }
