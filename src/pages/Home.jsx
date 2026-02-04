@@ -17,8 +17,15 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -48,36 +55,18 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    result = result.filter((p) => {
-      const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });
+    if (filters.purchasePrice) {
+      result = result.filter((p) => {
+        const buyPrice = p.buy_from_price || 0;
+        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
+      });
+    }
 
-    // Quick filters
-    if (filters.gasFree) {
-      result = result.filter((p) => 
-        p.kitchen?.stove_type?.toLowerCase() === 'electric' && 
-        p.climate?.stand_heating?.toLowerCase() === 'electric'
-      );
-    }
-    if (filters.ecoMaterials) {
-      result = result.filter((p) => 
-        p.eco_scoring?.furniture_materials_eco || p.eco_scoring?.flooring_material_eco || 
-        p.eco_scoring?.insulation_material_eco || p.eco_scoring?.textile_material_eco
-      );
-    }
-    if (filters.familyFriendly) {
-      result = result.filter((p) => 
-        (p.sleeping?.sleeps || 0) >= 4 && p.sit_lounge?.iso_fix && p.sit_lounge.iso_fix !== 'no'
-      );
-    }
-    if (filters.offGrid) {
-      result = result.filter((p) => 
-        (p.energy?.solar_panel_max_w || 0) >= 100 && (p.energy?.camping_battery_wh || 0) >= 1
-      );
-    }
-    if (filters.winterReady) {
-      result = result.filter((p) => p.climate?.insulation === 'yes');
+    if (filters.rentalPrice) {
+      result = result.filter((p) => {
+        const rentPrice = p.rent_from_price || 0;
+        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
+      });
     }
 
     switch (filters.sortBy) {
