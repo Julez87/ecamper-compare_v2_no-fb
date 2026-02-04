@@ -20,7 +20,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
   // Check which smart filters apply
   const smartFilters = [];
   
-  if (product.kitchen?.stove_type === 'electric' && product.climate?.stand_heating === 'electric') {
+  if (product.kitchen?.stove_type?.toLowerCase() === 'electric' && product.climate?.stand_heating?.toLowerCase() === 'electric') {
     smartFilters.push({ icon: Wind, label: 'Gas-Free' });
   }
   if (product.eco_scoring?.furniture_materials_eco || product.eco_scoring?.flooring_material_eco || 

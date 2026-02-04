@@ -17,15 +17,8 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    purchasePrice: [0, 150000],
-    rentalPrice: [0, 250],
-    sortBy: 'featured',
-    gasFree: false,
-    ecoMaterials: false,
-    familyFriendly: false,
-    offGrid: false,
-    winterReady: false,
-    advanced: {}
+    priceRange: [0, 5000],
+    sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -55,100 +48,36 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    // Purchase price filter
-    if (filters.purchasePrice) {
-      result = result.filter((p) => {
-        const buyPrice = p.buy_from_price || 0;
-        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
-      });
-    }
-
-    // Rental price filter
-    if (filters.rentalPrice) {
-      result = result.filter((p) => {
-        const rentPrice = p.rent_from_price || 0;
-        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
-      });
-    }
+    result = result.filter((p) => {
+      const buyPrice = p.buy_from_price || 0;
+      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+    });
 
     // Quick filters
     if (filters.gasFree) {
       result = result.filter((p) => 
-        p.kitchen?.stove_type === 'electric' && 
-        p.climate?.stand_heating === 'electric'
+        p.kitchen?.stove_type?.toLowerCase() === 'electric' && 
+        p.climate?.stand_heating?.toLowerCase() === 'electric'
       );
     }
-
     if (filters.ecoMaterials) {
       result = result.filter((p) => 
-        p.eco_scoring?.furniture_materials_eco || 
-        p.eco_scoring?.flooring_material_eco || 
-        p.eco_scoring?.insulation_material_eco || 
-        p.eco_scoring?.textile_material_eco
+        p.eco_scoring?.furniture_materials_eco || p.eco_scoring?.flooring_material_eco || 
+        p.eco_scoring?.insulation_material_eco || p.eco_scoring?.textile_material_eco
       );
     }
-
     if (filters.familyFriendly) {
       result = result.filter((p) => 
-        (p.sleeping?.sleeps || 0) >= 4 && 
-        p.sit_lounge?.iso_fix && 
-        p.sit_lounge.iso_fix !== 'no'
+        (p.sleeping?.sleeps || 0) >= 4 && p.sit_lounge?.iso_fix && p.sit_lounge.iso_fix !== 'no'
       );
     }
-
     if (filters.offGrid) {
       result = result.filter((p) => 
-        (p.energy?.solar_panel_max_w || 0) >= 100 && 
-        (p.energy?.camping_battery_wh || 0) >= 1
+        (p.energy?.solar_panel_max_w || 0) >= 100 && (p.energy?.camping_battery_wh || 0) >= 1
       );
     }
-
     if (filters.winterReady) {
       result = result.filter((p) => p.climate?.insulation === 'yes');
-    }
-
-    // Advanced filters
-    if (filters.advanced?.model_year) {
-      result = result.filter((p) => p.base_vehicle?.model_year >= parseInt(filters.advanced.model_year));
-    }
-    if (filters.advanced?.min_range) {
-      result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= parseInt(filters.advanced.min_range));
-    }
-    if (filters.advanced?.min_battery) {
-      result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= parseInt(filters.advanced.min_battery));
-    }
-    if (filters.advanced?.drive) {
-      result = result.filter((p) => p.base_vehicle?.drive === filters.advanced.drive);
-    }
-    if (filters.advanced?.min_sleeps) {
-      result = result.filter((p) => (p.sleeping?.sleeps || 0) >= parseInt(filters.advanced.min_sleeps));
-    }
-    if (filters.advanced?.min_storage) {
-      result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= parseInt(filters.advanced.min_storage));
-    }
-    if (filters.advanced?.stove_type) {
-      result = result.filter((p) => p.kitchen?.stove_type?.toLowerCase().includes(filters.advanced.stove_type.toLowerCase()));
-    }
-    if (filters.advanced?.min_fridge) {
-      result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= parseInt(filters.advanced.min_fridge));
-    }
-    if (filters.advanced?.toilet_type) {
-      result = result.filter((p) => p.bathroom?.toilet_type === filters.advanced.toilet_type);
-    }
-    if (filters.advanced?.shower) {
-      result = result.filter((p) => p.bathroom?.shower === filters.advanced.shower);
-    }
-    if (filters.advanced?.ac) {
-      result = result.filter((p) => p.climate?.ac === filters.advanced.ac);
-    }
-    if (filters.advanced?.stand_heating) {
-      result = result.filter((p) => p.climate?.stand_heating === filters.advanced.stand_heating);
-    }
-    if (filters.advanced?.carplay) {
-      result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === filters.advanced.carplay);
-    }
-    if (filters.advanced?.rear_camera) {
-      result = result.filter((p) => p.smart_connected?.rear_camera === filters.advanced.rear_camera);
     }
 
     switch (filters.sortBy) {
@@ -235,8 +164,7 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxBuyPrice={maxPrice}
-          maxRentPrice={250} />
+          maxPrice={maxPrice} />
 
 
         <div className="mt-6">
@@ -280,13 +208,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onCompare={handleCompare}
-                  isInCompare={compareList.some((p) => p.id === product.id)}
-                  onClick={() => window.location.href = createPageUrl('ProductDetail') + `?id=${product.id}`}
-                />
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
+                  <ProductCard
+                product={product}
+                onCompare={handleCompare}
+                isInCompare={compareList.some((p) => p.id === product.id)}
+                onClick={() => {}} />
+
+                </Link>
             )}
             </div>
           }

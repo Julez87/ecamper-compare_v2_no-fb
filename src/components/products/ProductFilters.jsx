@@ -356,50 +356,6 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           />
         </div>
 
-        {/* Quick Filters Pills */}
-        <div className="hidden md:flex items-center gap-2 ml-auto">
-          <Button 
-            variant={filters.gasFree ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateFilter('gasFree', !filters.gasFree)}
-            className={filters.gasFree ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-          >
-            <Wind className="w-4 h-4 mr-1" /> Gas-Free
-          </Button>
-          <Button 
-            variant={filters.ecoMaterials ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateFilter('ecoMaterials', !filters.ecoMaterials)}
-            className={filters.ecoMaterials ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-          >
-            <Leaf className="w-4 h-4 mr-1" /> Eco Materials
-          </Button>
-          <Button 
-            variant={filters.familyFriendly ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateFilter('familyFriendly', !filters.familyFriendly)}
-            className={filters.familyFriendly ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-          >
-            <Users className="w-4 h-4 mr-1" /> Family Friendly
-          </Button>
-          <Button 
-            variant={filters.offGrid ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateFilter('offGrid', !filters.offGrid)}
-            className={filters.offGrid ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-          >
-            <Zap className="w-4 h-4 mr-1" /> Off-Grid
-          </Button>
-          <Button 
-            variant={filters.winterReady ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateFilter('winterReady', !filters.winterReady)}
-            className={filters.winterReady ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-          >
-            <Snowflake className="w-4 h-4 mr-1" /> Winter Ready
-          </Button>
-        </div>
-
         {/* Desktop Filters */}
         <div className="hidden lg:flex items-center gap-3">
           <Select value={filters.sizeCategory} onValueChange={(v) => updateFilter('sizeCategory', v)}>
