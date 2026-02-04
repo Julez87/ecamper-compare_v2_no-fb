@@ -50,7 +50,9 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+      const minPrice = filters.priceRange?.[0] ?? 0;
+      const maxPrice = filters.priceRange?.[1] ?? Infinity;
+      return buyPrice >= minPrice && buyPrice <= maxPrice;
     });
 
     switch (filters.sortBy) {
@@ -181,13 +183,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onCompare={handleCompare}
-                  isInCompare={compareList.some((p) => p.id === product.id)}
-                  onClick={() => window.location.href = createPageUrl('ProductDetail') + `?id=${product.id}`}
-                />
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
+                  <ProductCard
+                product={product}
+                onCompare={handleCompare}
+                isInCompare={compareList.some((p) => p.id === product.id)}
+                onClick={() => {}} />
+
+                </Link>
             )}
             </div>
           }
