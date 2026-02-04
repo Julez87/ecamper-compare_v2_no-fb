@@ -20,19 +20,33 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
   // Check which smart filters apply
   const smartFilters = [];
   
-  if (product.kitchen?.stove_type?.toLowerCase() === 'electric' && product.climate?.stand_heating?.toLowerCase() === 'electric') {
+  // Gas-Free: NO gas in fridge, stove, stand heating, or vehicle heating
+  const hasGas = 
+    product.kitchen?.stove_type?.toLowerCase() === 'gas' ||
+    product.kitchen?.fridge_type?.toLowerCase() === 'gas' ||
+    product.climate?.stand_heating?.toLowerCase() === 'gas' ||
+    product.climate?.vehicle_heating?.toLowerCase() === 'gas';
+  if (!hasGas) {
     smartFilters.push({ icon: Wind, label: 'Gas-Free' });
   }
+  
+  // Eco Materials: ANY eco material flag is true
   if (product.eco_scoring?.furniture_materials_eco || product.eco_scoring?.flooring_material_eco || 
       product.eco_scoring?.insulation_material_eco || product.eco_scoring?.textile_material_eco) {
     smartFilters.push({ icon: Leaf, label: 'Eco Materials' });
   }
-  if ((product.sleeping?.sleeps || 0) >= 4 && product.sit_lounge?.iso_fix && product.sit_lounge.iso_fix !== 'no') {
+  
+  // Family Friendly: 4 or more sleeps only
+  if ((product.sleeping?.sleeps || 0) >= 4) {
     smartFilters.push({ icon: Users, label: 'Family Friendly' });
   }
+  
+  // Off-Grid: >= 100W solar and >= 1Wh battery
   if ((product.energy?.solar_panel_max_w || 0) >= 100 && (product.energy?.camping_battery_wh || 0) >= 1) {
     smartFilters.push({ icon: Zap, label: 'Off-Grid' });
   }
+  
+  // Winter Ready: insulation === 'yes' only
   if (product.climate?.insulation === 'yes') {
     smartFilters.push({ icon: Snowflake, label: 'Winter Ready' });
   }
