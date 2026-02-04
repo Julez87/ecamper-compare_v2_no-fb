@@ -112,7 +112,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
 
       {/* Advanced Filters */}
       <Separator className="my-6" />
-      <Collapsible>
+      <Collapsible defaultOpen>
         <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
           <span>Advanced Filters</span>
           <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
