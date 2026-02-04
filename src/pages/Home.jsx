@@ -17,8 +17,15 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -48,10 +55,19 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    result = result.filter((p) => {
-      const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });
+    if (filters.purchasePrice) {
+      result = result.filter((p) => {
+        const buyPrice = p.buy_from_price || 0;
+        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
+      });
+    }
+
+    if (filters.rentalPrice) {
+      result = result.filter((p) => {
+        const rentPrice = p.rent_from_price || 0;
+        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
+      });
+    }
 
     switch (filters.sortBy) {
       case 'price-buy-low':
@@ -181,14 +197,15 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
                   <ProductCard
-                      key={product.id}
-                      product={product}
-                      onCompare={handleCompare}
-                      isInCompare={compareList.some((p) => p.id === product.id)}
-                      onClick={() => window.location.href = createPageUrl('ProductDetail') + `?id=${product.id}`}
-                  />
-              )}
+                product={product}
+                onCompare={handleCompare}
+                isInCompare={compareList.some((p) => p.id === product.id)}
+                onClick={() => {}} />
+
+                </Link>
+            )}
             </div>
           }
         </div>
