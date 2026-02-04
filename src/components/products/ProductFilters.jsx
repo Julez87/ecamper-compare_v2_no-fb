@@ -8,7 +8,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
-const SIZE_CATEGORIES = ["All", "Compact", "Standard", "Large", "XL"];
+const SIZE_CATEGORIES = [
+  { value: "All", label: "All" },
+  { value: "Compact", label: "Size S" },
+  { value: "Standard", label: "Size M" },
+  { value: "Large", label: "Size L" },
+  { value: "XL", label: "Size XL" }
+];
 const BRANDS = ["All", "VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
 
 export default function ProductFilters({ filters, setFilters, maxBuyPrice = 150000, maxRentPrice = 250 }) {
@@ -49,7 +55,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           </SelectTrigger>
           <SelectContent>
             {SIZE_CATEGORIES.map(cat => (
-              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+              <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -340,13 +346,13 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
   return (
     <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 space-y-3">
       <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <Input
-            placeholder="Search products..."
+            placeholder="Search Camper"
             value={filters.search}
             onChange={(e) => updateFilter('search', e.target.value)}
-            className="pl-10 bg-slate-50 border-0 focus-visible:ring-violet-500"
+            className="pl-12 h-12 text-base bg-slate-50 border-0 focus-visible:ring-violet-500"
           />
         </div>
 
@@ -398,11 +404,11 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
         <div className="hidden lg:flex items-center gap-3">
           <Select value={filters.sizeCategory} onValueChange={(v) => updateFilter('sizeCategory', v)}>
             <SelectTrigger className="w-36 bg-white border-slate-200">
-              <SelectValue placeholder="Size" />
+              <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
               {SIZE_CATEGORIES.map(cat => (
-                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -439,10 +445,10 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           )}
         </div>
 
-        {/* Mobile Filter Button */}
+        {/* Filter Button */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" className="lg:hidden border-slate-200">
+            <Button variant="outline" className="border-slate-200 h-12 px-6">
               <SlidersHorizontal className="w-5 h-5 mr-2" /> Filters
             </Button>
           </SheetTrigger>
@@ -457,8 +463,8 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
         </Sheet>
       </div>
 
-      {/* Mobile Quick Filters */}
-      <div className="flex md:hidden items-center gap-2 overflow-x-auto pb-1">
+      {/* Quick Filters - New Row */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
         <Button 
           variant={filters.gasFree ? "default" : "outline"}
           size="sm"
