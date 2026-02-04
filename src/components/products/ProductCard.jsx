@@ -176,6 +176,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             }`}
             onClick={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               onCompare(product);
             }}
           >
