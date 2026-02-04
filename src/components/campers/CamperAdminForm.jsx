@@ -61,6 +61,11 @@ const STOVE_TYPES = ["no", "electric", "gas"];
 const HEATING_OPTIONS = ["no", "electric", "gas"];
 const OUTDOOR_COOKING = ["side", "rear", "no"];
 const TOILET_TYPES = ["chemical", "separation", "no"];
+const WINDOW_OPENING_OPTIONS = ["electric", "manual", "no", "unknown"];
+const TRAILER_HITCH_OPTIONS = ["yes", "no", "retractable", "unknown"];
+const CARPLAY_OPTIONS = ["yes", "no", "cable", "wireless", "unknown"];
+const NAVIGATION_OPTIONS = ["yes", "no", "optional", "unknown"];
+const VEHICLE_COOLING_OPTIONS = ["no", "electric", "unknown"];
 const RENTAL_COMPANIES = ["Roadsurfer", "Indie Campers", "Campanda", "McRent", "Outbase", "Tonke", "Ventje"];
 
 export default function CamperAdminForm({ formData, setFormData }) {
@@ -236,33 +241,36 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledInput label="Seats (persons)" type="number" placeholder="Seats" value={formData.camper_data?.seats || ''} onChange={(e) => updateNested('camper_data', 'seats', parseInt(e.target.value))} />
             <LabeledInput label="Storage Total (in l)" type="number" placeholder="Storage Total (l)" value={formData.camper_data?.storage_total_l || ''} onChange={(e) => updateNested('camper_data', 'storage_total_l', parseInt(e.target.value))} />
             <LabeledInput label="Storage Shelves (in l)" type="number" placeholder="Storage Shelves (l)" value={formData.camper_data?.storage_shelves_l || ''} onChange={(e) => updateNested('camper_data', 'storage_shelves_l', parseInt(e.target.value))} />
-            <LabeledInput label="Storage Other (in l)" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
             <LabeledInput label="Storage Trunk (in l)" type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
+            <LabeledInput label="Storage Other (in l)" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
             <LabeledInput label="Sleeps (persons)" type="number" placeholder="Sleeps" value={formData.sleeping?.sleeps || ''} onChange={(e) => updateNested('sleeping', 'sleeps', parseInt(e.target.value))} />
             <LabeledInput label="Bed Bottom (w x l)" placeholder="Bed Size Bottom (cm)" value={formData.sleeping?.bed_size_bottom_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_bottom_cm', e.target.value)} />
             <LabeledInput label="Bed Rooftop (w x l)" placeholder="Bed Size Rooftop (cm)" value={formData.sleeping?.bed_size_rooftop_cm || ''} onChange={(e) => updateNested('sleeping', 'bed_size_rooftop_cm', e.target.value)} />
-            <LabeledSelect label="Mosquito Nets" value={formData.sleeping?.rooftop_mosquito_nets || ''} onValueChange={(v) => updateNested('sleeping', 'rooftop_mosquito_nets', v)} placeholder="Mosquito Nets">
-              <SelectContent>{MOSQUITO_NETS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </LabeledSelect>
             <LabeledSelect label="Ventilation" value={formData.sleeping?.ventilation || ''} onValueChange={(v) => updateNested('sleeping', 'ventilation', v)} placeholder="Ventilation">
               <SelectContent>{VENTILATION_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            </LabeledSelect>
+            <LabeledSelect label="Mosquito Nets" value={formData.sleeping?.rooftop_mosquito_nets || ''} onValueChange={(v) => updateNested('sleeping', 'rooftop_mosquito_nets', v)} placeholder="Mosquito Nets">
+              <SelectContent>{MOSQUITO_NETS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
           </div>
         </TabsContent>
 
         <TabsContent value="interior" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
+            <LabeledSelect label="Swivel Seats" value={formData.sit_lounge?.swivel_front_seats || ''} onValueChange={(v) => updateNested('sit_lounge', 'swivel_front_seats', v)} placeholder="Swivel Front Seats">
+              <SelectContent>{SWIVEL_SEATS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            </LabeledSelect>
             <LabeledSelect label="Indoor Table" value={formData.sit_lounge?.indoor_table || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_table', v)} placeholder="Indoor Table">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Outdoor Table" value={formData.sit_lounge?.outdoor_table || ''} onValueChange={(v) => updateNested('sit_lounge', 'outdoor_table', v)} placeholder="Outdoor Table">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Swivel Seats" value={formData.sit_lounge?.swivel_front_seats || ''} onValueChange={(v) => updateNested('sit_lounge', 'swivel_front_seats', v)} placeholder="Swivel Front Seats">
-              <SelectContent>{SWIVEL_SEATS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="ISO-Fix" value={formData.sit_lounge?.iso_fix || ''} onValueChange={(v) => updateNested('sit_lounge', 'iso_fix', v)} placeholder="ISO-Fix">
+              <SelectContent>{ISO_FIX_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Indoor Lights" value={formData.sit_lounge?.indoor_lights || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_lights', v)} placeholder="Indoor Lights">
-              <SelectContent>{LIGHTS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="Tinted Windows" value={formData.sit_lounge?.tinted_windows || ''} onValueChange={(v) => updateNested('sit_lounge', 'tinted_windows', v)} placeholder="Tinted Windows">
+              <SelectContent>{TINTED_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Curtains" value={formData.sit_lounge?.curtains || ''} onValueChange={(v) => updateNested('sit_lounge', 'curtains', v)} placeholder="Curtains">
               <SelectContent>{CURTAINS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
@@ -270,16 +278,13 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledSelect label="Awning" value={formData.sit_lounge?.awning || ''} onValueChange={(v) => updateNested('sit_lounge', 'awning', v)} placeholder="Awning">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Tinted Windows" value={formData.sit_lounge?.tinted_windows || ''} onValueChange={(v) => updateNested('sit_lounge', 'tinted_windows', v)} placeholder="Tinted Windows">
-              <SelectContent>{TINTED_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="Indoor Lights" value={formData.sit_lounge?.indoor_lights || ''} onValueChange={(v) => updateNested('sit_lounge', 'indoor_lights', v)} placeholder="Indoor Lights">
+              <SelectContent>{LIGHTS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="ISO-Fix" value={formData.sit_lounge?.iso_fix || ''} onValueChange={(v) => updateNested('sit_lounge', 'iso_fix', v)} placeholder="ISO-Fix">
-              <SelectContent>{ISO_FIX_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </LabeledSelect>
-            <LabeledInput label="Fridge" type="number" placeholder="Fridge (l)" value={formData.kitchen?.fridge_l || ''} onChange={(e) => updateNested('kitchen', 'fridge_l', parseInt(e.target.value))} />
             <LabeledSelect label="Fridge Type" value={formData.kitchen?.fridge_type || ''} onValueChange={(v) => updateNested('kitchen', 'fridge_type', v)} placeholder="Fridge Type">
               <SelectContent>{FRIDGE_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
+            <LabeledInput label="Fridge" type="number" placeholder="Fridge (l)" value={formData.kitchen?.fridge_l || ''} onChange={(e) => updateNested('kitchen', 'fridge_l', parseInt(e.target.value))} />
             <LabeledSelect label="Stove Type" value={formData.kitchen?.stove_type || ''} onValueChange={(v) => updateNested('kitchen', 'stove_type', v)} placeholder="Stove Type">
               <SelectContent>{STOVE_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
@@ -291,9 +296,6 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledSelect label="Outdoor Cooking" value={formData.kitchen?.outdoor_cooking || ''} onValueChange={(v) => updateNested('kitchen', 'outdoor_cooking', v)} placeholder="Outdoor Cooking">
               <SelectContent>{OUTDOOR_COOKING.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Toilet Type" value={formData.bathroom?.toilet_type || ''} onValueChange={(v) => updateNested('bathroom', 'toilet_type', v)} placeholder="Toilet Type">
-              <SelectContent>{TOILET_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </LabeledSelect>
             <LabeledInput label="Fresh Water" type="number" placeholder="Fresh Water (l)" value={formData.bathroom?.fresh_water_l || ''} onChange={(e) => updateNested('bathroom', 'fresh_water_l', parseInt(e.target.value))} />
             <LabeledInput label="Waste Water" type="number" placeholder="Waste Water (l)" value={formData.bathroom?.waste_water_l || ''} onChange={(e) => updateNested('bathroom', 'waste_water_l', parseInt(e.target.value))} />
             <LabeledInput label="Warm Water" type="number" placeholder="Warm Water (l)" value={formData.bathroom?.warm_water_l || ''} onChange={(e) => updateNested('bathroom', 'warm_water_l', parseInt(e.target.value))} />
@@ -303,13 +305,16 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledSelect label="Warm Shower" value={formData.bathroom?.warm_shower || ''} onValueChange={(v) => updateNested('bathroom', 'warm_shower', v)} placeholder="Warm Shower">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
+            <LabeledSelect label="Toilet Type" value={formData.bathroom?.toilet_type || ''} onValueChange={(v) => updateNested('bathroom', 'toilet_type', v)} placeholder="Toilet Type">
+              <SelectContent>{TOILET_TYPES.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            </LabeledSelect>
           </div>
         </TabsContent>
 
         <TabsContent value="energy" className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
             <LabeledInput label="Camping Battery (in kWh)" type="number" placeholder="Camping Battery (Wh)" value={formData.energy?.camping_battery_wh || ''} onChange={(e) => updateNested('energy', 'camping_battery_wh', parseInt(e.target.value))} />
-            <LabeledInput label="Solar Panel (max. kW)" type="number" placeholder="Solar Panel Max (W)" value={formData.energy?.solar_panel_max_w || ''} onChange={(e) => updateNested('energy', 'solar_panel_max_w', parseInt(e.target.value))} />
+            <LabeledInput label="Solar Panel (max. W)" type="number" placeholder="Solar Panel Max (W)" value={formData.energy?.solar_panel_max_w || ''} onChange={(e) => updateNested('energy', 'solar_panel_max_w', parseInt(e.target.value))} />
             <LabeledInput label="Charge via Solar (in kW)" type="number" placeholder="Battery Charging Solar (Wh)" value={formData.energy?.battery_charging_solar_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_solar_wh', parseInt(e.target.value))} />
             <LabeledInput label="Charge via Vehicle Battery (in kW)" type="number" placeholder="Battery Charging HV (Wh)" value={formData.energy?.battery_charging_hv_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_hv_wh', parseInt(e.target.value))} />
             <LabeledInput label="Charge while driving (in kW)" type="number" placeholder="Battery Charging Driving (Wh)" value={formData.energy?.battery_charging_driving_wh || ''} onChange={(e) => updateNested('energy', 'battery_charging_driving_wh', parseInt(e.target.value))} />
@@ -328,14 +333,14 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledSelect label="Air Conditioning" value={formData.climate?.ac || ''} onValueChange={(v) => updateNested('climate', 'ac', v)} placeholder="Air Conditioning">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Climate Program" value={formData.climate?.vehicle_climate_programming || ''} onValueChange={(v) => updateNested('climate', 'vehicle_climate_programming', v)} placeholder="Climate Programming">
+            <LabeledSelect label="Climate Programming" value={formData.climate?.vehicle_climate_programming || ''} onValueChange={(v) => updateNested('climate', 'vehicle_climate_programming', v)} placeholder="Climate Programming">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Vehicle Heating" value={formData.climate?.vehicle_heating || ''} onValueChange={(v) => updateNested('climate', 'vehicle_heating', v)} placeholder="Vehicle Heating">
               <SelectContent>{HEATING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Vehicle Cooling" value={formData.climate?.vehicle_cooling || ''} onValueChange={(v) => updateNested('climate', 'vehicle_cooling', v)} placeholder="Vehicle Cooling">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+              <SelectContent>{VEHICLE_COOLING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Stand Heating" value={formData.climate?.stand_heating || ''} onValueChange={(v) => updateNested('climate', 'stand_heating', v)} placeholder="Stand Heating">
               <SelectContent>{HEATING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
@@ -349,26 +354,26 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledSelect label="Seat Heating" value={formData.climate?.seat_heating || ''} onValueChange={(v) => updateNested('climate', 'seat_heating', v)} placeholder="Seat Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Wheel Heating" value={formData.climate?.steering_wheel_heating || ''} onValueChange={(v) => updateNested('climate', 'steering_wheel_heating', v)} placeholder="Steering Wheel Heating">
+            <LabeledSelect label="Steering Wheel Heating" value={formData.climate?.steering_wheel_heating || ''} onValueChange={(v) => updateNested('climate', 'steering_wheel_heating', v)} placeholder="Steering Wheel Heating">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Front Windows" value={formData.climate?.front_windows_opening_electric || ''} onValueChange={(v) => updateNested('climate', 'front_windows_opening_electric', v)} placeholder="Front Windows (Electric)">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="Front Windows Opening" value={formData.climate?.front_windows_opening_electric || ''} onValueChange={(v) => updateNested('climate', 'front_windows_opening_electric', v)} placeholder="Front Windows Opening">
+              <SelectContent>{WINDOW_OPENING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Rear Windows" value={formData.climate?.rear_windows_opening || ''} onValueChange={(v) => updateNested('climate', 'rear_windows_opening', v)} placeholder="Rear Windows Opening">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="Rear Windows Opening" value={formData.climate?.rear_windows_opening || ''} onValueChange={(v) => updateNested('climate', 'rear_windows_opening', v)} placeholder="Rear Windows Opening">
+              <SelectContent>{WINDOW_OPENING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Back Window" value={formData.climate?.back_window_opening || ''} onValueChange={(v) => updateNested('climate', 'back_window_opening', v)} placeholder="Back Window Opening">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="Back Window Opening" value={formData.climate?.back_window_opening || ''} onValueChange={(v) => updateNested('climate', 'back_window_opening', v)} placeholder="Back Window Opening">
+              <SelectContent>{WINDOW_OPENING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Remote App" value={formData.smart_connected?.remote_app_access || ''} onValueChange={(v) => updateNested('smart_connected', 'remote_app_access', v)} placeholder="Remote App Access">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="CarPlay/Auto" value={formData.smart_connected?.apple_carplay_android_auto || ''} onValueChange={(v) => updateNested('smart_connected', 'apple_carplay_android_auto', v)} placeholder="CarPlay/Android Auto">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            <LabeledSelect label="CarPlay / Android Auto" value={formData.smart_connected?.apple_carplay_android_auto || ''} onValueChange={(v) => updateNested('smart_connected', 'apple_carplay_android_auto', v)} placeholder="CarPlay / Android Auto">
+              <SelectContent>{CARPLAY_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Navigation" value={formData.smart_connected?.navigation_software || ''} onValueChange={(v) => updateNested('smart_connected', 'navigation_software', v)} placeholder="Navigation">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+              <SelectContent>{NAVIGATION_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="ACC" value={formData.smart_connected?.acc || ''} onValueChange={(v) => updateNested('smart_connected', 'acc', v)} placeholder="ACC">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
@@ -383,7 +388,7 @@ export default function CamperAdminForm({ formData, setFormData }) {
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Trailer Hitch" value={formData.extras?.trailer_hitch || ''} onValueChange={(v) => updateNested('extras', 'trailer_hitch', v)} placeholder="Trailer Hitch">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+              <SelectContent>{TRAILER_HITCH_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Sliding Doors" value={formData.extras?.sliding_doors || ''} onValueChange={(v) => updateNested('extras', 'sliding_doors', v)} placeholder="Sliding Doors">
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
@@ -392,28 +397,28 @@ export default function CamperAdminForm({ formData, setFormData }) {
               <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <div>
-              <LabeledInput label="Furniture" placeholder="Furniture Materials" value={formData.eco_scoring?.furniture_materials || ''} onChange={(e) => updateNested('eco_scoring', 'furniture_materials', e.target.value)} />
+              <LabeledInput label="Furniture Materials" placeholder="Furniture Materials" value={formData.eco_scoring?.furniture_materials || ''} onChange={(e) => updateNested('eco_scoring', 'furniture_materials', e.target.value)} />
               <div className="flex items-center gap-2 mt-1.5">
                 <Switch checked={formData.eco_scoring?.furniture_materials_eco || false} onCheckedChange={(v) => updateNested('eco_scoring', 'furniture_materials_eco', v)} />
                 <Label className="text-xs text-slate-600">Eco Material</Label>
               </div>
             </div>
             <div>
-              <LabeledInput label="Flooring" placeholder="Flooring Material" value={formData.eco_scoring?.flooring_material || ''} onChange={(e) => updateNested('eco_scoring', 'flooring_material', e.target.value)} />
+              <LabeledInput label="Flooring Materials" placeholder="Flooring Materials" value={formData.eco_scoring?.flooring_material || ''} onChange={(e) => updateNested('eco_scoring', 'flooring_material', e.target.value)} />
               <div className="flex items-center gap-2 mt-1.5">
                 <Switch checked={formData.eco_scoring?.flooring_material_eco || false} onCheckedChange={(v) => updateNested('eco_scoring', 'flooring_material_eco', v)} />
                 <Label className="text-xs text-slate-600">Eco Material</Label>
               </div>
             </div>
             <div>
-              <LabeledInput label="Insulation Mat" placeholder="Insulation Material" value={formData.eco_scoring?.insulation_material || ''} onChange={(e) => updateNested('eco_scoring', 'insulation_material', e.target.value)} />
+              <LabeledInput label="Insulation Materials" placeholder="Insulation Materials" value={formData.eco_scoring?.insulation_material || ''} onChange={(e) => updateNested('eco_scoring', 'insulation_material', e.target.value)} />
               <div className="flex items-center gap-2 mt-1.5">
                 <Switch checked={formData.eco_scoring?.insulation_material_eco || false} onCheckedChange={(v) => updateNested('eco_scoring', 'insulation_material_eco', v)} />
                 <Label className="text-xs text-slate-600">Eco Material</Label>
               </div>
             </div>
             <div>
-              <LabeledInput label="Textile" placeholder="Textile Material" value={formData.eco_scoring?.textile_material || ''} onChange={(e) => updateNested('eco_scoring', 'textile_material', e.target.value)} />
+              <LabeledInput label="Textile Materials" placeholder="Textile Materials" value={formData.eco_scoring?.textile_material || ''} onChange={(e) => updateNested('eco_scoring', 'textile_material', e.target.value)} />
               <div className="flex items-center gap-2 mt-1.5">
                 <Switch checked={formData.eco_scoring?.textile_material_eco || false} onCheckedChange={(v) => updateNested('eco_scoring', 'textile_material_eco', v)} />
                 <Label className="text-xs text-slate-600">Eco Material</Label>
