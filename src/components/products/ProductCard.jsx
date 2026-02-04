@@ -61,13 +61,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           })}
         </div>
 
-        {product.is_featured && (
-          <div className="absolute bottom-3 right-3 z-10">
-            <Badge className="bg-violet-600 text-white text-xs font-medium px-2 py-0.5">
-              Featured
-            </Badge>
-          </div>
-        )}
+
 
         <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden relative">
           {product.image_url ? (
@@ -80,8 +74,15 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             <div className="w-full h-full flex items-center justify-center bg-slate-200">
               <span className="text-4xl font-bold text-slate-400">🚐</span>
             </div>
-          )}
-        </div>
+            )}
+            {product.is_featured && (
+            <div className="absolute bottom-3 right-3 z-10">
+              <Badge className="bg-violet-600 text-white text-xs font-medium px-2 py-0.5">
+                Featured
+              </Badge>
+            </div>
+            )}
+            </div>
         
         <div className="p-5 flex-1 flex flex-col">
           <div className="flex items-center gap-2 mb-1">
