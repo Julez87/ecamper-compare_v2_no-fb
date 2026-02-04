@@ -55,18 +55,76 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    if (filters.purchasePrice) {
-      result = result.filter((p) => {
-        const buyPrice = p.buy_from_price || 0;
-        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
-      });
+    result = result.filter((p) => {
+      const buyPrice = p.buy_from_price || 0;
+      const rentPrice = p.rent_from_price || 0;
+      return (
+        (buyPrice >= (filters.purchasePrice?.[0] || 0) && buyPrice <= (filters.purchasePrice?.[1] || 150000)) &&
+        (rentPrice >= (filters.rentalPrice?.[0] || 0) && rentPrice <= (filters.rentalPrice?.[1] || 250))
+      );
+    });
+
+    // Quick filters
+    if (filters.gasFree) {
+      result = result.filter(p => p.kitchen?.stove_type !== 'gas' && p.kitchen?.fridge_type !== 'gas');
+    }
+    if (filters.ecoMaterials) {
+      result = result.filter(p => p.eco_scoring?.furniture_materials_eco === true);
+    }
+    if (filters.familyFriendly) {
+      result = result.filter(p => (p.sleeping?.sleeps && p.sleeping.sleeps >= 4) || (p.sit_lounge?.iso_fix && p.sit_lounge.iso_fix !== 'no'));
+    }
+    if (filters.offGrid) {
+      result = result.filter(p => (p.energy?.solar_panel_max_w && p.energy.solar_panel_max_w > 0) && (p.energy?.camping_battery_wh && p.energy.camping_battery_wh > 0));
+    }
+    if (filters.winterReady) {
+      result = result.filter(p => (p.climate?.stand_heating && p.climate.stand_heating !== 'no') && (p.climate?.insulation === 'yes'));
     }
 
-    if (filters.rentalPrice) {
-      result = result.filter((p) => {
-        const rentPrice = p.rent_from_price || 0;
-        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
-      });
+    // Advanced filters
+    if (filters.advanced) {
+      if (filters.advanced.model_year) {
+        result = result.filter(p => p.base_vehicle?.model_year >= parseInt(filters.advanced.model_year));
+      }
+      if (filters.advanced.min_range) {
+        result = result.filter(p => p.camper_data?.camper_range_km >= parseInt(filters.advanced.min_range));
+      }
+      if (filters.advanced.min_battery) {
+        result = result.filter(p => p.base_vehicle?.battery_size_kwh >= parseInt(filters.advanced.min_battery));
+      }
+      if (filters.advanced.drive && filters.advanced.drive !== 'all') {
+        result = result.filter(p => p.base_vehicle?.drive === filters.advanced.drive);
+      }
+      if (filters.advanced.min_sleeps) {
+        result = result.filter(p => p.sleeping?.sleeps >= parseInt(filters.advanced.min_sleeps));
+      }
+      if (filters.advanced.min_storage) {
+        result = result.filter(p => p.camper_data?.storage_total_l >= parseInt(filters.advanced.min_storage));
+      }
+      if (filters.advanced.stove_type && filters.advanced.stove_type !== 'all') {
+        result = result.filter(p => p.kitchen?.stove_type === filters.advanced.stove_type);
+      }
+      if (filters.advanced.min_fridge) {
+        result = result.filter(p => p.kitchen?.fridge_l >= parseInt(filters.advanced.min_fridge));
+      }
+      if (filters.advanced.toilet_type && filters.advanced.toilet_type !== 'all') {
+        result = result.filter(p => p.bathroom?.toilet_type === filters.advanced.toilet_type);
+      }
+      if (filters.advanced.shower && filters.advanced.shower !== 'all') {
+        result = result.filter(p => p.bathroom?.shower === filters.advanced.shower);
+      }
+      if (filters.advanced.ac && filters.advanced.ac !== 'all') {
+        result = result.filter(p => p.climate?.ac === filters.advanced.ac);
+      }
+      if (filters.advanced.stand_heating && filters.advanced.stand_heating !== 'all') {
+        result = result.filter(p => p.climate?.stand_heating === filters.advanced.stand_heating);
+      }
+      if (filters.advanced.carplay && filters.advanced.carplay !== 'all') {
+        result = result.filter(p => (p.smart_connected?.apple_carplay_android_auto === 'yes' || p.smart_connected?.apple_carplay_android_auto === 'wireless' || p.smart_connected?.apple_carplay_android_auto === 'cable'));
+      }
+      if (filters.advanced.rear_camera && filters.advanced.rear_camera !== 'all') {
+        result = result.filter(p => p.smart_connected?.rear_camera === filters.advanced.rear_camera);
+      }
     }
 
     switch (filters.sortBy) {
