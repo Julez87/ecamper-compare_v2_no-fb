@@ -104,7 +104,8 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -153,7 +154,8 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxPrice={maxPrice} />
+          maxBuyPrice={maxBuyPrice}
+          maxRentPrice={maxRentPrice} />
 
 
         <div className="mt-6">
