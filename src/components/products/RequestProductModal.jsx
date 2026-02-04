@@ -427,25 +427,25 @@ export default function RequestProductModal({ isOpen, onClose }) {
                         <Select onValueChange={(v) => updateExpertData('climate', 'vehicle_heating', v)}>
                           <SelectTrigger><SelectValue placeholder="Vehicle Heating" /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">Yes</SelectItem>
                             <SelectItem value="no">No</SelectItem>
-                            <SelectItem value="unknown">Unknown</SelectItem>
+                            <SelectItem value="electric">Electric</SelectItem>
+                            <SelectItem value="gas">Gas</SelectItem>
                           </SelectContent>
                         </Select>
                         <Select onValueChange={(v) => updateExpertData('climate', 'vehicle_cooling', v)}>
                           <SelectTrigger><SelectValue placeholder="Vehicle Cooling" /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">Yes</SelectItem>
                             <SelectItem value="no">No</SelectItem>
+                            <SelectItem value="electric">Electric</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
                         </Select>
                         <Select onValueChange={(v) => updateExpertData('climate', 'stand_heating', v)}>
                           <SelectTrigger><SelectValue placeholder="Stand Heating" /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">Yes</SelectItem>
                             <SelectItem value="no">No</SelectItem>
-                            <SelectItem value="unknown">Unknown</SelectItem>
+                            <SelectItem value="electric">Electric</SelectItem>
+                            <SelectItem value="gas">Gas</SelectItem>
                           </SelectContent>
                         </Select>
                         <Select onValueChange={(v) => updateExpertData('climate', 'living_room_heating', v)}>
@@ -481,9 +481,10 @@ export default function RequestProductModal({ isOpen, onClose }) {
                           </SelectContent>
                         </Select>
                         <Select onValueChange={(v) => updateExpertData('climate', 'front_windows_opening_electric', v)}>
-                          <SelectTrigger><SelectValue placeholder="Front Windows (Electric)" /></SelectTrigger>
+                          <SelectTrigger><SelectValue placeholder="Front Windows Opening" /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">Yes</SelectItem>
+                            <SelectItem value="electric">Electric</SelectItem>
+                            <SelectItem value="manual">Manual</SelectItem>
                             <SelectItem value="no">No</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
@@ -491,7 +492,8 @@ export default function RequestProductModal({ isOpen, onClose }) {
                         <Select onValueChange={(v) => updateExpertData('climate', 'rear_windows_opening', v)}>
                           <SelectTrigger><SelectValue placeholder="Rear Windows Opening" /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">Yes</SelectItem>
+                            <SelectItem value="electric">Electric</SelectItem>
+                            <SelectItem value="manual">Manual</SelectItem>
                             <SelectItem value="no">No</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
@@ -499,7 +501,8 @@ export default function RequestProductModal({ isOpen, onClose }) {
                         <Select onValueChange={(v) => updateExpertData('climate', 'back_window_opening', v)}>
                           <SelectTrigger><SelectValue placeholder="Back Window Opening" /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">Yes</SelectItem>
+                            <SelectItem value="electric">Electric</SelectItem>
+                            <SelectItem value="manual">Manual</SelectItem>
                             <SelectItem value="no">No</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
@@ -518,10 +521,12 @@ export default function RequestProductModal({ isOpen, onClose }) {
                           </SelectContent>
                         </Select>
                         <Select onValueChange={(v) => updateExpertData('smart_connected', 'apple_carplay_android_auto', v)}>
-                          <SelectTrigger><SelectValue placeholder="CarPlay/Android Auto" /></SelectTrigger>
+                          <SelectTrigger><SelectValue placeholder="CarPlay / Android Auto" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="yes">Yes</SelectItem>
                             <SelectItem value="no">No</SelectItem>
+                            <SelectItem value="cable">Cable</SelectItem>
+                            <SelectItem value="wireless">Wireless</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
                         </Select>
@@ -530,6 +535,7 @@ export default function RequestProductModal({ isOpen, onClose }) {
                           <SelectContent>
                             <SelectItem value="yes">Yes</SelectItem>
                             <SelectItem value="no">No</SelectItem>
+                            <SelectItem value="optional">Optional</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
                         </Select>
@@ -570,6 +576,7 @@ export default function RequestProductModal({ isOpen, onClose }) {
                           <SelectContent>
                             <SelectItem value="yes">Yes</SelectItem>
                             <SelectItem value="no">No</SelectItem>
+                            <SelectItem value="retractable">Retractable</SelectItem>
                             <SelectItem value="unknown">Unknown</SelectItem>
                           </SelectContent>
                         </Select>
@@ -590,9 +597,9 @@ export default function RequestProductModal({ isOpen, onClose }) {
                           </SelectContent>
                         </Select>
                         <Input placeholder="Furniture Materials" onChange={(e) => updateExpertData('eco_scoring', 'furniture_materials', e.target.value)} />
-                        <Input placeholder="Flooring Material" onChange={(e) => updateExpertData('eco_scoring', 'flooring_material', e.target.value)} />
-                        <Input placeholder="Insulation Material" onChange={(e) => updateExpertData('eco_scoring', 'insulation_material', e.target.value)} />
-                        <Input placeholder="Textile Material" onChange={(e) => updateExpertData('eco_scoring', 'textile_material', e.target.value)} />
+                        <Input placeholder="Flooring Materials" onChange={(e) => updateExpertData('eco_scoring', 'flooring_material', e.target.value)} />
+                        <Input placeholder="Insulation Materials" onChange={(e) => updateExpertData('eco_scoring', 'insulation_material', e.target.value)} />
+                        <Input placeholder="Textile Materials" onChange={(e) => updateExpertData('eco_scoring', 'textile_material', e.target.value)} />
                       </div>
                     </TabsContent>
                   </Tabs>
