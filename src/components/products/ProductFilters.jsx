@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown } from 'lucide-react';
+import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown, Zap, Snowflake } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -27,6 +27,8 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
       gasFree: false,
       ecoMaterials: false,
       familyFriendly: false,
+      offGrid: false,
+      winterReady: false,
       advanced: {}
     });
   };
@@ -34,7 +36,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
   const hasActiveFilters = filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' || 
     (filters.purchasePrice && (filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxBuyPrice)) || 
     (filters.rentalPrice && (filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < maxRentPrice)) ||
-    filters.gasFree || filters.ecoMaterials || filters.familyFriendly ||
+    filters.gasFree || filters.ecoMaterials || filters.familyFriendly || filters.offGrid || filters.winterReady ||
     Object.keys(filters.advanced || {}).length > 0;
 
   const FilterContent = () => (
@@ -374,6 +376,22 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           >
             <Users className="w-4 h-4 mr-1" /> Family Friendly
           </Button>
+          <Button 
+            variant={filters.offGrid ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateFilter('offGrid', !filters.offGrid)}
+            className={filters.offGrid ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+          >
+            <Zap className="w-4 h-4 mr-1" /> Off-Grid
+          </Button>
+          <Button 
+            variant={filters.winterReady ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateFilter('winterReady', !filters.winterReady)}
+            className={filters.winterReady ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+          >
+            <Snowflake className="w-4 h-4 mr-1" /> Winter Ready
+          </Button>
         </div>
 
         {/* Desktop Filters */}
@@ -464,6 +482,22 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           className={filters.familyFriendly ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
         >
           <Users className="w-4 h-4 mr-1" /> Family Friendly
+        </Button>
+        <Button 
+          variant={filters.offGrid ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateFilter('offGrid', !filters.offGrid)}
+          className={filters.offGrid ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+        >
+          <Zap className="w-4 h-4 mr-1" /> Off-Grid
+        </Button>
+        <Button 
+          variant={filters.winterReady ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateFilter('winterReady', !filters.winterReady)}
+          className={filters.winterReady ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+        >
+          <Snowflake className="w-4 h-4 mr-1" /> Winter Ready
         </Button>
       </div>
     </div>
