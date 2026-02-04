@@ -23,6 +23,8 @@ export default function Home() {
     gasFree: false,
     ecoMaterials: false,
     familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
     advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
@@ -92,6 +94,17 @@ export default function Home() {
         p.sit_lounge?.iso_fix && 
         p.sit_lounge.iso_fix !== 'no'
       );
+    }
+
+    if (filters.offGrid) {
+      result = result.filter((p) => 
+        (p.energy?.solar_panel_max_w || 0) >= 100 && 
+        (p.energy?.camping_battery_wh || 0) >= 1
+      );
+    }
+
+    if (filters.winterReady) {
+      result = result.filter((p) => p.climate?.insulation === 'yes');
     }
 
     // Advanced filters
