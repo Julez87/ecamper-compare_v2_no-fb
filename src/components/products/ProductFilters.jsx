@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown, Zap, Snowflake } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 const SIZE_CATEGORIES = [
   { value: "All", label: "All" },
@@ -17,10 +19,28 @@ const SIZE_CATEGORIES = [
 ];
 const BRANDS = ["All", "VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
 
-export default function ProductFilters({ filters, setFilters, maxBuyPrice = 150000, maxRentPrice = 250 }) {
+export default function ProductFilters({ filters, setFilters, maxBuyPrice = 150000, maxRentPrice = 250, products = [] }) {
+  const [showMoreVehicle, setShowMoreVehicle] = useState(false);
+  const [showMoreCamper, setShowMoreCamper] = useState(false);
+  const [showMoreKitchen, setShowMoreKitchen] = useState(false);
+  const [showMoreBathroom, setShowMoreBathroom] = useState(false);
+  const [showMoreClimate, setShowMoreClimate] = useState(false);
+  const [showMoreSmart, setShowMoreSmart] = useState(false);
+
   const updateFilter = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
+
+  // Extract all available model years from products
+  const availableYears = [...new Set(products
+    .map(p => p.base_vehicle?.model_year)
+    .filter(Boolean)
+  )].sort((a, b) => b - a);
+
+  // Get max range from products
+  const maxRange = Math.max(...products.map(p => p.camper_data?.camper_range_km || 0), 500);
+  const maxStorage = Math.max(...products.map(p => p.camper_data?.storage_total_l || 0), 1000);
+  const maxFridge = Math.max(...products.map(p => p.kitchen?.fridge_l || 0), 100);
 
   const clearFilters = () => {
     setFilters({
@@ -120,43 +140,49 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
 
       {/* Advanced Filters */}
       <Separator className="my-6" />
-      <Collapsible defaultOpen>
+      <Collapsible>
         <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
           <span>Advanced Filters</span>
           <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Vehicle</div>
+          
+          {/* Model Year Pills */}
           <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Model Year</label>
-            <Input 
-              type="number" 
-              placeholder="e.g. 2024"
-              value={filters.advanced?.model_year || ''}
-              onChange={(e) => updateFilter('advanced', {...filters.advanced, model_year: e.target.value})}
-              className="bg-white"
+            <label className="text-sm text-slate-600 mb-2 block">Model Year</label>
+            <div className="flex flex-wrap gap-2">
+              {availableYears.slice(0, showMoreVehicle ? availableYears.length : 6).map(year => (
+                <Badge
+                  key={year}
+                  variant={filters.advanced?.model_year === year ? "default" : "outline"}
+                  className={`cursor-pointer ${filters.advanced?.model_year === year ? 'bg-emerald-600 hover:bg-emerald-700' : 'hover:bg-slate-100'}`}
+                  onClick={() => updateFilter('advanced', {
+                    ...filters.advanced, 
+                    model_year: filters.advanced?.model_year === year ? undefined : year
+                  })}
+                >
+                  {year}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          {/* Min Range Slider */}
+          <div>
+            <label className="text-sm text-slate-600 mb-3 block">
+              Min. Range (realistic): {filters.advanced?.min_range || 0} km
+            </label>
+            <Slider
+              value={[filters.advanced?.min_range || 0]}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_range: v[0]})}
+              max={maxRange}
+              step={10}
+              className="py-2"
             />
           </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Min Range (km)</label>
-            <Input 
-              type="number" 
-              placeholder="e.g. 300"
-              value={filters.advanced?.min_range || ''}
-              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_range: e.target.value})}
-              className="bg-white"
-            />
-          </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Min Battery (kWh)</label>
-            <Input 
-              type="number" 
-              placeholder="e.g. 75"
-              value={filters.advanced?.min_battery || ''}
-              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_battery: e.target.value})}
-              className="bg-white"
-            />
-          </div>
+
+          {/* Drive Type Dropdown */}
           <div>
             <label className="text-sm text-slate-600 mb-1.5 block">Drive Type</label>
             <Select 
@@ -175,58 +201,119 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
             </Select>
           </div>
 
+          {showMoreVehicle && (
+            <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Min Battery (kWh)</label>
+                <Input 
+                  type="number" 
+                  placeholder="e.g. 75"
+                  value={filters.advanced?.min_battery || ''}
+                  onChange={(e) => updateFilter('advanced', {...filters.advanced, min_battery: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+            </>
+          )}
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowMoreVehicle(!showMoreVehicle)}
+            className="w-full text-emerald-600 hover:text-emerald-700"
+          >
+            {showMoreVehicle ? 'Show Less' : 'More'}
+          </Button>
+
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Camper</div>
+
+          {/* Min Storage Slider */}
           <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Min Sleeps</label>
-            <Input 
-              type="number" 
-              placeholder="e.g. 2"
-              value={filters.advanced?.min_sleeps || ''}
-              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_sleeps: e.target.value})}
-              className="bg-white"
+            <label className="text-sm text-slate-600 mb-3 block">
+              Min. Storage: {filters.advanced?.min_storage || 0} L
+            </label>
+            <Slider
+              value={[filters.advanced?.min_storage || 0]}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_storage: v[0]})}
+              max={maxStorage}
+              step={50}
+              className="py-2"
             />
           </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Min Storage (L)</label>
-            <Input 
-              type="number" 
-              placeholder="e.g. 500"
-              value={filters.advanced?.min_storage || ''}
-              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_storage: e.target.value})}
-              className="bg-white"
-            />
-          </div>
+
+          {showMoreCamper && (
+            <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Min Sleeps</label>
+                <Input 
+                  type="number" 
+                  placeholder="e.g. 2"
+                  value={filters.advanced?.min_sleeps || ''}
+                  onChange={(e) => updateFilter('advanced', {...filters.advanced, min_sleeps: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+            </>
+          )}
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowMoreCamper(!showMoreCamper)}
+            className="w-full text-emerald-600 hover:text-emerald-700"
+          >
+            {showMoreCamper ? 'Show Less' : 'More'}
+          </Button>
 
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Kitchen</div>
+
+          {/* Min Fridge Size Slider */}
           <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Stove Type</label>
-            <Select 
-              value={filters.advanced?.stove_type || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, stove_type: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="Electric">Electric</SelectItem>
-                <SelectItem value="Gas">Gas</SelectItem>
-                <SelectItem value="Electric & Gas">Electric & Gas</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Min Fridge Size (L)</label>
-            <Input 
-              type="number" 
-              placeholder="e.g. 40"
-              value={filters.advanced?.min_fridge || ''}
-              onChange={(e) => updateFilter('advanced', {...filters.advanced, min_fridge: e.target.value})}
-              className="bg-white"
+            <label className="text-sm text-slate-600 mb-3 block">
+              Min. Fridge Size: {filters.advanced?.min_fridge || 0} L
+            </label>
+            <Slider
+              value={[filters.advanced?.min_fridge || 0]}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_fridge: v[0]})}
+              max={maxFridge}
+              step={5}
+              className="py-2"
             />
           </div>
 
+          {showMoreKitchen && (
+            <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Stove Type</label>
+                <Select 
+                  value={filters.advanced?.stove_type || 'all'}
+                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, stove_type: v === 'all' ? undefined : v})}
+                >
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                    <SelectItem value="electric">Electric</SelectItem>
+                    <SelectItem value="gas">Gas</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowMoreKitchen(!showMoreKitchen)}
+            className="w-full text-emerald-600 hover:text-emerald-700"
+          >
+            {showMoreKitchen ? 'Show Less' : 'More'}
+          </Button>
+
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Bathroom</div>
+
           <div>
             <label className="text-sm text-slate-600 mb-1.5 block">Toilet Type</label>
             <Select 
@@ -244,58 +331,84 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Shower</label>
-            <Select 
-              value={filters.advanced?.shower || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, shower: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+
+          {showMoreBathroom && (
+            <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Shower</label>
+                <Select 
+                  value={filters.advanced?.shower || 'all'}
+                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, shower: v === 'all' ? undefined : v})}
+                >
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowMoreBathroom(!showMoreBathroom)}
+            className="w-full text-emerald-600 hover:text-emerald-700"
+          >
+            {showMoreBathroom ? 'Show Less' : 'More'}
+          </Button>
 
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Climate</div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Air Conditioning</label>
-            <Select 
-              value={filters.advanced?.ac || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, ac: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Stand Heating</label>
-            <Select 
-              value={filters.advanced?.stand_heating || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, stand_heating: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
+
+          {/* Air Conditioning Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="ac"
+              checked={filters.advanced?.ac === 'yes'}
+              onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, ac: checked ? 'yes' : undefined})}
+            />
+            <label htmlFor="ac" className="text-sm text-slate-600 cursor-pointer">
+              Air Conditioning
+            </label>
           </div>
 
+          {showMoreClimate && (
+            <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Stand Heating</label>
+                <Select 
+                  value={filters.advanced?.stand_heating || 'all'}
+                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, stand_heating: v === 'all' ? undefined : v})}
+                >
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                    <SelectItem value="electric">Electric</SelectItem>
+                    <SelectItem value="gas">Gas</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowMoreClimate(!showMoreClimate)}
+            className="w-full text-emerald-600 hover:text-emerald-700"
+          >
+            {showMoreClimate ? 'Show Less' : 'More'}
+          </Button>
+
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Smart & Connected</div>
+
           <div>
             <label className="text-sm text-slate-600 mb-1.5 block">Apple CarPlay / Android Auto</label>
             <Select 
@@ -308,26 +421,42 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="cable">Cable</SelectItem>
+                <SelectItem value="wireless">Wireless</SelectItem>
                 <SelectItem value="no">No</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Rear Camera</label>
-            <Select 
-              value={filters.advanced?.rear_camera || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, rear_camera: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+
+          {showMoreSmart && (
+            <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Rear Camera</label>
+                <Select 
+                  value={filters.advanced?.rear_camera || 'all'}
+                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, rear_camera: v === 'all' ? undefined : v})}
+                >
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowMoreSmart(!showMoreSmart)}
+            className="w-full text-emerald-600 hover:text-emerald-700"
+          >
+            {showMoreSmart ? 'Show Less' : 'More'}
+          </Button>
         </CollapsibleContent>
       </Collapsible>
 
@@ -419,7 +548,10 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
         </Sheet>
       </div>
 
-      {/* Quick Filters - New Row */}
+      {/* Top Filters Title */}
+      <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Top Filters</div>
+      
+      {/* Quick Filters */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
         <Button 
           variant={filters.gasFree ? "default" : "outline"}
