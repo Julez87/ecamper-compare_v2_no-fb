@@ -195,7 +195,7 @@ export default function ProductDetail() {
                 <TabsTrigger value="camperDetails"><Home className="w-4 h-4 mr-1" /> Camper</TabsTrigger>
                 <TabsTrigger value="interiorDetails"><Sofa className="w-4 h-4 mr-1" /> Interior</TabsTrigger>
                 <TabsTrigger value="energy"><Battery className="w-4 h-4 mr-1" /> Energy</TabsTrigger>
-                <TabsTrigger value="features"><Sparkles className="w-4 h-4 mr-1" /> Features</TabsTrigger>
+                <TabsTrigger value="features"><Sparkles className="w-4 h-4 mr-1" /> Comfort</TabsTrigger>
               </TabsList>
 
               <TabsContent value="baseVehicle" className="mt-6">
