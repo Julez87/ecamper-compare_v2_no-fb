@@ -210,7 +210,7 @@ export default function CamperAdminForm({ formData, setFormData }) {
           <TabsTrigger value="camperDetails">Camper</TabsTrigger>
           <TabsTrigger value="interiorDetails">Interior</TabsTrigger>
           <TabsTrigger value="energy">Energy</TabsTrigger>
-          <TabsTrigger value="features">Features</TabsTrigger>
+          <TabsTrigger value="features">Comfort</TabsTrigger>
         </TabsList>
 
         <TabsContent value="baseVehicle" className="space-y-3 mt-4">
