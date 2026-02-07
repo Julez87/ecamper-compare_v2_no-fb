@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -72,11 +74,15 @@ const PARKING_SENSORS_OPTIONS = ["no", "front", "rear", "front & rear", "unknown
 const HEATED_SEATS_OPTIONS = ["no", "front", "all", "unknown"];
 const SOLAR_PANEL_OPTIONS = ["yes", "no", "unknown"];
 const WARM_WATER_OPTIONS = ["yes", "no", "unknown"];
-const RENTAL_COMPANIES = ["Roadsurfer", "Indie Campers", "Campanda", "McRent", "Outbase", "Tonke", "Ventje"];
 
 export default function CamperAdminForm({ formData, setFormData }) {
   const [newFeature, setNewFeature] = useState('');
   const [newRentalCompany, setNewRentalCompany] = useState('');
+
+  const { data: rentalCompanies = [] } = useQuery({
+    queryKey: ['rentalCompanies'],
+    queryFn: () => base44.entities.RentalCompany.list()
+  });
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -182,7 +188,9 @@ export default function CamperAdminForm({ formData, setFormData }) {
         <div className="flex gap-2 mt-1.5">
           <Select value={newRentalCompany} onValueChange={setNewRentalCompany}>
             <SelectTrigger><SelectValue placeholder="Select company" /></SelectTrigger>
-            <SelectContent>{RENTAL_COMPANIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+            <SelectContent>
+              {rentalCompanies.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+            </SelectContent>
           </Select>
           <Button type="button" variant="outline" onClick={addRentalCompany}><Plus className="w-4 h-4" /></Button>
         </div>
