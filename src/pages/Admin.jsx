@@ -395,10 +395,10 @@ export default function Admin() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">{company.countries?.length || 0}</Badge>
+                        <Badge variant="outline">{company.countries?.length || 0} countries</Badge>
                       </TableCell>
                       <TableCell>
-                        {Object.values(company.locations || {}).reduce((acc, cities) => acc + cities.length, 0)} locations
+                        <Badge variant="outline">{Object.values(company.locations || {}).reduce((acc, cities) => acc + cities.length, 0)} cities</Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{company.available_campers?.length || 0} campers</Badge>
