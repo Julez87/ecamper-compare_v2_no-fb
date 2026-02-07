@@ -518,7 +518,10 @@ export default function ProductDetail() {
                       {product.kitchen?.fridge_type && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Fridge Type</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.kitchen.fridge_type}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.kitchen.fridge_type}
+                            {product.kitchen.fridge_type === 'electric' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.kitchen?.fridge_l && (
@@ -530,7 +533,10 @@ export default function ProductDetail() {
                       {product.kitchen?.stove_type && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Stove Type</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.kitchen.stove_type}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.kitchen.stove_type}
+                            {product.kitchen.stove_type === 'electric' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.kitchen?.stove_plates && (
@@ -602,7 +608,10 @@ export default function ProductDetail() {
                       {product.bathroom?.toilet_type && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Toilet</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.bathroom.toilet_type}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.bathroom.toilet_type}
+                            {product.bathroom.toilet_type === 'separation' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -664,7 +673,10 @@ export default function ProductDetail() {
                     {product.energy?.solar_panel_available && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
-                        <p className="font-semibold text-slate-900 capitalize">{product.energy.solar_panel_available}</p>
+                        <p className="font-semibold text-slate-900 capitalize">
+                          {product.energy.solar_panel_available}
+                          {product.energy.solar_panel_available === 'yes' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                        </p>
                       </div>
                     )}
                     {product.energy?.solar_panel_max_w && (
@@ -757,19 +769,28 @@ export default function ProductDetail() {
                       {product.climate?.vehicle_heating && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Vehicle Heating</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.climate.vehicle_heating}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.climate.vehicle_heating}
+                            {product.climate.vehicle_heating === 'electric' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.climate?.vehicle_cooling && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Vehicle Cooling</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.climate.vehicle_cooling}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.climate.vehicle_cooling}
+                            {product.climate.vehicle_cooling === 'electric' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.climate?.stand_heating && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Stand Heating</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.climate.stand_heating}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.climate.stand_heating}
+                            {product.climate.stand_heating === 'electric' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.climate?.living_room_heating && (
@@ -793,7 +814,10 @@ export default function ProductDetail() {
                       {product.climate?.steering_wheel_heating && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Steering Wheel Heating</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.climate.steering_wheel_heating}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.climate.steering_wheel_heating}
+                            {product.climate.steering_wheel_heating === 'yes' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.climate?.front_windows_opening_electric && (
@@ -817,7 +841,10 @@ export default function ProductDetail() {
                       {product.climate?.heated_seats && (
                        <div className="p-3 bg-slate-50 rounded-xl">
                          <p className="text-xs text-slate-500 uppercase">Heated seats</p>
-                         <p className="font-semibold text-slate-900 capitalize">{product.climate.heated_seats}</p>
+                         <p className="font-semibold text-slate-900 capitalize">
+                           {product.climate.heated_seats}
+                           {(product.climate.heated_seats === 'front' || product.climate.heated_seats === 'all') && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                         </p>
                        </div>
                       )}
                     </div>
