@@ -232,6 +232,13 @@ export default function RequestProductModal({ isOpen, onClose }) {
                         <Input type="number" placeholder="Storage Shelves (L)" onChange={(e) => updateExpertData('camper_data', 'storage_shelves_l', e.target.value)} />
                         <Input type="number" placeholder="Storage Other (L)" onChange={(e) => updateExpertData('camper_data', 'storage_other_l', e.target.value)} />
                         <Input type="number" placeholder="Storage Trunk (L)" onChange={(e) => updateExpertData('camper_data', 'storage_trunk_l', e.target.value)} />
+                        <Select onValueChange={(v) => updateExpertData('camper_data', 'popup_roof', v)}>
+                          <SelectTrigger><SelectValue placeholder="Pop-Up-Roof" /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="yes">Yes</SelectItem>
+                            <SelectItem value="no">No</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <Input type="number" placeholder="Sleeps" onChange={(e) => updateExpertData('sleeping', 'sleeps', e.target.value)} />
                         <Input placeholder="Bed Size Bottom (cm)" onChange={(e) => updateExpertData('sleeping', 'bed_size_bottom_cm', e.target.value)} />
                         <Input placeholder="Bed Size Rooftop (cm)" onChange={(e) => updateExpertData('sleeping', 'bed_size_rooftop_cm', e.target.value)} />

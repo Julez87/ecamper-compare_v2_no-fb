@@ -49,6 +49,7 @@ const SIZE_CATEGORIES = ["Compact", "Standard", "Large", "XL"];
 const BRANDS = ["VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
 const YEARS = Array.from({length: 10}, (_, i) => 2020 + i);
 const YES_NO = ["yes", "no", "unknown"];
+const YES_NO_ONLY = ["yes", "no"];
 const DRIVE_OPTIONS = ["front", "rear", "4x4"];
 const CHARGER_TYPES = ["Type2", "CCS", "Type2 / CCS", "unknown"];
 const VENTILATION_OPTIONS = ["no", "front window", "rear windows", "rooftop window", "unknown"];
@@ -269,6 +270,9 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledInput label="Storage Shelves (in l)" type="number" placeholder="Storage Shelves (l)" value={formData.camper_data?.storage_shelves_l || ''} onChange={(e) => updateNested('camper_data', 'storage_shelves_l', parseInt(e.target.value))} />
             <LabeledInput label="Storage Trunk (in l)" type="number" placeholder="Storage Trunk (l)" value={formData.camper_data?.storage_trunk_l || ''} onChange={(e) => updateNested('camper_data', 'storage_trunk_l', parseInt(e.target.value))} />
             <LabeledInput label="Storage Other (in l)" type="number" placeholder="Storage Other (l)" value={formData.camper_data?.storage_other_l || ''} onChange={(e) => updateNested('camper_data', 'storage_other_l', parseInt(e.target.value))} />
+            <LabeledSelect label="Pop-Up-Roof" value={formData.camper_data?.popup_roof || ''} onValueChange={(v) => updateNested('camper_data', 'popup_roof', v)} placeholder="Pop-Up-Roof">
+              <SelectContent>{YES_NO_ONLY.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+            </LabeledSelect>
           </div>
         </TabsContent>
 

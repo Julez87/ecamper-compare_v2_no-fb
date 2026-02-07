@@ -245,6 +245,18 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
             />
           </div>
 
+          {/* Pop-Up-Roof Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="popup_roof"
+              checked={filters.advanced?.popup_roof === 'yes'}
+              onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, popup_roof: checked ? 'yes' : undefined})}
+            />
+            <label htmlFor="popup_roof" className="text-sm text-slate-600 cursor-pointer">
+              Pop-Up-Roof
+            </label>
+          </div>
+
           {showMoreCamper && (
             <>
               <div>
@@ -415,7 +427,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
       {/* Features Filters */}
       <Collapsible>
         <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
-          <span>Features</span>
+          <span>Comfort</span>
           <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">

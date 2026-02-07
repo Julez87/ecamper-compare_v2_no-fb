@@ -410,6 +410,12 @@ export default function ProductDetail() {
                         <p className="font-semibold text-slate-900">{product.camper_data.storage_other_l} L</p>
                       </div>
                     )}
+                    {product.camper_data?.popup_roof && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Pop-Up-Roof</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.camper_data.popup_roof}</p>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </TabsContent>
