@@ -127,13 +127,13 @@ export default function ProductDetail() {
             <div className="grid grid-cols-2 gap-4">
               {product.buy_from_price && (
                 <div>
-                  <p className="text-sm text-slate-500">Buy from</p>
+                  <p className="text-sm text-slate-500">Buy Price from</p>
                   <p className="text-2xl font-bold text-slate-900">€{product.buy_from_price?.toLocaleString()}</p>
                 </div>
               )}
               {product.rent_from_price && (
                 <div>
-                  <p className="text-sm text-slate-500">Rent from</p>
+                  <p className="text-sm text-slate-500">Rent Price from</p>
                   <p className="text-2xl font-bold text-emerald-600">€{product.rent_from_price}/day</p>
                 </div>
               )}
@@ -228,16 +228,16 @@ export default function ProductDetail() {
                             <p className="font-semibold text-slate-900">{product.base_vehicle.consumption_kwh_100km} kWh/100km</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_speed_ac_kw && (
+                        {product.base_vehicle.charging_speed_ac_w && (
                           <div className="p-3 bg-slate-50 rounded-xl">
                             <p className="text-xs text-slate-500 uppercase">AC Charging</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_ac_kw} kW</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_ac_w} W</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_speed_dc_kw && (
+                        {product.base_vehicle.charging_speed_dc_w && (
                           <div className="p-3 bg-slate-50 rounded-xl">
                             <p className="text-xs text-slate-500 uppercase">DC Fast Charging</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_dc_kw} kW</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_dc_w} W</p>
                           </div>
                         )}
                         {product.base_vehicle.charger_types && (
@@ -246,22 +246,40 @@ export default function ProductDetail() {
                             <p className="font-semibold text-slate-900">{product.base_vehicle.charger_types}</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_20_80_min && (
+                        {product.base_vehicle.dc_fast_charging_20_80_min && (
                           <div className="p-3 bg-slate-50 rounded-xl">
-                            <p className="text-xs text-slate-500 uppercase">Charging 20-80%</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_20_80_min} min</p>
+                            <p className="text-xs text-slate-500 uppercase">DC Fast-Charging 20-80%</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.dc_fast_charging_20_80_min} min</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_10_80_min && (
+                        {product.base_vehicle.dc_fast_charging_10_80_min && (
                           <div className="p-3 bg-slate-50 rounded-xl">
-                            <p className="text-xs text-slate-500 uppercase">Charging 10-80%</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_10_80_min} min</p>
+                            <p className="text-xs text-slate-500 uppercase">DC Fast-Charging 10-80%</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.dc_fast_charging_10_80_min} min</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_10_90_min && (
+                        {product.base_vehicle.dc_fast_charging_10_90_min && (
                           <div className="p-3 bg-slate-50 rounded-xl">
-                            <p className="text-xs text-slate-500 uppercase">Charging 10-90%</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_10_90_min} min</p>
+                            <p className="text-xs text-slate-500 uppercase">DC Fast-Charging 10-90%</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.dc_fast_charging_10_90_min} min</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.max_speed_kmh && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Max. Speed</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.max_speed_kmh} km/h</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.turning_circle_m && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Turning circle</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.turning_circle_m} m</p>
+                          </div>
+                        )}
+                        {product.base_vehicle.ac_slow_charging_min && (
+                          <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">AC Slow-Charging</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.ac_slow_charging_min} min</p>
                           </div>
                         )}
                         {product.base_vehicle.drive && (
@@ -317,26 +335,26 @@ export default function ProductDetail() {
                   <div className="grid grid-cols-2 gap-4">
                     {product.camper_data?.camper_range_km && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Camper Range</p>
+                        <p className="text-xs text-slate-500 uppercase">Range (realistic)</p>
                         <p className="font-semibold text-slate-900">{product.camper_data.camper_range_km} km</p>
                       </div>
                     )}
-                    {product.camper_data?.length_m && (
+                    {product.camper_data?.length_mm && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Length</p>
-                        <p className="font-semibold text-slate-900">{product.camper_data.length_m} m</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.length_mm} mm</p>
                       </div>
                     )}
-                    {product.camper_data?.height_m && (
+                    {product.camper_data?.height_mm && (
                       <div className="p-3 bg-slate-50 rounded-xl">
                         <p className="text-xs text-slate-500 uppercase">Height</p>
-                        <p className="font-semibold text-slate-900">{product.camper_data.height_m} m</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.height_mm} mm</p>
                       </div>
                     )}
-                    {product.camper_data?.width_m && (
+                    {product.camper_data?.width_mm && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Width</p>
-                        <p className="font-semibold text-slate-900">{product.camper_data.width_m} m</p>
+                        <p className="text-xs text-slate-500 uppercase">Max. width</p>
+                        <p className="font-semibold text-slate-900">{product.camper_data.width_mm} mm</p>
                       </div>
                     )}
                     {product.camper_data?.seats && (
@@ -534,6 +552,12 @@ export default function ProductDetail() {
                           <p className="font-semibold text-slate-900">{product.bathroom.warm_water_l} L</p>
                         </div>
                       )}
+                      {product.bathroom?.warm_water_available && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Warm water</p>
+                          <p className="font-semibold text-slate-900 capitalize">{product.bathroom.warm_water_available}</p>
+                        </div>
+                      )}
                       {product.bathroom?.shower && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Shower</p>
@@ -671,10 +695,16 @@ export default function ProductDetail() {
                         </div>
                       )}
                       {product.climate?.back_window_opening && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Back Window Opening</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.climate.back_window_opening}</p>
-                        </div>
+                       <div className="p-3 bg-slate-50 rounded-xl">
+                         <p className="text-xs text-slate-500 uppercase">Back Window Opening</p>
+                         <p className="font-semibold text-slate-900 capitalize">{product.climate.back_window_opening}</p>
+                       </div>
+                      )}
+                      {product.climate?.heated_seats && (
+                       <div className="p-3 bg-slate-50 rounded-xl">
+                         <p className="text-xs text-slate-500 uppercase">Heated seats</p>
+                         <p className="font-semibold text-slate-900 capitalize">{product.climate.heated_seats}</p>
+                       </div>
                       )}
                     </div>
                   </div>
@@ -688,6 +718,12 @@ export default function ProductDetail() {
                         <p className="font-semibold text-slate-900">{product.energy.camping_battery_wh} Wh</p>
                       </div>
                     )}
+                      {product.energy?.solar_panel_available && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
+                          <p className="font-semibold text-slate-900 capitalize">{product.energy.solar_panel_available}</p>
+                        </div>
+                      )}
                       {product.energy?.solar_panel_max_w && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Solar Panel (max. W)</p>
@@ -708,8 +744,8 @@ export default function ProductDetail() {
                     )}
                     {product.energy?.battery_charging_driving_wh && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Charging while Driving</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_driving_wh} Wh</p>
+                        <p className="text-xs text-slate-500 uppercase">Charge while driving</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_driving_wh} W</p>
                       </div>
                     )}
                     {product.energy?.battery_charging_landline_wh && (
@@ -720,7 +756,7 @@ export default function ProductDetail() {
                     )}
                     {product.energy?.max_battery_output_ac_12v_w && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Max Output AC 12V</p>
+                        <p className="text-xs text-slate-500 uppercase">Max. Output AC 12V</p>
                         <p className="font-semibold text-slate-900">{product.energy.max_battery_output_ac_12v_w} W</p>
                       </div>
                     )}
@@ -730,10 +766,10 @@ export default function ProductDetail() {
                         <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_ac}</p>
                       </div>
                     )}
-                    {product.energy?.max_battery_output_dc_230v && (
+                    {product.energy?.max_battery_output_dc_230v_w && (
                       <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Max Output DC 230V</p>
-                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_dc_230v}</p>
+                        <p className="text-xs text-slate-500 uppercase">Max. Output DC 230V</p>
+                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_dc_230v_w} W</p>
                       </div>
                     )}
                     {product.energy?.battery_output_plugs_dc && (
@@ -778,10 +814,16 @@ export default function ProductDetail() {
                           <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.navigation_software}</p>
                         </div>
                       )}
-                      {product.smart_connected?.acc && (
+                      {product.smart_connected?.cruise_control && (
                         <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">ACC</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.acc}</p>
+                          <p className="text-xs text-slate-500 uppercase">Cruise Control</p>
+                          <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.cruise_control}</p>
+                        </div>
+                      )}
+                      {product.smart_connected?.parking_sensors && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Parking Sensors</p>
+                          <p className="font-semibold text-slate-900 capitalize">{product.smart_connected.parking_sensors}</p>
                         </div>
                       )}
                       {product.smart_connected?.lane_assist && (

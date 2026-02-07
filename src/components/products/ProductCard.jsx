@@ -123,18 +123,18 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           )}
           
           <div className="space-y-2 mb-4 mt-auto">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs text-slate-500">Buy from</span>
-              <span className="text-xl font-bold text-slate-900">
-                €{product.buy_from_price?.toLocaleString() || '—'}
-              </span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs text-slate-500">Rent from</span>
-              <span className="text-lg font-semibold text-emerald-600">
-                €{product.rent_from_price?.toLocaleString() || '—'}/day
-              </span>
-            </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs text-slate-500">Buy Price from</span>
+            <span className="text-xl font-bold text-slate-900">
+              €{product.buy_from_price?.toLocaleString() || '—'}
+            </span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs text-slate-500">Rent Price from</span>
+            <span className="text-lg font-semibold text-emerald-600">
+              €{product.rent_from_price?.toLocaleString() || '—'}/day
+            </span>
+          </div>
           </div>
           
           {/* Rental Companies */}
