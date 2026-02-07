@@ -94,7 +94,7 @@ export default function ProductDetail() {
           </Button>
         </Link>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
           {/* Product Image */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -181,9 +181,15 @@ export default function ProductDetail() {
                 </div>
               </div>
             )}
+          </motion.div>
+        </div>
 
-            {/* Tabs */}
-            <Tabs defaultValue="vehicle" className="mt-8">
+        {/* Tabs - Full Width */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Tabs defaultValue="vehicle" className="w-full">
               <TabsList className="bg-slate-100 p-1 grid grid-cols-4">
                 <TabsTrigger value="vehicle"><Car className="w-4 h-4 mr-1" /> Vehicle</TabsTrigger>
                 <TabsTrigger value="camper"><Home className="w-4 h-4 mr-1" /> Camper</TabsTrigger>
@@ -865,8 +871,7 @@ export default function ProductDetail() {
                 </Card>
               </TabsContent>
             </Tabs>
-          </motion.div>
-        </div>
+        </motion.div>
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
