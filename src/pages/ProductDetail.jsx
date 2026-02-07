@@ -251,16 +251,16 @@ export default function ProductDetail() {
                             <p className="font-semibold text-slate-900">{product.base_vehicle.consumption_kwh_100km} kWh/100km</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_speed_ac_w && (
+                        {product.base_vehicle.charging_speed_ac_kw && (
                           <div className="p-3 bg-slate-50 rounded-xl">
-                            <p className="text-xs text-slate-500 uppercase">AC Charging</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_ac_w} W</p>
+                            <p className="text-xs text-slate-500 uppercase">AC Slow-Charge (max. kW)</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_ac_kw} kW</p>
                           </div>
                         )}
-                        {product.base_vehicle.charging_speed_dc_w && (
+                        {product.base_vehicle.charging_speed_dc_kw && (
                           <div className="p-3 bg-slate-50 rounded-xl">
-                            <p className="text-xs text-slate-500 uppercase">DC Fast Charging</p>
-                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_dc_w} W</p>
+                            <p className="text-xs text-slate-500 uppercase">DC Fast-Charge (max. kW)</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.charging_speed_dc_kw} kW</p>
                           </div>
                         )}
                         {product.base_vehicle.charger_types && (
