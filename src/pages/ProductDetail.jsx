@@ -189,15 +189,16 @@ export default function ProductDetail() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Tabs defaultValue="vehicle" className="w-full">
-              <TabsList className="bg-slate-100 p-1 grid grid-cols-4">
-                <TabsTrigger value="vehicle"><Car className="w-4 h-4 mr-1" /> Vehicle</TabsTrigger>
-                <TabsTrigger value="camper"><Home className="w-4 h-4 mr-1" /> Camper</TabsTrigger>
-                <TabsTrigger value="interior"><Sofa className="w-4 h-4 mr-1" /> Interior</TabsTrigger>
+          <Tabs defaultValue="baseVehicle" className="w-full">
+              <TabsList className="bg-slate-100 p-1 grid grid-cols-5">
+                <TabsTrigger value="baseVehicle"><Car className="w-4 h-4 mr-1" /> Base Vehicle</TabsTrigger>
+                <TabsTrigger value="camperDetails"><Home className="w-4 h-4 mr-1" /> Camper</TabsTrigger>
+                <TabsTrigger value="interiorDetails"><Sofa className="w-4 h-4 mr-1" /> Interior</TabsTrigger>
+                <TabsTrigger value="energy"><Battery className="w-4 h-4 mr-1" /> Energy</TabsTrigger>
                 <TabsTrigger value="features"><Sparkles className="w-4 h-4 mr-1" /> Features</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="vehicle" className="mt-6">
+              <TabsContent value="baseVehicle" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-4">
                   {product.base_vehicle && (
                     <>
@@ -352,7 +353,7 @@ export default function ProductDetail() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="camper" className="mt-6">
+              <TabsContent value="camperDetails" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     {product.camper_data?.camper_range_km && (
@@ -413,8 +414,44 @@ export default function ProductDetail() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="interior" className="mt-6">
+              <TabsContent value="interiorDetails" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-6">
+                  <div>
+                    <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Sleeping</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {product.sleeping?.sleeps && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Sleeps</p>
+                          <p className="font-semibold text-slate-900">{product.sleeping.sleeps} persons</p>
+                        </div>
+                      )}
+                      {product.sleeping?.bed_size_bottom_cm && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Bed Bottom (w x l)</p>
+                          <p className="font-semibold text-slate-900">{product.sleeping.bed_size_bottom_cm}</p>
+                        </div>
+                      )}
+                      {product.sleeping?.bed_size_rooftop_cm && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Bed Rooftop (w x l)</p>
+                          <p className="font-semibold text-slate-900">{product.sleeping.bed_size_rooftop_cm}</p>
+                        </div>
+                      )}
+                      {product.sleeping?.ventilation && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Ventilation</p>
+                          <p className="font-semibold text-slate-900">{product.sleeping.ventilation}</p>
+                        </div>
+                      )}
+                      {product.sleeping?.rooftop_mosquito_nets && (
+                        <div className="p-3 bg-slate-50 rounded-xl">
+                          <p className="text-xs text-slate-500 uppercase">Mosquito Nets</p>
+                          <p className="font-semibold text-slate-900 capitalize">{product.sleeping.rooftop_mosquito_nets}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div>
                     <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Sitting & Lounging</h3>
                     <div className="grid grid-cols-2 gap-4">
@@ -464,42 +501,6 @@ export default function ProductDetail() {
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Indoor Lights</p>
                           <p className="font-semibold text-slate-900 capitalize">{product.sit_lounge.indoor_lights}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Sleeping</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {product.sleeping?.sleeps && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Sleeps</p>
-                          <p className="font-semibold text-slate-900">{product.sleeping.sleeps} persons</p>
-                        </div>
-                      )}
-                      {product.sleeping?.bed_size_bottom_cm && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Bed Bottom (w x l)</p>
-                          <p className="font-semibold text-slate-900">{product.sleeping.bed_size_bottom_cm}</p>
-                        </div>
-                      )}
-                      {product.sleeping?.bed_size_rooftop_cm && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Bed Rooftop (w x l)</p>
-                          <p className="font-semibold text-slate-900">{product.sleeping.bed_size_rooftop_cm}</p>
-                        </div>
-                      )}
-                      {product.sleeping?.ventilation && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Ventilation</p>
-                          <p className="font-semibold text-slate-900">{product.sleeping.ventilation}</p>
-                        </div>
-                      )}
-                      {product.sleeping?.rooftop_mosquito_nets && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Mosquito Nets</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.sleeping.rooftop_mosquito_nets}</p>
                         </div>
                       )}
                     </div>
@@ -645,6 +646,91 @@ export default function ProductDetail() {
                 </Card>
               </TabsContent>
 
+              <TabsContent value="energy" className="mt-6">
+                <Card className="p-6 border-0 shadow-sm">
+                  <div className="grid grid-cols-2 gap-4">
+                    {product.energy?.camping_battery_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Camping Battery</p>
+                        <p className="font-semibold text-slate-900">{product.energy.camping_battery_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.solar_panel_available && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
+                        <p className="font-semibold text-slate-900 capitalize">{product.energy.solar_panel_available}</p>
+                      </div>
+                    )}
+                    {product.energy?.solar_panel_max_w && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Solar Panel (max. W)</p>
+                        <p className="font-semibold text-slate-900">{product.energy.solar_panel_max_w} W</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_solar_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging via Solar</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_solar_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_hv_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging via HV</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_hv_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_driving_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charge while driving</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_driving_wh} W</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_charging_landline_wh && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Charging via Landline</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_landline_wh} Wh</p>
+                      </div>
+                    )}
+                    {product.energy?.max_battery_output_ac_12v_w && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Max. Output AC 12V</p>
+                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_ac_12v_w} W</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_output_plugs_ac && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">AC Plugs (230V Schuko)</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_ac}</p>
+                      </div>
+                    )}
+                    {product.energy?.max_battery_output_dc_230v_w && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">Max. Output DC 230V</p>
+                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_dc_230v_w} W</p>
+                      </div>
+                    )}
+                    {product.energy?.battery_output_plugs_dc && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">DC Plugs (12V)</p>
+                        <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_dc}</p>
+                      </div>
+                    )}
+                    {product.energy?.usb_c_plugs_front && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">USB(-C) plugs Cockpit</p>
+                        <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_front}</p>
+                      </div>
+                    )}
+                    {product.energy?.usb_c_plugs_livingroom && (
+                      <div className="p-3 bg-slate-50 rounded-xl">
+                        <p className="text-xs text-slate-500 uppercase">USB(-C) plugs Living</p>
+                        <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_livingroom}</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </TabsContent>
+
               <TabsContent value="features" className="mt-6">
                 <Card className="p-6 border-0 shadow-sm space-y-6">
                   <div>
@@ -732,91 +818,7 @@ export default function ProductDetail() {
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Energy</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {product.energy?.camping_battery_wh && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Camping Battery</p>
-                        <p className="font-semibold text-slate-900">{product.energy.camping_battery_wh} Wh</p>
-                      </div>
-                    )}
-                      {product.energy?.solar_panel_available && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Solar Panel</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.energy.solar_panel_available}</p>
-                        </div>
-                      )}
-                      {product.energy?.solar_panel_max_w && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">Solar Panel (max. W)</p>
-                          <p className="font-semibold text-slate-900">{product.energy.solar_panel_max_w} W</p>
-                        </div>
-                      )}
-                    {product.energy?.battery_charging_solar_wh && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Charging via Solar</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_solar_wh} Wh</p>
-                      </div>
-                    )}
-                    {product.energy?.battery_charging_hv_wh && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Charging via HV</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_hv_wh} Wh</p>
-                      </div>
-                    )}
-                    {product.energy?.battery_charging_driving_wh && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Charge while driving</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_driving_wh} W</p>
-                      </div>
-                    )}
-                    {product.energy?.battery_charging_landline_wh && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Charging via Landline</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_charging_landline_wh} Wh</p>
-                      </div>
-                    )}
-                    {product.energy?.max_battery_output_ac_12v_w && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Max. Output AC 12V</p>
-                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_ac_12v_w} W</p>
-                      </div>
-                    )}
-                    {product.energy?.battery_output_plugs_ac && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">AC Plugs (230V Schuko)</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_ac}</p>
-                      </div>
-                    )}
-                    {product.energy?.max_battery_output_dc_230v_w && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">Max. Output DC 230V</p>
-                        <p className="font-semibold text-slate-900">{product.energy.max_battery_output_dc_230v_w} W</p>
-                      </div>
-                    )}
-                    {product.energy?.battery_output_plugs_dc && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">DC Plugs (12V)</p>
-                        <p className="font-semibold text-slate-900">{product.energy.battery_output_plugs_dc}</p>
-                      </div>
-                    )}
-                    {product.energy?.usb_c_plugs_front && (
-                      <div className="p-3 bg-slate-50 rounded-xl">
-                        <p className="text-xs text-slate-500 uppercase">USB(-C) plugs Cockpit</p>
-                        <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_front}</p>
-                      </div>
-                    )}
-                      {product.energy?.usb_c_plugs_livingroom && (
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <p className="text-xs text-slate-500 uppercase">USB(-C) plugs Living</p>
-                          <p className="font-semibold text-slate-900">{product.energy.usb_c_plugs_livingroom}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Safety & Assistance</h3>
+                    <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Smart & Connected</h3>
                     <div className="grid grid-cols-2 gap-4">
                       {product.smart_connected?.remote_app_access && (
                         <div className="p-3 bg-slate-50 rounded-xl">
