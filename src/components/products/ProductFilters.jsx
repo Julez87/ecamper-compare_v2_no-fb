@@ -22,10 +22,9 @@ const BRANDS = ["All", "VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", 
 export default function ProductFilters({ filters, setFilters, maxBuyPrice = 150000, maxRentPrice = 250, products = [] }) {
   const [showMoreVehicle, setShowMoreVehicle] = useState(false);
   const [showMoreCamper, setShowMoreCamper] = useState(false);
-  const [showMoreKitchen, setShowMoreKitchen] = useState(false);
-  const [showMoreBathroom, setShowMoreBathroom] = useState(false);
-  const [showMoreClimate, setShowMoreClimate] = useState(false);
-  const [showMoreSmart, setShowMoreSmart] = useState(false);
+  const [showMoreInterior, setShowMoreInterior] = useState(false);
+  const [showMoreEnergy, setShowMoreEnergy] = useState(false);
+  const [showMoreFeatures, setShowMoreFeatures] = useState(false);
 
   const updateFilter = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -140,14 +139,14 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
 
       {/* Advanced Filters */}
       <Separator className="my-6" />
+      
+      {/* Base Vehicle Filters */}
       <Collapsible>
         <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
-          <span>Advanced Filters</span>
+          <span>Base Vehicle</span>
           <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Vehicle</div>
-          
           {/* Model Year Pills */}
           <div>
             <label className="text-sm text-slate-600 mb-2 block">Model Year</label>
@@ -166,20 +165,16 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
                 </Badge>
               ))}
             </div>
-          </div>
-
-          {/* Min Range Slider */}
-          <div>
-            <label className="text-sm text-slate-600 mb-3 block">
-              Min. Range (realistic): {filters.advanced?.min_range || 0} km
-            </label>
-            <Slider
-              value={[filters.advanced?.min_range || 0]}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_range: v[0]})}
-              max={maxRange}
-              step={10}
-              className="py-2"
-            />
+            {availableYears.length > 6 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowMoreVehicle(!showMoreVehicle)}
+                className="w-full text-emerald-600 hover:text-emerald-700 mt-2"
+              >
+                {showMoreVehicle ? 'Show Less' : 'More'}
+              </Button>
+            )}
           </div>
 
           {/* Drive Type Dropdown */}
@@ -201,7 +196,56 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
             </Select>
           </div>
 
-          {showMoreVehicle && (
+          {/* Trailer Hitch Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="trailer_hitch"
+              checked={filters.advanced?.trailer_hitch === 'yes'}
+              onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, trailer_hitch: checked ? 'yes' : undefined})}
+            />
+            <label htmlFor="trailer_hitch" className="text-sm text-slate-600 cursor-pointer">
+              Trailer Hitch
+            </label>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
+      {/* Camper Details Filters */}
+      <Collapsible>
+        <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
+          <span>Camper Details</span>
+          <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+          {/* Min Range Slider */}
+          <div>
+            <label className="text-sm text-slate-600 mb-3 block">
+              Min. Range (realistic): {filters.advanced?.min_range || 0} km
+            </label>
+            <Slider
+              value={[filters.advanced?.min_range || 0]}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_range: v[0]})}
+              max={maxRange}
+              step={10}
+              className="py-2"
+            />
+          </div>
+
+          {/* Min Total Storage Slider */}
+          <div>
+            <label className="text-sm text-slate-600 mb-3 block">
+              Min. Total Storage: {filters.advanced?.min_storage_total || 0} L
+            </label>
+            <Slider
+              value={[filters.advanced?.min_storage_total || 0]}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_storage_total: v[0]})}
+              max={maxStorage}
+              step={50}
+              className="py-2"
+            />
+          </div>
+
+          {showMoreCamper && (
             <>
               <div>
                 <label className="text-sm text-slate-600 mb-1.5 block">Min Battery (kWh)</label>
@@ -219,53 +263,34 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => setShowMoreVehicle(!showMoreVehicle)}
-            className="w-full text-emerald-600 hover:text-emerald-700"
-          >
-            {showMoreVehicle ? 'Show Less' : 'More'}
-          </Button>
-
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Camper</div>
-
-          {/* Min Storage Slider */}
-          <div>
-            <label className="text-sm text-slate-600 mb-3 block">
-              Min. Storage: {filters.advanced?.min_storage || 0} L
-            </label>
-            <Slider
-              value={[filters.advanced?.min_storage || 0]}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_storage: v[0]})}
-              max={maxStorage}
-              step={50}
-              className="py-2"
-            />
-          </div>
-
-          {showMoreCamper && (
-            <>
-              <div>
-                <label className="text-sm text-slate-600 mb-1.5 block">Min Sleeps</label>
-                <Input 
-                  type="number" 
-                  placeholder="e.g. 2"
-                  value={filters.advanced?.min_sleeps || ''}
-                  onChange={(e) => updateFilter('advanced', {...filters.advanced, min_sleeps: e.target.value})}
-                  className="bg-white"
-                />
-              </div>
-            </>
-          )}
-
-          <Button 
-            variant="ghost" 
-            size="sm" 
             onClick={() => setShowMoreCamper(!showMoreCamper)}
             className="w-full text-emerald-600 hover:text-emerald-700"
           >
             {showMoreCamper ? 'Show Less' : 'More'}
           </Button>
+        </CollapsibleContent>
+      </Collapsible>
 
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Kitchen</div>
+      {/* Interior Details Filters */}
+      <Collapsible>
+        <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
+          <span>Interior Details</span>
+          <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+          {/* Min Sleeps Slider */}
+          <div>
+            <label className="text-sm text-slate-600 mb-3 block">
+              Min. Sleeps: {filters.advanced?.min_sleeps || 0}
+            </label>
+            <Slider
+              value={[filters.advanced?.min_sleeps || 0]}
+              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, min_sleeps: v[0]})}
+              max={6}
+              step={1}
+              className="py-2"
+            />
+          </div>
 
           {/* Min Fridge Size Slider */}
           <div>
@@ -281,7 +306,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
             />
           </div>
 
-          {showMoreKitchen && (
+          {showMoreInterior && (
             <>
               <div>
                 <label className="text-sm text-slate-600 mb-1.5 block">Stove Type</label>
@@ -300,55 +325,45 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
                   </SelectContent>
                 </Select>
               </div>
-            </>
-          )}
 
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => setShowMoreKitchen(!showMoreKitchen)}
-            className="w-full text-emerald-600 hover:text-emerald-700"
-          >
-            {showMoreKitchen ? 'Show Less' : 'More'}
-          </Button>
-
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Bathroom</div>
-
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Toilet Type</label>
-            <Select 
-              value={filters.advanced?.toilet_type || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, toilet_type: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="chemical">Chemical</SelectItem>
-                <SelectItem value="separation">Separation</SelectItem>
-                <SelectItem value="no">No Toilet</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {showMoreBathroom && (
-            <>
               <div>
-                <label className="text-sm text-slate-600 mb-1.5 block">Shower</label>
+                <label className="text-sm text-slate-600 mb-1.5 block">Toilet Type</label>
                 <Select 
-                  value={filters.advanced?.shower || 'all'}
-                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, shower: v === 'all' ? undefined : v})}
+                  value={filters.advanced?.toilet_type || 'all'}
+                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, toilet_type: v === 'all' ? undefined : v})}
                 >
                   <SelectTrigger className="bg-white">
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
+                    <SelectItem value="chemical">Chemical</SelectItem>
+                    <SelectItem value="separation">Separation</SelectItem>
+                    <SelectItem value="no">No Toilet</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="warm_shower"
+                  checked={filters.advanced?.warm_shower === 'yes'}
+                  onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, warm_shower: checked ? 'yes' : undefined})}
+                />
+                <label htmlFor="warm_shower" className="text-sm text-slate-600 cursor-pointer">
+                  Warm Shower
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="eco_materials_filter"
+                  checked={filters.ecoMaterials}
+                  onCheckedChange={(checked) => updateFilter('ecoMaterials', checked)}
+                />
+                <label htmlFor="eco_materials_filter" className="text-sm text-slate-600 cursor-pointer">
+                  Eco Materials
+                </label>
               </div>
             </>
           )}
@@ -356,14 +371,54 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => setShowMoreBathroom(!showMoreBathroom)}
+            onClick={() => setShowMoreInterior(!showMoreInterior)}
             className="w-full text-emerald-600 hover:text-emerald-700"
           >
-            {showMoreBathroom ? 'Show Less' : 'More'}
+            {showMoreInterior ? 'Show Less' : 'More'}
           </Button>
+        </CollapsibleContent>
+      </Collapsible>
 
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Climate</div>
+      {/* Energy Filters */}
+      <Collapsible>
+        <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
+          <span>Energy</span>
+          <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+          {/* Solar Panel Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="solar_panel"
+              checked={filters.advanced?.solar_panel_available === 'yes'}
+              onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, solar_panel_available: checked ? 'yes' : undefined})}
+            />
+            <label htmlFor="solar_panel" className="text-sm text-slate-600 cursor-pointer">
+              Solar Panel
+            </label>
+          </div>
 
+          {/* Gas Free Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="gas_free_filter"
+              checked={filters.gasFree}
+              onCheckedChange={(checked) => updateFilter('gasFree', checked)}
+            />
+            <label htmlFor="gas_free_filter" className="text-sm text-slate-600 cursor-pointer">
+              Gas-Free
+            </label>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
+      {/* Features Filters */}
+      <Collapsible>
+        <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-sm font-medium text-slate-900 hover:text-emerald-600 transition-colors group">
+          <span>Features</span>
+          <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-all group-data-[state=open]:rotate-180" />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4 space-y-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
           {/* Air Conditioning Checkbox */}
           <div className="flex items-center space-x-2">
             <Checkbox 
@@ -376,8 +431,61 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
             </label>
           </div>
 
-          {showMoreClimate && (
+          {/* Winter Ready Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="winter_ready_filter"
+              checked={filters.winterReady}
+              onCheckedChange={(checked) => updateFilter('winterReady', checked)}
+            />
+            <label htmlFor="winter_ready_filter" className="text-sm text-slate-600 cursor-pointer">
+              Winter Ready
+            </label>
+          </div>
+
+          {showMoreFeatures && (
             <>
+              <div>
+                <label className="text-sm text-slate-600 mb-1.5 block">Apple CarPlay / Android Auto</label>
+                <Select 
+                  value={filters.advanced?.carplay || 'all'}
+                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, carplay: v === 'all' ? undefined : v})}
+                >
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="cable">Cable</SelectItem>
+                    <SelectItem value="wireless">Wireless</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remote_app_access"
+                  checked={filters.advanced?.remote_app_access === 'yes'}
+                  onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, remote_app_access: checked ? 'yes' : undefined})}
+                />
+                <label htmlFor="remote_app_access" className="text-sm text-slate-600 cursor-pointer">
+                  Remote App Access
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="parking_sensors"
+                  checked={filters.advanced?.parking_sensors?.includes('front') || filters.advanced?.parking_sensors?.includes('rear') || filters.advanced?.parking_sensors === 'front & rear'}
+                  onCheckedChange={(checked) => updateFilter('advanced', {...filters.advanced, parking_sensors: checked ? 'front & rear' : undefined})}
+                />
+                <label htmlFor="parking_sensors" className="text-sm text-slate-600 cursor-pointer">
+                  Parking Sensors
+                </label>
+              </div>
+
               <div>
                 <label className="text-sm text-slate-600 mb-1.5 block">Stand Heating</label>
                 <Select 
@@ -401,61 +509,10 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => setShowMoreClimate(!showMoreClimate)}
+            onClick={() => setShowMoreFeatures(!showMoreFeatures)}
             className="w-full text-emerald-600 hover:text-emerald-700"
           >
-            {showMoreClimate ? 'Show Less' : 'More'}
-          </Button>
-
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-4">Smart & Connected</div>
-
-          <div>
-            <label className="text-sm text-slate-600 mb-1.5 block">Apple CarPlay / Android Auto</label>
-            <Select 
-              value={filters.advanced?.carplay || 'all'}
-              onValueChange={(v) => updateFilter('advanced', {...filters.advanced, carplay: v === 'all' ? undefined : v})}
-            >
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="cable">Cable</SelectItem>
-                <SelectItem value="wireless">Wireless</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {showMoreSmart && (
-            <>
-              <div>
-                <label className="text-sm text-slate-600 mb-1.5 block">Rear Camera</label>
-                <Select 
-                  value={filters.advanced?.rear_camera || 'all'}
-                  onValueChange={(v) => updateFilter('advanced', {...filters.advanced, rear_camera: v === 'all' ? undefined : v})}
-                >
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="All" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </>
-          )}
-
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => setShowMoreSmart(!showMoreSmart)}
-            className="w-full text-emerald-600 hover:text-emerald-700"
-          >
-            {showMoreSmart ? 'Show Less' : 'More'}
+            {showMoreFeatures ? 'Show Less' : 'More'}
           </Button>
         </CollapsibleContent>
       </Collapsible>
