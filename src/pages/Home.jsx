@@ -235,7 +235,9 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxPrice={maxPrice} />
+          maxBuyPrice={maxBuyPrice}
+          maxRentPrice={maxRentPrice}
+          products={products} />
 
 
         <div className="mt-6">
