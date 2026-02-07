@@ -36,6 +36,22 @@ export default function ProductDetail() {
     enabled: !!product?.size_category
   });
 
+  const { data: allCompanies = [] } = useQuery({
+    queryKey: ['rentalCompanies'],
+    queryFn: () => base44.entities.RentalCompany.list()
+  });
+
+  // Calculate minimum rent price from rental companies if not manually set
+  const rentPrice = product?.rent_from_price || (() => {
+    if (!product) return null;
+    const prices = allCompanies
+      .flatMap(company => company.available_campers || [])
+      .filter(c => c.camper_id === product.id)
+      .map(c => c.rent_price)
+      .filter(p => p != null);
+    return prices.length > 0 ? Math.min(...prices) : null;
+  })();
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -131,10 +147,10 @@ export default function ProductDetail() {
                   <p className="text-2xl font-bold text-slate-900">€{product.buy_from_price?.toLocaleString()}</p>
                 </div>
               )}
-              {product.rent_from_price && (
+              {rentPrice && (
                 <div>
                   <p className="text-sm text-slate-500">Rent Price from</p>
-                  <p className="text-2xl font-bold text-emerald-600">€{product.rent_from_price}/day</p>
+                  <p className="text-2xl font-bold text-emerald-600">€{rentPrice}/day</p>
                 </div>
               )}
             </div>
@@ -872,8 +888,10 @@ export default function ProductDetail() {
                     <div className="p-4">
                       <p className="text-xs text-slate-500">{p.base_vehicle?.brand} {p.base_vehicle?.model}</p>
                       <p className="font-medium text-slate-900 truncate">{p.model_name}</p>
-                      {p.rent_from_price && (
-                        <p className="font-bold text-emerald-600 mt-1">€{p.rent_from_price}/day</p>
+                      {(p.rent_from_price || allCompanies.flatMap(c => c.available_campers || []).filter(ac => ac.camper_id === p.id).map(ac => ac.rent_price).filter(pr => pr != null)[0]) && (
+                        <p className="font-bold text-emerald-600 mt-1">
+                          €{p.rent_from_price || Math.min(...allCompanies.flatMap(c => c.available_campers || []).filter(ac => ac.camper_id === p.id).map(ac => ac.rent_price).filter(pr => pr != null))}/day
+                        </p>
                       )}
                     </div>
                   </Card>

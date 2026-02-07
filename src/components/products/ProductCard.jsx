@@ -17,6 +17,16 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
     company.available_campers?.some(c => c.camper_id === product.id)
   );
 
+  // Calculate minimum rent price from rental companies if not manually set
+  const rentPrice = product.rent_from_price || (() => {
+    const prices = allCompanies
+      .flatMap(company => company.available_campers || [])
+      .filter(c => c.camper_id === product.id)
+      .map(c => c.rent_price)
+      .filter(p => p != null);
+    return prices.length > 0 ? Math.min(...prices) : null;
+  })();
+
   // Check which smart filters apply
   const smartFilters = [];
   
@@ -132,7 +142,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           <div className="flex items-baseline gap-2">
             <span className="text-xs text-slate-500">Rent Price from</span>
             <span className="text-lg font-semibold text-emerald-600">
-              €{product.rent_from_price?.toLocaleString() || '—'}/day
+              €{rentPrice?.toLocaleString() || '—'}/day
             </span>
           </div>
           </div>

@@ -149,8 +149,8 @@ export default function CamperAdminForm({ formData, setFormData }) {
           <Input type="number" value={formData.buy_from_price || ''} onChange={(e) => updateField('buy_from_price', e.target.value)} className="mt-1.5" />
         </div>
         <div>
-          <Label>Rent Price from (€/day)</Label>
-          <Input type="number" value={formData.rent_from_price || ''} onChange={(e) => updateField('rent_from_price', e.target.value)} className="mt-1.5" />
+          <Label>Rent Price from (€/day) - automatic / optional</Label>
+          <Input type="number" value={formData.rent_from_price || ''} onChange={(e) => updateField('rent_from_price', e.target.value)} placeholder="Auto-calculated from rental companies" className="mt-1.5" />
         </div>
         <div className="flex items-center gap-2">
           <Switch checked={formData.is_featured || false} onCheckedChange={(v) => updateField('is_featured', v)} />
