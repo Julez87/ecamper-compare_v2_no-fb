@@ -17,8 +17,15 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -48,10 +55,100 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    result = result.filter((p) => {
-      const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });
+    if (filters.purchasePrice) {
+      result = result.filter((p) => {
+        const buyPrice = p.buy_from_price || 0;
+        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
+      });
+    }
+
+    if (filters.rentalPrice) {
+      result = result.filter((p) => {
+        const rentPrice = p.rent_from_price || 0;
+        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
+      });
+    }
+
+    // Smart filters
+    if (filters.gasFree) {
+      result = result.filter((p) => {
+        const hasGas = 
+          p.kitchen?.stove_type?.toLowerCase() === 'gas' ||
+          p.kitchen?.fridge_type?.toLowerCase() === 'gas' ||
+          p.climate?.stand_heating?.toLowerCase() === 'gas' ||
+          p.climate?.vehicle_heating?.toLowerCase() === 'gas';
+        return !hasGas;
+      });
+    }
+
+    if (filters.ecoMaterials) {
+      result = result.filter((p) => 
+        p.eco_scoring?.furniture_materials_eco || 
+        p.eco_scoring?.flooring_material_eco || 
+        p.eco_scoring?.insulation_material_eco || 
+        p.eco_scoring?.textile_material_eco
+      );
+    }
+
+    if (filters.familyFriendly) {
+      result = result.filter((p) => (p.sleeping?.sleeps || 0) >= 4);
+    }
+
+    if (filters.offGrid) {
+      result = result.filter((p) => 
+        (p.energy?.solar_panel_max_w || 0) >= 100 && 
+        (p.energy?.camping_battery_wh || 0) >= 1
+      );
+    }
+
+    if (filters.winterReady) {
+      result = result.filter((p) => p.climate?.insulation === 'yes');
+    }
+
+    // Advanced filters
+    const adv = filters.advanced || {};
+    if (adv.model_year) {
+      result = result.filter((p) => p.base_vehicle?.model_year === adv.model_year);
+    }
+    if (adv.min_range) {
+      result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= adv.min_range);
+    }
+    if (adv.drive) {
+      result = result.filter((p) => p.base_vehicle?.drive === adv.drive);
+    }
+    if (adv.min_battery) {
+      result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= Number(adv.min_battery));
+    }
+    if (adv.min_sleeps) {
+      result = result.filter((p) => (p.sleeping?.sleeps || 0) >= Number(adv.min_sleeps));
+    }
+    if (adv.min_storage) {
+      result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= adv.min_storage);
+    }
+    if (adv.stove_type) {
+      result = result.filter((p) => p.kitchen?.stove_type?.toLowerCase() === adv.stove_type);
+    }
+    if (adv.min_fridge) {
+      result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= adv.min_fridge);
+    }
+    if (adv.toilet_type) {
+      result = result.filter((p) => p.bathroom?.toilet_type === adv.toilet_type);
+    }
+    if (adv.shower) {
+      result = result.filter((p) => p.bathroom?.shower === adv.shower);
+    }
+    if (adv.ac) {
+      result = result.filter((p) => p.climate?.ac === adv.ac);
+    }
+    if (adv.stand_heating) {
+      result = result.filter((p) => p.climate?.stand_heating === adv.stand_heating);
+    }
+    if (adv.carplay) {
+      result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === adv.carplay);
+    }
+    if (adv.rear_camera) {
+      result = result.filter((p) => p.smart_connected?.rear_camera === adv.rear_camera);
+    }
 
     switch (filters.sortBy) {
       case 'price-buy-low':
@@ -88,7 +185,8 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -137,8 +235,7 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxPrice={maxPrice}
-          products={products} />
+          maxPrice={maxPrice} />
 
 
         <div className="mt-6">
