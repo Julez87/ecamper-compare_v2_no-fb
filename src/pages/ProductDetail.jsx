@@ -49,14 +49,19 @@ export default function ProductDetail() {
     queryFn: () => base44.entities.RentalCompany.list()
   });
 
-  // Calculate minimum rent price from rental companies if not manually set
-  const rentPrice = product?.rent_from_price || (() => {
+  // Get rental companies offering this product
+  const rentalCompanies = allCompanies.filter((company) =>
+    (company.available_campers || []).some((c) => c.camper_id === product?.id)
+  );
+
+  // Calculate minimum rent price from rental companies
+  const rentPrice = (() => {
     if (!product) return null;
-    const prices = allCompanies.
-    flatMap((company) => company.available_campers || []).
-    filter((c) => c.camper_id === product.id).
-    map((c) => c.rent_price).
-    filter((p) => p != null);
+    const prices = allCompanies
+      .flatMap((company) => company.available_campers || [])
+      .filter((c) => c.camper_id === product.id)
+      .map((c) => c.rent_price)
+      .filter((p) => p != null);
     return prices.length > 0 ? Math.min(...prices) : null;
   })();
 
@@ -179,16 +184,45 @@ export default function ProductDetail() {
             </div>
 
             {/* Rental Companies */}
-            {product.rental_companies?.length > 0 &&
-            <div>
-                <p className="text-sm font-medium text-slate-700 mb-2">Book me now at:</p>
+            {rentalCompanies.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-slate-700 mb-3">Available at:</p>
                 <div className="flex flex-wrap gap-2">
-                  {product.rental_companies.map((company, i) =>
-                <Badge key={i} variant="outline" className="px-3 py-1">{company}</Badge>
-                )}
+                  {rentalCompanies.map((company) => {
+                    const camperData = company.available_campers?.find((c) => c.camper_id === product.id);
+                    return (
+                      <a
+                        key={company.id}
+                        href={company.website_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:shadow-md transition-all group"
+                        style={{ borderColor: company.color + '40' }}
+                      >
+                        {company.logo_url && (
+                          <img
+                            src={company.logo_url}
+                            alt={company.name}
+                            className="w-5 h-5 object-contain"
+                          />
+                        )}
+                        <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                          {company.name}
+                        </span>
+                        {camperData?.rent_price && (
+                          <span
+                            className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: company.color + '20', color: company.color }}
+                          >
+                            €{camperData.rent_price}/day
+                          </span>
+                        )}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
-            }
+            )}
           </motion.div>
         </div>
 
