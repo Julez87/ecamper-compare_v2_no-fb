@@ -236,7 +236,7 @@ export default function Compare() {
                     {/* Specs */}
                     <div className="divide-y divide-slate-100">
                       {/* Buy Price */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false).includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false).includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Buy Price</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-slate-900">
@@ -249,7 +249,7 @@ export default function Compare() {
                       </div>
 
                       {/* Rent Price */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false).includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false).includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Rent per Day</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-emerald-600">
@@ -262,7 +262,7 @@ export default function Compare() {
                       </div>
 
                       {/* Actual Range */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('actual_range_km').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('actual_range_km').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Actual Range</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
@@ -275,7 +275,7 @@ export default function Compare() {
                       </div>
 
                       {/* Seats */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('seats').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('seats').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Seats</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{product.camper_data?.seats || '—'}</span>
@@ -286,7 +286,7 @@ export default function Compare() {
                       </div>
 
                       {/* Sleeps */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('sleeps').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('sleeps').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Sleeps</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{product.sleeping?.sleeps || '—'}</span>
@@ -297,7 +297,7 @@ export default function Compare() {
                       </div>
 
                       {/* Solar Panel */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Solar Panel</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
@@ -310,7 +310,7 @@ export default function Compare() {
                       </div>
 
                       {/* Camping Battery */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Camping Battery</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
@@ -323,7 +323,7 @@ export default function Compare() {
                       </div>
 
                       {/* Fridge */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('fridge_l').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('fridge_l').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Fridge Size</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
@@ -336,7 +336,7 @@ export default function Compare() {
                       </div>
 
                       {/* Amount Stoves */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('stove_plates').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('stove_plates').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Amount Stoves</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{product.kitchen?.stove_plates || '—'}</span>
@@ -347,7 +347,7 @@ export default function Compare() {
                       </div>
 
                       {/* Fresh Water */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('fresh_water_l').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('fresh_water_l').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Fresh Water</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
@@ -360,7 +360,7 @@ export default function Compare() {
                       </div>
 
                       {/* Eco-Tags */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('eco_tags').includes(product.id) ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('eco_tags').includes(product.id) ? 'bg-emerald-100' : ''}`}>
                         <span className="text-sm text-slate-600">Eco-Tags</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{getEcoTagCount(product)}</span>
