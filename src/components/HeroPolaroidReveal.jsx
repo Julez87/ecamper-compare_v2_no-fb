@@ -167,7 +167,7 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
               <button type="button" className="inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors" onClick={onBrowseClick}>
                 Browse Campers <ArrowRight className="w-5 h-5 ml-2" />
               </button>
-              <button type="button" className="inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-white text-slate-700 border border-white/30 shadow-sm hover:bg-white/10 hover:text-white transition-colors" onClick={onRequestClick}>
+              <button type="button" className="inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-white/90 text-slate-700 border border-white/30 shadow-sm hover:bg-white hover:text-slate-900 transition-colors" onClick={onRequestClick}>
                 <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
               </button>
             </div>
