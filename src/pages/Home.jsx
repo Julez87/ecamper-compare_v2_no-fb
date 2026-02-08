@@ -17,9 +17,7 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured',
-    heightUnder2m: false
+    sortBy: 'featured'
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -47,15 +45,6 @@ export default function Home() {
 
     if (filters.brand !== 'All') {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
-    }
-
-    result = result.filter((p) => {
-      const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });
-
-    if (filters.heightUnder2m) {
-      result = result.filter((p) => (p.camper_data?.height_mm || Infinity) <= 2000);
     }
 
     switch (filters.sortBy) {
