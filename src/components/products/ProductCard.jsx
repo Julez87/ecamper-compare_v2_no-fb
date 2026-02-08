@@ -55,6 +55,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
 
   return (
     <motion.div
+      id={`product-${product.id}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
@@ -132,14 +133,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             <div className="flex items-baseline gap-2">
               <span className="text-xs text-slate-500">Rent from</span>
               <span className="text-lg font-semibold text-emerald-600">
-                €{(() => {
-                  const prices = allCompanies
-                    .flatMap((company) => company.available_campers || [])
-                    .filter((c) => c.camper_id === product.id)
-                    .map((c) => c.rent_price)
-                    .filter((p) => p != null);
-                  return prices.length > 0 ? Math.min(...prices).toLocaleString() : '—';
-                })()}/day
+                €{product.rent_from_price?.toLocaleString() || '—'}/day
               </span>
             </div>
           </div>
