@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,6 +34,8 @@ export default function Home() {
     queryKey: ['products'],
     queryFn: () => base44.entities.Product.list()
   });
+
+  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -135,7 +136,7 @@ export default function Home() {
     }
 
     return result;
-  }, [products, filters]);
+  }, [products, filters, maxPrice]);
 
   const handleCompare = (product) => {
     setCompareList((prev) => {
@@ -148,12 +149,10 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
-
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <HeroPolaroidRevealStyled 
+      <HeroPolaroidRevealStyled
         onBrowseClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
         onRequestClick={() => setIsRequestModalOpen(true)}
       />
