@@ -64,20 +64,18 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
       <Card 
         className="group relative overflow-hidden bg-white border-0 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
       >
-        <Link to={productUrl} className="contents">
-          <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 max-w-[calc(100%-1.5rem)]">
-            {smartFilters.map((filter, i) => {
-              const Icon = filter.icon;
-              return (
-                <Badge key={i} className="bg-emerald-600 text-white text-xs font-medium px-2 py-0.5 flex items-center gap-1">
-                  <Icon className="w-3 h-3" /> {filter.label}
-                </Badge>
-              );
-            })}
-          </div>
+        <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 max-w-[calc(100%-1.5rem)]">
+          {smartFilters.map((filter, i) => {
+            const Icon = filter.icon;
+            return (
+              <Badge key={i} className="bg-emerald-600 text-white text-xs font-medium px-2 py-0.5 flex items-center gap-1">
+                <Icon className="w-3 h-3" /> {filter.label}
+              </Badge>
+            );
+          })}
+        </div>
 
-
-
+        <Link to={productUrl}>
           <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden relative cursor-pointer">
           {product.image_url ? (
             <img 
@@ -98,8 +96,9 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
             </div>
             )}
           </div>
+        </Link>
         
-          <div className="p-5 flex-1 flex flex-col cursor-pointer">
+        <Link to={productUrl} className="p-5 flex-1 flex flex-col cursor-pointer">
           <div className="flex items-center gap-2 mb-1">
             <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
               {sizeLabel}
@@ -149,6 +148,7 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
                     <button
                       key={company.id}
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         if (company.website_url) window.open(company.website_url, '_blank');
                       }}
@@ -167,7 +167,8 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
             </div>
           )}
         </Link>
-          
+        
+        <div className="px-5 pb-5">
           <Button
             size="sm"
             variant={isInCompare ? "default" : "outline"}
@@ -177,6 +178,7 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
                 : 'border-slate-200 hover:border-violet-600 hover:text-violet-600'
             }`}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               onCompare(product);
             }}
