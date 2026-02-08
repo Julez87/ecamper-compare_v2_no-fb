@@ -107,10 +107,16 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
       {/* Background gradient like your screenshot */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900" />
 
-      {/* Polaroids (sharp) - ONLY visible through spotlight */}
+      {/* Polaroids (blurred) - ALWAYS visible (bottom layer) */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
+        <PolaroidField photos={photos} layout={layout} blurred />
+      </div>
+
+      {/* Polaroids (sharp) - ONLY visible through spotlight (top layer) */}
       <div
         className="absolute inset-0"
         style={{
+          zIndex: 2,
           clipPath: clip,
           WebkitClipPath: clip,
           transition: spot.active ? "none" : "clip-path 220ms ease",
@@ -118,11 +124,6 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
         }}
       >
         <PolaroidField photos={photos} layout={layout} blurred={false} />
-      </div>
-
-      {/* Polaroids (blurred) - ALWAYS visible */}
-      <div className="absolute inset-0">
-        <PolaroidField photos={photos} layout={layout} blurred />
       </div>
 
       {/* Vignette / depth like screenshot */}
