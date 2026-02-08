@@ -36,7 +36,7 @@ export default function ProductDetail() {
   });
 
   const { data: relatedProducts = [] } = useQuery({
-    queryKey: ['relatedProducts', product?.size_category],
+    queryKey: ['relatedProducts', product?.size_category, productId],
     queryFn: async () => {
       const products = await base44.entities.Product.filter({ size_category: product.size_category });
       return products.filter((p) => p.id !== productId).slice(0, 4);
