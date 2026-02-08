@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,8 +15,16 @@ import {
 import { motion } from 'framer-motion';
 
 export default function ProductDetail() {
-  const urlParams = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const queryClient = useQueryClient();
+  const urlParams = new URLSearchParams(location.search);
   const productId = urlParams.get('id');
+
+  useEffect(() => {
+    if (productId) {
+      queryClient.invalidateQueries(['product', productId]);
+    }
+  }, [productId, queryClient]);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', productId],
@@ -913,7 +921,7 @@ export default function ProductDetail() {
                   <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-0">
                     <div className="aspect-square bg-slate-100 p-4 flex items-center justify-center">
                       {p.image_url ?
-                  <img src={p.image_url} alt={p.name} className="max-h-full object-contain" /> :
+                  <img src={p.image_url} alt={p.model_name} className="max-h-full object-contain" /> :
 
                   <div className="w-16 h-16 bg-slate-200 rounded-xl flex items-center justify-center">
                           <span className="text-2xl font-bold text-slate-400">{p.brand?.[0]}</span>
