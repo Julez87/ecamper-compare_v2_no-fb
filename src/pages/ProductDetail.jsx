@@ -196,8 +196,8 @@ export default function ProductDetail() {
                         href={company.website_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:shadow-md transition-all group"
-                        style={{ borderColor: company.color + '40' }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+                        style={{ backgroundColor: company.color, color: 'white' }}
                       >
                         {company.logo_url && (
                           <img
@@ -206,17 +206,10 @@ export default function ProductDetail() {
                             className="w-5 h-5 object-contain"
                           />
                         )}
-                        <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                        <span className="text-sm font-medium">
                           {company.name}
+                          {camperData?.rent_price && ` • €${camperData.rent_price}/day`}
                         </span>
-                        {camperData?.rent_price && (
-                          <span
-                            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: company.color + '20', color: company.color }}
-                          >
-                            €{camperData.rent_price}/day
-                          </span>
-                        )}
                       </a>
                     );
                   })}
