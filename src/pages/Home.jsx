@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,13 +13,19 @@ import RequestProductModal from '@/components/products/RequestProductModal';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    priceRange: [0, 5000],
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -51,7 +57,7 @@ export default function Home() {
 
     result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+      return buyPrice >= (filters.purchasePrice?.[0] || 0) && buyPrice <= (filters.purchasePrice?.[1] || 150000);
     });
 
     switch (filters.sortBy) {
@@ -182,12 +188,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
                   <ProductCard
-                key={product.id}
                 product={product}
                 onCompare={handleCompare}
                 isInCompare={compareList.some((p) => p.id === product.id)}
-                onClick={() => navigate(createPageUrl('ProductDetail') + `?id=${product.id}`)} />
+                onClick={() => {}} />
+
+                </Link>
             )}
             </div>
           }
