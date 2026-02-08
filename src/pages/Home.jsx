@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
@@ -35,11 +35,21 @@ export default function Home() {
     queryFn: () => base44.entities.Product.list()
   });
 
+  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+
+  const hasAnyFilter = useMemo(() => {
+    const adv = filters.advanced || {};
+    return filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' ||
+      (filters.purchasePrice && (filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxPrice)) ||
+      (filters.rentalPrice && (filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < 250)) ||
+      filters.gasFree || filters.ecoMaterials || filters.familyFriendly || filters.offGrid || filters.winterReady || filters.heightUnder2m ||
+      Object.values(adv).some(v => v !== undefined);
+  }, [filters, maxPrice]);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
     const adv = filters.advanced || {};
 
-    // Search
     if (filters.search) {
       const s = filters.search.toLowerCase();
       result = result.filter(p => p.model_name?.toLowerCase().includes(s) || p.base_vehicle?.brand?.toLowerCase().includes(s) || p.description?.toLowerCase().includes(s));
@@ -47,7 +57,6 @@ export default function Home() {
     if (filters.sizeCategory !== 'All') result = result.filter(p => p.size_category === filters.sizeCategory);
     if (filters.brand !== 'All') result = result.filter(p => p.base_vehicle?.brand === filters.brand);
 
-    // Price ranges
     if (filters.purchasePrice) {
       result = result.filter(p => { const pr = p.buy_from_price || 0; return pr >= filters.purchasePrice[0] && pr <= filters.purchasePrice[1]; });
     }
@@ -123,7 +132,7 @@ export default function Home() {
     if (adv.min_usb_front) result = result.filter(p => (p.energy?.usb_c_plugs_front || 0) >= Number(adv.min_usb_front));
     if (adv.min_usb_living) result = result.filter(p => (p.energy?.usb_c_plugs_livingroom || 0) >= Number(adv.min_usb_living));
 
-    // Advanced: Comfort - Climate
+    // Advanced: Comfort
     if (adv.vehicle_heating) result = result.filter(p => p.climate?.vehicle_heating === adv.vehicle_heating);
     if (adv.vehicle_cooling) result = result.filter(p => p.climate?.vehicle_cooling === adv.vehicle_cooling);
     if (adv.insulation === 'yes') result = result.filter(p => p.climate?.insulation === 'yes');
@@ -157,16 +166,31 @@ export default function Home() {
 
   const handleCompare = (product) => {
     setCompareList((prev) => {
-      const exists = prev.find((p) => p.id === product.id);
-      if (exists) {
-        return prev.filter((p) => p.id !== product.id);
-      }
+      if (prev.find(p => p.id === product.id)) return prev.filter(p => p.id !== product.id);
       if (prev.length >= 4) return prev;
       return [...prev, product];
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const handlePolaroidClick = useCallback((productId) => {
+    if (hasAnyFilter) {
+      // Filters active: just scroll to the products section
+      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    // No filters: scroll to the specific card
+    setTimeout(() => {
+      const card = document.getElementById(`product-card-${productId}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Brief highlight
+        card.classList.add('ring-2', 'ring-emerald-500', 'ring-offset-2');
+        setTimeout(() => card.classList.remove('ring-2', 'ring-emerald-500', 'ring-offset-2'), 2000);
+      } else {
+        document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  }, [hasAnyFilter]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -174,6 +198,7 @@ export default function Home() {
       <HeroPolaroidRevealStyled
         onBrowseClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
         onRequestClick={() => setIsRequestModalOpen(true)}
+        onPolaroidClick={handlePolaroidClick}
       />
 
       {/* Products Section */}
@@ -182,8 +207,8 @@ export default function Home() {
           filters={filters}
           setFilters={setFilters}
           maxBuyPrice={maxPrice}
-          products={products} />
-
+          products={products}
+        />
 
         <div className="mt-6">
           <div className="flex items-center justify-between mb-6">
@@ -192,10 +217,10 @@ export default function Home() {
             </p>
           </div>
 
-          {isLoading ?
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) =>
-            <div key={i} className="bg-white rounded-2xl overflow-hidden">
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl overflow-hidden">
                   <Skeleton className="aspect-square" />
                   <div className="p-5 space-y-3">
                     <Skeleton className="h-4 w-16" />
@@ -207,52 +232,45 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-            )}
-            </div> :
-          filteredProducts.length === 0 ?
-          <div className="text-center py-20">
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-20">
               <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-4xl">🚐</span>
               </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-2">No campers found</h3>
               <p className="text-slate-600 mb-6">Try adjusting your filters or search terms</p>
-              <Button
-              variant="outline"
-              onClick={() => setIsRequestModalOpen(true)}>
-
+              <Button variant="outline" onClick={() => setIsRequestModalOpen(true)}>
                 <PlusCircle className="w-4 h-4 mr-2" /> Request a Camper
               </Button>
-            </div> :
-            
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onCompare={handleCompare}
-                  isInCompare={compareList.some((p) => p.id === product.id)}
-                  onClick={() => window.location.href = createPageUrl("ProductDetail") + `?id=${product.id}`}
-                />
+                <div key={product.id} id={`product-card-${product.id}`} className="rounded-2xl transition-all duration-300">
+                  <ProductCard
+                    product={product}
+                    onCompare={handleCompare}
+                    isInCompare={compareList.some(p => p.id === product.id)}
+                    onClick={() => window.location.href = createPageUrl("ProductDetail") + `?id=${product.id}`}
+                  />
+                </div>
               ))}
             </div>
-          }
+          )}
         </div>
       </div>
 
-      {/* Compare Bar */}
       <div className={compareList.length > 0 ? 'pb-24' : ''}>
         <CompareBar
           compareList={compareList}
-          onRemove={(id) => setCompareList((prev) => prev.filter((p) => p.id !== id))}
-          onClear={() => setCompareList([])} />
-
+          onRemove={(id) => setCompareList(prev => prev.filter(p => p.id !== id))}
+          onClear={() => setCompareList([])}
+        />
       </div>
 
-      {/* Request Modal */}
-      <RequestProductModal
-        isOpen={isRequestModalOpen}
-        onClose={() => setIsRequestModalOpen(false)} />
-
-    </div>);
-
+      <RequestProductModal isOpen={isRequestModalOpen} onClose={() => setIsRequestModalOpen(false)} />
+    </div>
+  );
 }
