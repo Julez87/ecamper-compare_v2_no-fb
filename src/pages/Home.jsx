@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +13,7 @@ import RequestProductModal from '@/components/products/RequestProductModal';
 import { motion } from 'framer-motion';
 
 export default function Home() {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     search: '',
     sizeCategory: 'All',
@@ -33,9 +34,9 @@ export default function Home() {
     if (filters.search) {
       const search = filters.search.toLowerCase();
       result = result.filter((p) =>
-        p.model_name?.toLowerCase().includes(search) ||
-        p.base_vehicle?.brand?.toLowerCase().includes(search) ||
-        p.description?.toLowerCase().includes(search)
+      p.model_name?.toLowerCase().includes(search) ||
+      p.base_vehicle?.brand?.toLowerCase().includes(search) ||
+      p.description?.toLowerCase().includes(search)
       );
     }
 
@@ -43,96 +44,15 @@ export default function Home() {
       result = result.filter((p) => p.size_category === filters.sizeCategory);
     }
 
-    if (filters.brand !== 'All') {
+    if (filters.brand !== 'All') { 
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    // Purchase price range
-    if (filters.purchasePrice) {
-      result = result.filter((p) => {
-        const price = p.buy_from_price || 0;
-        return price >= filters.purchasePrice[0] && price <= filters.purchasePrice[1];
-      });
-    }
+    /*result = result.filter((p) => {
+      const buyPrice = p.buy_from_price || 0;
+      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+    });*/
 
-    // Rental price range
-    if (filters.rentalPrice) {
-      result = result.filter((p) => {
-        const price = p.rent_from_price || 0;
-        return price >= filters.rentalPrice[0] && price <= filters.rentalPrice[1];
-      });
-    }
-
-    // Quick filters
-    if (filters.gasFree) {
-      result = result.filter((p) =>
-        p.kitchen?.stove_type !== 'gas' &&
-        p.climate?.vehicle_heating !== 'gas' &&
-        p.climate?.stand_heating !== 'gas' &&
-        p.kitchen?.fridge_type !== 'gas'
-      );
-    }
-
-    if (filters.ecoMaterials) {
-      result = result.filter((p) =>
-        p.eco_scoring?.furniture_materials_eco ||
-        p.eco_scoring?.flooring_material_eco ||
-        p.eco_scoring?.insulation_material_eco ||
-        p.eco_scoring?.textile_material_eco
-      );
-    }
-
-    if (filters.familyFriendly) {
-      result = result.filter((p) =>
-        (p.sleeping?.sleeps || 0) >= 4 ||
-        (p.camper_data?.seats || 0) >= 4 ||
-        (p.sit_lounge?.iso_fix && p.sit_lounge.iso_fix !== 'no' && p.sit_lounge.iso_fix !== 'unknown')
-      );
-    }
-
-    if (filters.offGrid) {
-      result = result.filter((p) =>
-        p.energy?.solar_panel_available === 'yes' ||
-        (p.energy?.camping_battery_wh || 0) >= 1000
-      );
-    }
-
-    if (filters.winterReady) {
-      result = result.filter((p) =>
-        (p.climate?.stand_heating && p.climate.stand_heating !== 'no' && p.climate.stand_heating !== 'unknown') ||
-        (p.climate?.living_room_heating === 'yes') ||
-        (p.climate?.insulation === 'yes')
-      );
-    }
-
-    if (filters.heightUnder2m) {
-      result = result.filter((p) =>
-        p.camper_data?.height_mm && p.camper_data.height_mm < 2000
-      );
-    }
-
-    // Advanced filters
-    const adv = filters.advanced || {};
-    if (adv.model_year) result = result.filter((p) => p.base_vehicle?.model_year === adv.model_year);
-    if (adv.drive) result = result.filter((p) => p.base_vehicle?.drive === adv.drive);
-    if (adv.trailer_hitch === 'yes') result = result.filter((p) => p.extras?.trailer_hitch === 'yes' || p.extras?.trailer_hitch === 'retractable');
-    if (adv.min_range) result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= adv.min_range);
-    if (adv.min_storage_total) result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= adv.min_storage_total);
-    if (adv.popup_roof === 'yes') result = result.filter((p) => p.camper_data?.popup_roof === 'yes');
-    if (adv.min_battery) result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= Number(adv.min_battery));
-    if (adv.min_sleeps) result = result.filter((p) => (p.sleeping?.sleeps || 0) >= adv.min_sleeps);
-    if (adv.min_fridge) result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= adv.min_fridge);
-    if (adv.stove_type) result = result.filter((p) => p.kitchen?.stove_type === adv.stove_type);
-    if (adv.toilet_type) result = result.filter((p) => p.bathroom?.toilet_type === adv.toilet_type);
-    if (adv.warm_shower === 'yes') result = result.filter((p) => p.bathroom?.warm_shower === 'yes');
-    if (adv.solar_panel_available === 'yes') result = result.filter((p) => p.energy?.solar_panel_available === 'yes');
-    if (adv.ac === 'yes') result = result.filter((p) => p.climate?.ac === 'yes');
-    if (adv.carplay) result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === adv.carplay);
-    if (adv.remote_app_access === 'yes') result = result.filter((p) => p.smart_connected?.remote_app_access === 'yes');
-    if (adv.parking_sensors) result = result.filter((p) => p.smart_connected?.parking_sensors && p.smart_connected.parking_sensors !== 'no' && p.smart_connected.parking_sensors !== 'unknown');
-    if (adv.stand_heating) result = result.filter((p) => p.climate?.stand_heating === adv.stand_heating);
-
-    // Sorting
     switch (filters.sortBy) {
       case 'price-buy-low':
         result.sort((a, b) => (a.buy_from_price || 0) - (b.buy_from_price || 0));
@@ -217,8 +137,7 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxBuyPrice={maxPrice}
-          products={products} />
+          maxPrice={maxPrice} />
 
 
         <div className="mt-6">
