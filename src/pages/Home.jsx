@@ -10,7 +10,6 @@ import ProductCard from '@/components/products/ProductCard';
 import ProductFilters from '@/components/products/ProductFilters';
 import CompareBar from '@/components/products/CompareBar';
 import RequestProductModal from '@/components/products/RequestProductModal';
-import PolaroidGallery from '@/components/PolaroidGallery';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -48,10 +47,126 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    /*result = result.filter((p) => {
-      const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });*/
+    if (filters.purchasePrice) {
+      result = result.filter((p) => {
+        const buyPrice = p.buy_from_price || 0;
+        return buyPrice >= filters.purchasePrice[0] && buyPrice <= filters.purchasePrice[1];
+      });
+    }
+
+    if (filters.rentalPrice) {
+      result = result.filter((p) => {
+        const rentPrice = p.rent_from_price || 0;
+        return rentPrice >= filters.rentalPrice[0] && rentPrice <= filters.rentalPrice[1];
+      });
+    }
+
+    if (filters.gasFree) {
+      result = result.filter((p) => 
+        p.kitchen?.stove_type !== 'gas' && 
+        p.climate?.stand_heating !== 'gas' && 
+        p.climate?.vehicle_heating !== 'gas'
+      );
+    }
+
+    if (filters.ecoMaterials) {
+      result = result.filter((p) => 
+        p.eco_scoring?.furniture_materials_eco || 
+        p.eco_scoring?.flooring_material_eco || 
+        p.eco_scoring?.insulation_material_eco || 
+        p.eco_scoring?.textile_material_eco
+      );
+    }
+
+    if (filters.familyFriendly) {
+      result = result.filter((p) => 
+        (p.sleeping?.sleeps || 0) >= 4 && 
+        p.sit_lounge?.iso_fix !== 'no'
+      );
+    }
+
+    if (filters.offGrid) {
+      result = result.filter((p) => 
+        p.energy?.solar_panel_available === 'yes' && 
+        (p.energy?.camping_battery_wh || 0) >= 1000
+      );
+    }
+
+    if (filters.winterReady) {
+      result = result.filter((p) => 
+        p.climate?.insulation === 'yes' && 
+        (p.climate?.stand_heating === 'electric' || p.climate?.stand_heating === 'gas')
+      );
+    }
+
+    if (filters.heightUnder2m) {
+      result = result.filter((p) => 
+        (p.camper_data?.height_mm || Infinity) < 2000
+      );
+    }
+
+    if (filters.advanced) {
+      const adv = filters.advanced;
+      
+      if (adv.model_year) {
+        result = result.filter((p) => p.base_vehicle?.model_year === adv.model_year);
+      }
+      if (adv.drive) {
+        result = result.filter((p) => p.base_vehicle?.drive === adv.drive);
+      }
+      if (adv.trailer_hitch === 'yes') {
+        result = result.filter((p) => p.extras?.trailer_hitch === 'yes' || p.extras?.trailer_hitch === 'retractable');
+      }
+      if (adv.min_range) {
+        result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= adv.min_range);
+      }
+      if (adv.min_storage_total) {
+        result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= adv.min_storage_total);
+      }
+      if (adv.popup_roof === 'yes') {
+        result = result.filter((p) => p.camper_data?.popup_roof === 'yes');
+      }
+      if (adv.min_battery) {
+        result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= parseFloat(adv.min_battery));
+      }
+      if (adv.min_sleeps) {
+        result = result.filter((p) => (p.sleeping?.sleeps || 0) >= adv.min_sleeps);
+      }
+      if (adv.min_fridge) {
+        result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= adv.min_fridge);
+      }
+      if (adv.stove_type) {
+        result = result.filter((p) => p.kitchen?.stove_type === adv.stove_type);
+      }
+      if (adv.toilet_type) {
+        result = result.filter((p) => p.bathroom?.toilet_type === adv.toilet_type);
+      }
+      if (adv.warm_shower === 'yes') {
+        result = result.filter((p) => p.bathroom?.warm_shower === 'yes');
+      }
+      if (adv.solar_panel_available === 'yes') {
+        result = result.filter((p) => p.energy?.solar_panel_available === 'yes');
+      }
+      if (adv.ac === 'yes') {
+        result = result.filter((p) => p.climate?.ac === 'yes');
+      }
+      if (adv.carplay) {
+        result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === adv.carplay);
+      }
+      if (adv.remote_app_access === 'yes') {
+        result = result.filter((p) => p.smart_connected?.remote_app_access === 'yes');
+      }
+      if (adv.parking_sensors) {
+        result = result.filter((p) => 
+          p.smart_connected?.parking_sensors === 'front & rear' || 
+          p.smart_connected?.parking_sensors === 'front' || 
+          p.smart_connected?.parking_sensors === 'rear'
+        );
+      }
+      if (adv.stand_heating) {
+        result = result.filter((p) => p.climate?.stand_heating === adv.stand_heating);
+      }
+    }
 
     switch (filters.sortBy) {
       case 'price-buy-low':
@@ -93,9 +208,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white relative overflow-hidden" style={{ minHeight: '500px' }}>
-        {products.length > 0 && <PolaroidGallery products={products} />}
-        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
