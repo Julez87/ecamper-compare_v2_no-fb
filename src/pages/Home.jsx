@@ -5,19 +5,28 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, ArrowRight, Sparkles } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
 import ProductFilters from '@/components/products/ProductFilters';
 import CompareBar from '@/components/products/CompareBar';
 import RequestProductModal from '@/components/products/RequestProductModal';
-import HeroPolaroidRevealStyled from '@/components/HeroPolaroidReveal';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const [filters, setFilters] = useState({
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    sortBy: 'featured'
+    sortBy: 'featured',
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    heightUnder2m: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -47,10 +56,74 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    /*result = result.filter((p) => {
-      const buyPrice = p.buy_from_price || 0;
-      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });*/
+    // Purchase price filter
+    if (filters.purchasePrice && (filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxPrice)) {
+      result = result.filter((p) => {
+        const price = p.buy_from_price || 0;
+        return price >= filters.purchasePrice[0] && price <= filters.purchasePrice[1];
+      });
+    }
+
+    // Rental price filter
+    if (filters.rentalPrice && (filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < 250)) {
+      result = result.filter((p) => {
+        const price = p.rent_from_price || 0;
+        return price >= filters.rentalPrice[0] && price <= filters.rentalPrice[1];
+      });
+    }
+
+    // Quick filters
+    if (filters.gasFree) {
+      result = result.filter((p) =>
+        p.kitchen?.stove_type !== 'gas' &&
+        p.climate?.stand_heating !== 'gas' &&
+        p.climate?.vehicle_heating !== 'gas'
+      );
+    }
+    if (filters.ecoMaterials) {
+      result = result.filter((p) =>
+        p.eco_scoring?.furniture_materials_eco ||
+        p.eco_scoring?.flooring_material_eco ||
+        p.eco_scoring?.insulation_material_eco ||
+        p.eco_scoring?.textile_material_eco
+      );
+    }
+    if (filters.familyFriendly) {
+      result = result.filter((p) => (p.camper_data?.seats || 0) >= 4 || (p.sleeping?.sleeps || 0) >= 4);
+    }
+    if (filters.offGrid) {
+      result = result.filter((p) => p.energy?.solar_panel_available === 'yes' || (p.energy?.camping_battery_wh || 0) >= 1000);
+    }
+    if (filters.winterReady) {
+      result = result.filter((p) =>
+        p.climate?.stand_heating && p.climate.stand_heating !== 'no' && p.climate.stand_heating !== 'unknown' &&
+        p.climate?.insulation === 'yes'
+      );
+    }
+    if (filters.heightUnder2m) {
+      result = result.filter((p) => p.camper_data?.height_mm && p.camper_data.height_mm < 2000);
+    }
+
+    // Advanced filters
+    const adv = filters.advanced || {};
+    if (adv.model_year) result = result.filter((p) => p.base_vehicle?.model_year === adv.model_year);
+    if (adv.drive) result = result.filter((p) => p.base_vehicle?.drive === adv.drive);
+    if (adv.trailer_hitch === 'yes') result = result.filter((p) => p.extras?.trailer_hitch === 'yes' || p.extras?.trailer_hitch === 'retractable');
+    if (adv.min_range) result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= adv.min_range);
+    if (adv.min_storage_total) result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= adv.min_storage_total);
+    if (adv.popup_roof === 'yes') result = result.filter((p) => p.camper_data?.popup_roof === 'yes');
+    if (adv.min_battery) result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= Number(adv.min_battery));
+    if (adv.min_sleeps) result = result.filter((p) => (p.sleeping?.sleeps || 0) >= adv.min_sleeps);
+    if (adv.min_fridge) result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= adv.min_fridge);
+    if (adv.stove_type) result = result.filter((p) => p.kitchen?.stove_type === adv.stove_type);
+    if (adv.toilet_type) result = result.filter((p) => p.bathroom?.toilet_type === adv.toilet_type);
+    if (adv.warm_shower === 'yes') result = result.filter((p) => p.bathroom?.warm_shower === 'yes');
+    if (adv.solar_panel_available === 'yes') result = result.filter((p) => p.energy?.solar_panel_available === 'yes');
+    if (adv.ac === 'yes') result = result.filter((p) => p.climate?.ac === 'yes');
+    if (adv.stand_heating) result = result.filter((p) => p.climate?.stand_heating === adv.stand_heating);
+    if (adv.carplay) result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === adv.carplay);
+    if (adv.remote_app_access === 'yes') result = result.filter((p) => p.smart_connected?.remote_app_access === 'yes');
+    if (adv.parking_sensors) result = result.filter((p) => p.smart_connected?.parking_sensors && p.smart_connected.parking_sensors !== 'no' && p.smart_connected.parking_sensors !== 'unknown');
 
     switch (filters.sortBy) {
       case 'price-buy-low':
@@ -91,11 +164,45 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Hero Section with Polaroid Reveal */}
-      <HeroPolaroidRevealStyled 
-        onBrowseClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
-        onRequestClick={() => setIsRequestModalOpen(true)}
-      />
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-3xl mx-auto">
+
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+              <Sparkles className="w-4 h-4 text-violet-400" />
+              <span className="text-sm font-medium text-violet-200">Compare Before You Buy</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              Find Your Perfect
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"> Electric Camper</span>
+            </h1>
+            <p className="text-lg text-slate-300 mb-8 max-w-xl mx-auto">
+              Compare specs, prices, and features across electric camper vans. Make informed decisions with our comprehensive comparison tool.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8"
+                onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
+
+                Browse Campers <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline" className="bg-background text-slate-700 px-8 text-sm font-medium rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-10 border-white/30 hover:bg-white/10"
+
+                onClick={() => setIsRequestModalOpen(true)}>
+
+                <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
 
       {/* Products Section */}
       <div id="products" className="max-w-7xl mx-auto px-4 py-8">
