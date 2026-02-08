@@ -43,14 +43,14 @@ export default function Home() {
       result = result.filter((p) => p.size_category === filters.sizeCategory);
     }
 
-    if (filters.brand !== 'All') {
+    if (filters.brand !== 'All') { 
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
-    result = result.filter((p) => {
+    /*result = result.filter((p) => {
       const buyPrice = p.buy_from_price || 0;
       return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
-    });
+    });*/
 
     switch (filters.sortBy) {
       case 'price-buy-low':
