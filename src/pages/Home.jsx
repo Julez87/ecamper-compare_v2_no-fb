@@ -93,7 +93,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white relative">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white relative overflow-hidden" style={{ minHeight: '500px' }}>
+        {products.length > 0 && <PolaroidGallery products={products} />}
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -130,7 +131,6 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
-        <PolaroidGallery products={products} />
       </div>
 
       {/* Products Section */}
