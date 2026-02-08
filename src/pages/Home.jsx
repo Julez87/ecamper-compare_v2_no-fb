@@ -151,7 +151,7 @@ export default function Home() {
                   product={product}
                   onCompare={handleCompare}
                   isInCompare={compareList.some((p) => p.id === product.id)}
-                  onClick={() => navigate(createPageUrl("ProductDetail") + `?id=${product.id}`)}
+                  onClick={() => window.location.href = createPageUrl("ProductDetail") + `?id=${product.id}`}
                 />
               ))}
             </div>
