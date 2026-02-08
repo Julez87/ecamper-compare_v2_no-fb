@@ -72,7 +72,7 @@ const NAVIGATION_OPTIONS = ["yes", "no", "optional", "unknown"];
 const VEHICLE_COOLING_OPTIONS = ["no", "electric", "unknown"];
 const CRUISE_CONTROL_OPTIONS = ["yes", "ACC", "no", "unknown"];
 const PARKING_SENSORS_OPTIONS = ["no", "front", "rear", "front & rear", "unknown"];
-const HEATED_SEATS_OPTIONS = ["no", "front", "all", "unknown"];
+
 const SOLAR_PANEL_OPTIONS = ["yes", "no", "unknown"];
 const WARM_WATER_OPTIONS = ["yes", "no", "unknown"];
 const SHOWER_OPTIONS = ["indoor", "outdoor", "no", "unknown"];
@@ -449,9 +449,7 @@ export default function CamperAdminForm({ formData, setFormData }) {
             <LabeledSelect label="Back Window Opening" value={formData.climate?.back_window_opening || ''} onValueChange={(v) => updateNested('climate', 'back_window_opening', v)} placeholder="Back Window Opening">
               <SelectContent>{WINDOW_OPENING_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
-            <LabeledSelect label="Heated Seats" value={formData.climate?.heated_seats || ''} onValueChange={(v) => updateNested('climate', 'heated_seats', v)} placeholder="Heated Seats">
-              <SelectContent>{HEATED_SEATS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </LabeledSelect>
+
           </div>
 
           <h3 className="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide pt-4">Smart & Connected</h3>

@@ -808,7 +808,10 @@ export default function ProductDetail() {
                       {product.climate?.seat_heating && (
                         <div className="p-3 bg-slate-50 rounded-xl">
                           <p className="text-xs text-slate-500 uppercase">Seat Heating</p>
-                          <p className="font-semibold text-slate-900 capitalize">{product.climate.seat_heating}</p>
+                          <p className="font-semibold text-slate-900 capitalize">
+                            {product.climate.seat_heating}
+                            {product.climate.seat_heating === 'yes' && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
+                          </p>
                         </div>
                       )}
                       {product.climate?.steering_wheel_heating && (
@@ -838,15 +841,7 @@ export default function ProductDetail() {
                          <p className="font-semibold text-slate-900 capitalize">{product.climate.back_window_opening}</p>
                        </div>
                       )}
-                      {product.climate?.heated_seats && (
-                       <div className="p-3 bg-slate-50 rounded-xl">
-                         <p className="text-xs text-slate-500 uppercase">Heated seats</p>
-                         <p className="font-semibold text-slate-900 capitalize">
-                           {product.climate.heated_seats}
-                           {(product.climate.heated_seats === 'front' || product.climate.heated_seats === 'all') && <Badge className="ml-2 bg-green-100 text-green-700 text-xs">Eco</Badge>}
-                         </p>
-                       </div>
-                      )}
+
                     </div>
                   </div>
 
