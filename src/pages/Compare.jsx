@@ -22,6 +22,11 @@ export default function Compare() {
     queryFn: () => base44.entities.Product.list(),
   });
 
+  const { data: allCompanies = [] } = useQuery({
+    queryKey: ['rentalCompanies'],
+    queryFn: () => base44.entities.RentalCompany.list()
+  });
+
   const { data: compareProducts = [], isLoading } = useQuery({
     queryKey: ['compareProducts', selectedIds],
     queryFn: async () => {
@@ -59,7 +64,14 @@ export default function Compare() {
     compareProducts.forEach(p => {
       let value = null;
       if (key === 'buy_from_price') value = p.buy_from_price;
-      else if (key === 'rent_from_price') value = p.rent_from_price;
+      else if (key === 'rent_from_price') {
+        const prices = allCompanies
+          .flatMap((company) => company.available_campers || [])
+          .filter((c) => c.camper_id === p.id)
+          .map((c) => c.rent_price)
+          .filter((pr) => pr != null);
+        value = prices.length > 0 ? Math.min(...prices) : null;
+      }
       else if (key === 'actual_range_km') value = p.camper_data?.camper_range_km;
       else if (key === 'seats') value = p.camper_data?.seats;
       else if (key === 'sleeps') value = p.sleeping?.sleeps;
@@ -255,7 +267,14 @@ export default function Compare() {
                         <span className="text-sm text-slate-600">Rent per Day</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-emerald-600">
-                            {product.rent_from_price ? `€${product.rent_from_price}` : '—'}
+                            {(() => {
+                              const prices = allCompanies
+                                .flatMap((company) => company.available_campers || [])
+                                .filter((c) => c.camper_id === product.id)
+                                .map((c) => c.rent_price)
+                                .filter((p) => p != null);
+                              return prices.length > 0 ? `€${Math.min(...prices)}` : '—';
+                            })()}
                           </span>
                           {getBestValue('rent_from_price', false).includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
