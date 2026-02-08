@@ -58,12 +58,27 @@ export default function Compare() {
       let value = null;
       if (key === 'buy_from_price') value = p.buy_from_price;
       else if (key === 'rent_from_price') value = p.rent_from_price;
-      else if (key === 'wltp_range_km') value = p.base_vehicle?.wltp_range_km;
-      else if (key === 'battery_size_kwh') value = p.base_vehicle?.battery_size_kwh;
-      else if (key === 'camping_battery_wh') value = p.energy?.camping_battery_wh;
-      else if (key === 'solar_panel_max_w') value = p.energy?.solar_panel_max_w;
+      else if (key === 'actual_range_km') value = p.camper_data?.camper_range_km;
+      else if (key === 'seats') value = p.camper_data?.seats;
       else if (key === 'sleeps') value = p.sleeping?.sleeps;
+      else if (key === 'solar_panel_max_w') value = p.energy?.solar_panel_max_w;
+      else if (key === 'camping_battery_wh') value = p.energy?.camping_battery_wh;
       else if (key === 'fridge_l') value = p.kitchen?.fridge_l;
+      else if (key === 'stove_plates') value = p.kitchen?.stove_plates;
+      else if (key === 'fresh_water_l') value = p.bathroom?.fresh_water_l;
+      else if (key === 'eco_tags') {
+        value = 0;
+        if (p.kitchen?.fridge_type === 'electric') value++;
+        if (p.kitchen?.stove_type === 'electric') value++;
+        if (p.climate?.vehicle_heating === 'electric') value++;
+        if (p.climate?.stand_heating === 'electric') value++;
+        if (p.energy?.solar_panel_available === 'yes') value++;
+        if (p.climate?.seat_heating === 'yes') value++;
+        if (p.eco_scoring?.furniture_materials_eco) value++;
+        if (p.eco_scoring?.flooring_material_eco) value++;
+        if (p.eco_scoring?.insulation_material_eco) value++;
+        if (p.eco_scoring?.textile_material_eco) value++;
+      }
       values.push({ id: p.id, value });
     });
 
@@ -71,7 +86,63 @@ export default function Compare() {
     if (validValues.length === 0) return null;
 
     const target = higherIsBetter ? Math.max(...validValues) : Math.min(...validValues);
+    const allEqualTarget = validValues.every(v => v === target);
+    if (allEqualTarget) return null;
+    
     return values.find(v => v.value === target)?.id;
+  };
+
+  const getHighlights = (product) => {
+    const highlights = [];
+    
+    // Gas-Free
+    const isGasFree = 
+      product.kitchen?.stove_type !== 'gas' && 
+      product.climate?.vehicle_heating !== 'gas' &&
+      product.climate?.stand_heating !== 'gas';
+    if (isGasFree) highlights.push('Gas-Free');
+    
+    // Eco Materials
+    const hasEcoMaterials = 
+      product.eco_scoring?.furniture_materials_eco ||
+      product.eco_scoring?.flooring_material_eco ||
+      product.eco_scoring?.insulation_material_eco ||
+      product.eco_scoring?.textile_material_eco;
+    if (hasEcoMaterials) highlights.push('Eco Materials');
+    
+    // Family Friendly
+    if ((product.sleeping?.sleeps || 0) >= 4 && (product.camper_data?.seats || 0) >= 4) {
+      highlights.push('Family Friendly');
+    }
+    
+    // Off-Grid
+    if (product.energy?.solar_panel_available === 'yes' && 
+        (product.energy?.camping_battery_wh || 0) >= 1000) {
+      highlights.push('Off-Grid');
+    }
+    
+    // Winter Ready
+    if ((product.climate?.stand_heating === 'electric' || product.climate?.stand_heating === 'gas') &&
+        product.climate?.insulation === 'yes') {
+      highlights.push('Winter Ready');
+    }
+    
+    return highlights;
+  };
+
+  const getEcoTagCount = (product) => {
+    let count = 0;
+    if (product.kitchen?.fridge_type === 'electric') count++;
+    if (product.kitchen?.stove_type === 'electric') count++;
+    if (product.climate?.vehicle_heating === 'electric') count++;
+    if (product.climate?.stand_heating === 'electric') count++;
+    if (product.energy?.solar_panel_available === 'yes') count++;
+    if (product.climate?.seat_heating === 'yes') count++;
+    if (product.eco_scoring?.furniture_materials_eco) count++;
+    if (product.eco_scoring?.flooring_material_eco) count++;
+    if (product.eco_scoring?.insulation_material_eco) count++;
+    if (product.eco_scoring?.textile_material_eco) count++;
+    return count;
   };
 
   const emptySlots = Math.max(0, 2 - compareProducts.length);
@@ -165,70 +236,50 @@ export default function Compare() {
                     {/* Specs */}
                     <div className="divide-y divide-slate-100">
                       {/* Buy Price */}
-                      {product.buy_from_price && (
-                        <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
-                          <span className="text-sm text-slate-600">Buy Price</span>
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-900">€{product.buy_from_price?.toLocaleString()}</span>
-                            {getBestValue('buy_from_price', false) === product.id && (
-                              <Trophy className="w-4 h-4 text-green-600" />
-                            )}
-                          </div>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Buy Price</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-900">
+                            {product.buy_from_price ? `€${product.buy_from_price.toLocaleString()}` : '—'}
+                          </span>
+                          {getBestValue('buy_from_price', false) === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
                         </div>
-                      )}
+                      </div>
 
                       {/* Rent Price */}
-                      {product.rent_from_price && (
-                        <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
-                          <span className="text-sm text-slate-600">Rent per Day</span>
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-emerald-600">€{product.rent_from_price}</span>
-                            {getBestValue('rent_from_price', false) === product.id && (
-                              <Trophy className="w-4 h-4 text-green-600" />
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* WLTP Range */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('wltp_range_km') === product.id ? 'bg-green-50' : ''}`}>
-                        <span className="text-sm text-slate-600">WLTP Range</span>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Rent per Day</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-slate-900">{product.base_vehicle?.wltp_range_km || '—'} km</span>
-                          {getBestValue('wltp_range_km') === product.id && (
+                          <span className="font-bold text-emerald-600">
+                            {product.rent_from_price ? `€${product.rent_from_price}` : '—'}
+                          </span>
+                          {getBestValue('rent_from_price', false) === product.id && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
-                      {/* Battery */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('battery_size_kwh') === product.id ? 'bg-green-50' : ''}`}>
-                        <span className="text-sm text-slate-600">Vehicle Battery</span>
+                      {/* Actual Range */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('actual_range_km') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Actual Range</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-slate-900">{product.base_vehicle?.battery_size_kwh || '—'} kWh</span>
-                          {getBestValue('battery_size_kwh') === product.id && (
+                          <span className="font-medium text-slate-900">
+                            {product.camper_data?.camper_range_km ? `${product.camper_data.camper_range_km} km` : '—'}
+                          </span>
+                          {getBestValue('actual_range_km') === product.id && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
-                      {/* Camping Battery */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh') === product.id ? 'bg-green-50' : ''}`}>
-                        <span className="text-sm text-slate-600">Camping Battery</span>
+                      {/* Seats */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('seats') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Seats</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-slate-900">{product.energy?.camping_battery_wh || '—'} Wh</span>
-                          {getBestValue('camping_battery_wh') === product.id && (
-                            <Trophy className="w-4 h-4 text-green-600" />
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Solar Panel */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w') === product.id ? 'bg-green-50' : ''}`}>
-                        <span className="text-sm text-slate-600">Solar Panel</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-slate-900">{product.energy?.solar_panel_max_w || '—'} W</span>
-                          {getBestValue('solar_panel_max_w') === product.id && (
+                          <span className="font-medium text-slate-900">{product.camper_data?.seats || '—'}</span>
+                          {getBestValue('seats') === product.id && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
@@ -245,53 +296,89 @@ export default function Compare() {
                         </div>
                       </div>
 
-                      {/* Seats */}
-                      <div className="p-4 flex justify-between items-center">
-                        <span className="text-sm text-slate-600">Seats</span>
-                        <span className="font-medium text-slate-900">{product.camper_data?.seats || '—'}</span>
+                      {/* Solar Panel */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Solar Panel</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">
+                            {product.energy?.solar_panel_max_w ? `${product.energy.solar_panel_max_w} W` : '—'}
+                          </span>
+                          {getBestValue('solar_panel_max_w') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Camping Battery */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Camping Battery</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">
+                            {product.energy?.camping_battery_wh ? `${product.energy.camping_battery_wh} Wh` : '—'}
+                          </span>
+                          {getBestValue('camping_battery_wh') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
                       </div>
 
                       {/* Fridge */}
                       <div className={`p-4 flex justify-between items-center ${getBestValue('fridge_l') === product.id ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Fridge Size</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-slate-900">{product.kitchen?.fridge_l || '—'} L</span>
+                          <span className="font-medium text-slate-900">
+                            {product.kitchen?.fridge_l ? `${product.kitchen.fridge_l} L` : '—'}
+                          </span>
                           {getBestValue('fridge_l') === product.id && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
+                      {/* Amount Stoves */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('stove_plates') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Amount Stoves</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">{product.kitchen?.stove_plates || '—'}</span>
+                          {getBestValue('stove_plates') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+
                       {/* Fresh Water */}
-                      <div className="p-4 flex justify-between items-center">
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('fresh_water_l') === product.id ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Fresh Water</span>
-                        <span className="font-medium text-slate-900">{product.bathroom?.fresh_water_l || '—'} L</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">
+                            {product.bathroom?.fresh_water_l ? `${product.bathroom.fresh_water_l} L` : '—'}
+                          </span>
+                          {getBestValue('fresh_water_l') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
                       </div>
 
-                      {/* Features */}
-                      <div className="p-4">
-                        <span className="text-sm text-slate-600 block mb-2">Top Features</span>
-                        {product.top_features?.length > 0 ? (
-                          <ul className="space-y-1">
-                            {product.top_features.slice(0, 3).map((feature, i) => (
-                              <li key={i} className="text-sm flex items-start gap-1.5">
-                                <Check className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span className="text-slate-700">{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <span className="text-slate-400 text-sm">—</span>
-                        )}
+                      {/* Eco-Tags */}
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('eco_tags') === product.id ? 'bg-green-50' : ''}`}>
+                        <span className="text-sm text-slate-600">Eco-Tags</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-slate-900">{getEcoTagCount(product)}</span>
+                          {getBestValue('eco_tags') === product.id && (
+                            <Trophy className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
                       </div>
 
-                      {/* Rental Companies */}
+                      {/* Highlights */}
                       <div className="p-4">
-                        <span className="text-sm text-slate-600 block mb-2">Available at</span>
-                        {product.rental_companies?.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {product.rental_companies.map((company, i) => (
-                              <Badge key={i} variant="outline" className="text-xs">{company}</Badge>
+                        <span className="text-sm text-slate-600 block mb-2">Highlights</span>
+                        {getHighlights(product).length > 0 ? (
+                          <div className="flex flex-wrap gap-1.5">
+                            {getHighlights(product).map((highlight, i) => (
+                              <Badge key={i} variant="secondary" className="text-xs bg-emerald-100 text-emerald-700">
+                                {highlight}
+                              </Badge>
                             ))}
                           </div>
                         ) : (
