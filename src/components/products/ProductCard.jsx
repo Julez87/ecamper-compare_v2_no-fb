@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 
-export default function ProductCard({ product, onCompare, isInCompare, onClick }) {
+export default function ProductCard({ product, onCompare, isInCompare, productUrl }) {
   const { data: allCompanies = [] } = useQuery({
     queryKey: ['rentalCompanies'],
     queryFn: () => base44.entities.RentalCompany.list()
@@ -61,23 +62,23 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
       transition={{ duration: 0.2 }}
     >
       <Card 
-        className="group relative overflow-hidden bg-white border-0 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full"
-        onClick={onClick}
+        className="group relative overflow-hidden bg-white border-0 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
       >
-        <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 max-w-[calc(100%-1.5rem)]">
-          {smartFilters.map((filter, i) => {
-            const Icon = filter.icon;
-            return (
-              <Badge key={i} className="bg-emerald-600 text-white text-xs font-medium px-2 py-0.5 flex items-center gap-1">
-                <Icon className="w-3 h-3" /> {filter.label}
-              </Badge>
-            );
-          })}
-        </div>
+        <Link to={productUrl} className="contents">
+          <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 max-w-[calc(100%-1.5rem)]">
+            {smartFilters.map((filter, i) => {
+              const Icon = filter.icon;
+              return (
+                <Badge key={i} className="bg-emerald-600 text-white text-xs font-medium px-2 py-0.5 flex items-center gap-1">
+                  <Icon className="w-3 h-3" /> {filter.label}
+                </Badge>
+              );
+            })}
+          </div>
 
 
 
-        <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden relative">
+          <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden relative cursor-pointer">
           {product.image_url ? (
             <img 
               src={product.image_url} 
@@ -96,9 +97,9 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
               </Badge>
             </div>
             )}
-            </div>
+          </div>
         
-        <div className="p-5 flex-1 flex flex-col">
+          <div className="p-5 flex-1 flex flex-col cursor-pointer">
           <div className="flex items-center gap-2 mb-1">
             <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
               {sizeLabel}
@@ -165,6 +166,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
               </div>
             </div>
           )}
+        </Link>
           
           <Button
             size="sm"
@@ -174,7 +176,10 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
                 ? 'bg-violet-600 hover:bg-violet-700 text-white' 
                 : 'border-slate-200 hover:border-violet-600 hover:text-violet-600'
             }`}
-            onClick={(e) => onCompare(e)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onCompare(product);
+            }}
           >
             {isInCompare ? (
               <><Check className="w-4 h-4 mr-1" /> Added</>
