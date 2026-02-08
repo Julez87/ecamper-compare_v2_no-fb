@@ -17,17 +17,17 @@ export default function PolaroidGallery({ products }) {
   };
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden">
       {products.slice(0, 12).map((product, index) => {
-        const randomRotation = (Math.random() - 0.5) * 20;
-        const randomX = Math.random() * 80 + 10;
-        const randomY = Math.random() * 70 + 15;
+        const randomRotation = (Math.random() - 0.5) * 45; // Increased rotation range
+        const randomX = Math.random() * 75; // Wider X spread
+        const randomY = Math.random() * 65; // Wider Y spread
         const randomFont = handwrittenFonts[index % handwrittenFonts.length];
         
         return (
           <motion.div
             key={product.id}
-            className="absolute pointer-events-auto cursor-pointer"
+            className="absolute cursor-pointer"
             style={{
               left: `${randomX}%`,
               top: `${randomY}%`,
@@ -44,7 +44,7 @@ export default function PolaroidGallery({ products }) {
             }}
             onClick={() => handleClick(product.id)}
           >
-            <div className="bg-white p-3 shadow-xl" style={{ width: '140px' }}>
+            <div className="bg-white p-3 shadow-xl hover:shadow-2xl transition-shadow" style={{ width: '140px' }}>
               <div className="aspect-square bg-slate-100 mb-2 overflow-hidden">
                 {product.image_url ? (
                   <img 
@@ -58,12 +58,14 @@ export default function PolaroidGallery({ products }) {
                   </div>
                 )}
               </div>
-              <p 
-                className="text-center text-sm text-slate-800 truncate"
-                style={{ fontFamily: randomFont }}
-              >
-                {product.model_name}
-              </p>
+              <div className="relative">
+                <p 
+                  className="text-center text-sm font-semibold text-slate-900 truncate bg-white/90 backdrop-blur-sm px-2 py-1 rounded"
+                  style={{ fontFamily: randomFont, textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
+                >
+                  {product.model_name}
+                </p>
+              </div>
             </div>
           </motion.div>
         );
