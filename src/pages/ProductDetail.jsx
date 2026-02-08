@@ -199,13 +199,6 @@ export default function ProductDetail() {
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
                         style={{ backgroundColor: company.color, color: 'white' }}
                       >
-                        {company.logo_url && (
-                          <img
-                            src={company.logo_url}
-                            alt={company.name}
-                            className="w-5 h-5 object-contain"
-                          />
-                        )}
                         <span className="text-sm font-medium">
                           {company.name}
                           {camperData?.rent_price && ` • €${camperData.rent_price}/day`}
