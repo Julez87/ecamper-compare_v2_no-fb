@@ -16,7 +16,16 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    sortBy: 'featured'
+    sortBy: 'featured',
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    heightUnder2m: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
