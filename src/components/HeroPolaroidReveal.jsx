@@ -153,7 +153,7 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
             </h1>
 
             {/* subcopy */}
-            <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
+            <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto" style={{ textShadow: '0 0 8px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5)' }}>
               Compare specs, prices, and features across electric camper vans. Make
               informed decisions with our comprehensive comparison tool.
             </p>
