@@ -376,7 +376,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
   const sortLabel = SORT_LABELS[filters.sortBy] || "Featured";
 
   return (
-    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 space-y-3">
+    <div id="filter-bar" className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 space-y-3">
       <div className="flex items-center gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
