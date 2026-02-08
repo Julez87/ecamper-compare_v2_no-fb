@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown, Zap, Snowflake, ArrowDown } from 'lucide-react';
+import { Search, X, SlidersHorizontal, Flame, Leaf, Users, ChevronDown, Zap, Snowflake, ArrowDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -629,7 +629,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           onClick={() => updateFilter('gasFree', !filters.gasFree)}
           className={filters.gasFree ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
         >
-          <Wind className="w-4 h-4 mr-1" /> Gas-Free
+          <Flame className="w-4 h-4 mr-1" /> Gas-Free
         </Button>
         <Button 
           variant={filters.ecoMaterials ? "default" : "outline"}

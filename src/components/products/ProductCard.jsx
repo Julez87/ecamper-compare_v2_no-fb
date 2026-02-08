@@ -1,14 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, Check, Award, Wind, Leaf, Users, Zap, Snowflake } from 'lucide-react';
+import { Plus, Check, Award, Flame, Leaf, Users, Zap, Snowflake } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 
-export default function ProductCard({ product, onCompare, isInCompare, productUrl }) {
+export default function ProductCard({ product, onCompare, isInCompare, onClick }) {
   const { data: allCompanies = [] } = useQuery({
     queryKey: ['rentalCompanies'],
     queryFn: () => base44.entities.RentalCompany.list()
@@ -28,7 +27,7 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
     product.climate?.stand_heating?.toLowerCase() === 'gas' ||
     product.climate?.vehicle_heating?.toLowerCase() === 'gas';
   if (!hasGas) {
-    smartFilters.push({ icon: Wind, label: 'Gas-Free' });
+    smartFilters.push({ icon: Flame, label: 'Gas-Free' });
   }
   
   // Eco Materials: ANY eco material flag is true
@@ -62,7 +61,8 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
       transition={{ duration: 0.2 }}
     >
       <Card 
-        className="group relative overflow-hidden bg-white border-0 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+        className="group relative overflow-hidden bg-white border-0 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full"
+        onClick={onClick}
       >
         <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 max-w-[calc(100%-1.5rem)]">
           {smartFilters.map((filter, i) => {
@@ -75,8 +75,9 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
           })}
         </div>
 
-        <Link to={productUrl}>
-          <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden relative cursor-pointer">
+
+
+        <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden relative">
           {product.image_url ? (
             <img 
               src={product.image_url} 
@@ -95,10 +96,9 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
               </Badge>
             </div>
             )}
-          </div>
-        </Link>
+            </div>
         
-        <Link to={productUrl} className="p-5 flex-1 flex flex-col cursor-pointer">
+        <div className="p-5 flex-1 flex flex-col">
           <div className="flex items-center gap-2 mb-1">
             <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
               {sizeLabel}
@@ -148,7 +148,6 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
                     <button
                       key={company.id}
                       onClick={(e) => {
-                        e.preventDefault();
                         e.stopPropagation();
                         if (company.website_url) window.open(company.website_url, '_blank');
                       }}
@@ -166,9 +165,7 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
               </div>
             </div>
           )}
-        </Link>
-        
-        <div className="px-5 pb-5">
+          
           <Button
             size="sm"
             variant={isInCompare ? "default" : "outline"}
@@ -178,7 +175,6 @@ export default function ProductCard({ product, onCompare, isInCompare, productUr
                 : 'border-slate-200 hover:border-violet-600 hover:text-violet-600'
             }`}
             onClick={(e) => {
-              e.preventDefault();
               e.stopPropagation();
               onCompare(product);
             }}
