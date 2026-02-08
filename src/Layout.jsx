@@ -16,9 +16,9 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex items-center justify-between h-16">
             <Link to={createPageUrl('Home')} className="flex items-center gap-2 shrink-0">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69821ce2e60eda0e750871ab/459fb4fd6_MinimalistKompassimLiquidGlassStil.png" 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69821ce2e60eda0e750871ab/49807fe7d_image.png" 
                 alt="eC@mpass" 
-                className="w-9 h-9 shrink-0 rounded-lg"
+                className="w-9 h-9 shrink-0 object-contain"
               />
               <span className="font-bold text-xl text-slate-900 whitespace-nowrap">eC@mpass</span>
             </Link>
