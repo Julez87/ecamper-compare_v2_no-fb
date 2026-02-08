@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown, Zap, Snowflake } from 'lucide-react';
+import { Search, X, SlidersHorizontal, Wind, Leaf, Users, ChevronDown, Zap, Snowflake, ArrowDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -54,6 +54,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
       familyFriendly: false,
       offGrid: false,
       winterReady: false,
+      heightUnder2m: false,
       advanced: {}
     });
   };
@@ -61,7 +62,7 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
   const hasActiveFilters = filters.search || filters.sizeCategory !== 'All' || filters.brand !== 'All' || 
     (filters.purchasePrice && (filters.purchasePrice[0] > 0 || filters.purchasePrice[1] < maxBuyPrice)) || 
     (filters.rentalPrice && (filters.rentalPrice[0] > 0 || filters.rentalPrice[1] < maxRentPrice)) ||
-    filters.gasFree || filters.ecoMaterials || filters.familyFriendly || filters.offGrid || filters.winterReady ||
+    filters.gasFree || filters.ecoMaterials || filters.familyFriendly || filters.offGrid || filters.winterReady || filters.heightUnder2m ||
     Object.keys(filters.advanced || {}).length > 0;
 
   const FilterContent = () => (
@@ -661,6 +662,14 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           className={filters.winterReady ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
         >
           <Snowflake className="w-4 h-4 mr-1" /> Winter Ready
+        </Button>
+        <Button 
+          variant={filters.heightUnder2m ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateFilter('heightUnder2m', !filters.heightUnder2m)}
+          className={filters.heightUnder2m ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+        >
+          <ArrowDown className="w-4 h-4 mr-1" /> Height &lt;2m
         </Button>
       </div>
     </div>

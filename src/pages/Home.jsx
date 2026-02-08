@@ -17,7 +17,9 @@ export default function Home() {
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    sortBy: 'featured'
+    priceRange: [0, 5000],
+    sortBy: 'featured',
+    heightUnder2m: false
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -47,7 +49,14 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
+    result = result.filter((p) => {
+      const buyPrice = p.buy_from_price || 0;
+      return buyPrice >= filters.priceRange[0] && buyPrice <= filters.priceRange[1];
+    });
 
+    if (filters.heightUnder2m) {
+      result = result.filter((p) => (p.camper_data?.height_mm || Infinity) <= 2000);
+    }
 
     switch (filters.sortBy) {
       case 'price-buy-low':
@@ -177,12 +186,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) =>
+            <Link key={product.id} to={createPageUrl('ProductDetail') + `?id=${product.id}`}>
                   <ProductCard
-                key={product.id}
                 product={product}
-                productUrl={createPageUrl('ProductDetail') + `?id=${product.id}`}
                 onCompare={handleCompare}
-                isInCompare={compareList.some((p) => p.id === product.id)} />
+                isInCompare={compareList.some((p) => p.id === product.id)}
+                onClick={() => {}} />
+
+                </Link>
             )}
             </div>
           }
