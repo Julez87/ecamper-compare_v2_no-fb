@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,11 +13,21 @@ import RequestProductModal from '@/components/products/RequestProductModal';
 import { motion } from 'framer-motion';
 
 export default function Home() {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     search: '',
     sizeCategory: 'All',
     brand: 'All',
-    sortBy: 'featured'
+    purchasePrice: [0, 150000],
+    rentalPrice: [0, 250],
+    sortBy: 'featured',
+    gasFree: false,
+    ecoMaterials: false,
+    familyFriendly: false,
+    offGrid: false,
+    winterReady: false,
+    heightUnder2m: false,
+    advanced: {}
   });
   const [compareList, setCompareList] = useState([]);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -47,6 +57,7 @@ export default function Home() {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
 
+    // Price filters
     if (filters.purchasePrice) {
       result = result.filter((p) => {
         const buyPrice = p.buy_from_price || 0;
@@ -61,12 +72,16 @@ export default function Home() {
       });
     }
 
+    // Smart filters
     if (filters.gasFree) {
-      result = result.filter((p) => 
-        p.kitchen?.stove_type !== 'gas' && 
-        p.climate?.stand_heating !== 'gas' && 
-        p.climate?.vehicle_heating !== 'gas'
-      );
+      result = result.filter((p) => {
+        const hasGas = 
+          p.kitchen?.stove_type?.toLowerCase() === 'gas' ||
+          p.kitchen?.fridge_type?.toLowerCase() === 'gas' ||
+          p.climate?.stand_heating?.toLowerCase() === 'gas' ||
+          p.climate?.vehicle_heating?.toLowerCase() === 'gas';
+        return !hasGas;
+      });
     }
 
     if (filters.ecoMaterials) {
@@ -79,93 +94,98 @@ export default function Home() {
     }
 
     if (filters.familyFriendly) {
-      result = result.filter((p) => 
-        (p.sleeping?.sleeps || 0) >= 4 && 
-        p.sit_lounge?.iso_fix !== 'no'
-      );
+      result = result.filter((p) => (p.sleeping?.sleeps || 0) >= 4);
     }
 
     if (filters.offGrid) {
       result = result.filter((p) => 
-        p.energy?.solar_panel_available === 'yes' && 
-        (p.energy?.camping_battery_wh || 0) >= 1000
+        (p.energy?.solar_panel_max_w || 0) >= 100 && 
+        (p.energy?.camping_battery_wh || 0) >= 1
       );
     }
 
     if (filters.winterReady) {
-      result = result.filter((p) => 
-        p.climate?.insulation === 'yes' && 
-        (p.climate?.stand_heating === 'electric' || p.climate?.stand_heating === 'gas')
-      );
+      result = result.filter((p) => p.climate?.insulation === 'yes');
     }
 
     if (filters.heightUnder2m) {
-      result = result.filter((p) => 
-        (p.camper_data?.height_mm || Infinity) < 2000
-      );
+      result = result.filter((p) => (p.camper_data?.height_mm || 0) < 2000);
     }
 
-    if (filters.advanced) {
-      const adv = filters.advanced;
-      
-      if (adv.model_year) {
-        result = result.filter((p) => p.base_vehicle?.model_year === adv.model_year);
-      }
-      if (adv.drive) {
-        result = result.filter((p) => p.base_vehicle?.drive === adv.drive);
-      }
-      if (adv.trailer_hitch === 'yes') {
-        result = result.filter((p) => p.extras?.trailer_hitch === 'yes' || p.extras?.trailer_hitch === 'retractable');
-      }
-      if (adv.min_range) {
-        result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= adv.min_range);
-      }
-      if (adv.min_storage_total) {
-        result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= adv.min_storage_total);
-      }
-      if (adv.popup_roof === 'yes') {
-        result = result.filter((p) => p.camper_data?.popup_roof === 'yes');
-      }
-      if (adv.min_battery) {
-        result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= parseFloat(adv.min_battery));
-      }
-      if (adv.min_sleeps) {
-        result = result.filter((p) => (p.sleeping?.sleeps || 0) >= adv.min_sleeps);
-      }
-      if (adv.min_fridge) {
-        result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= adv.min_fridge);
-      }
-      if (adv.stove_type) {
-        result = result.filter((p) => p.kitchen?.stove_type === adv.stove_type);
-      }
-      if (adv.toilet_type) {
-        result = result.filter((p) => p.bathroom?.toilet_type === adv.toilet_type);
-      }
-      if (adv.warm_shower === 'yes') {
-        result = result.filter((p) => p.bathroom?.warm_shower === 'yes');
-      }
-      if (adv.solar_panel_available === 'yes') {
-        result = result.filter((p) => p.energy?.solar_panel_available === 'yes');
-      }
-      if (adv.ac === 'yes') {
-        result = result.filter((p) => p.climate?.ac === 'yes');
-      }
-      if (adv.carplay) {
-        result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === adv.carplay);
-      }
-      if (adv.remote_app_access === 'yes') {
-        result = result.filter((p) => p.smart_connected?.remote_app_access === 'yes');
-      }
-      if (adv.parking_sensors) {
-        result = result.filter((p) => 
-          p.smart_connected?.parking_sensors === 'front & rear' || 
-          p.smart_connected?.parking_sensors === 'front' || 
-          p.smart_connected?.parking_sensors === 'rear'
-        );
-      }
-      if (adv.stand_heating) {
-        result = result.filter((p) => p.climate?.stand_heating === adv.stand_heating);
-      }
+    // Advanced filters
+    if (filters.advanced?.model_year) {
+      result = result.filter((p) => p.base_vehicle?.model_year === filters.advanced.model_year);
+    }
+
+    if (filters.advanced?.drive) {
+      result = result.filter((p) => p.base_vehicle?.drive === filters.advanced.drive);
+    }
+
+    if (filters.advanced?.trailer_hitch === 'yes') {
+      result = result.filter((p) => p.extras?.trailer_hitch === 'yes' || p.extras?.trailer_hitch === 'retractable');
+    }
+
+    if (filters.advanced?.min_range) {
+      result = result.filter((p) => (p.camper_data?.camper_range_km || 0) >= filters.advanced.min_range);
+    }
+
+    if (filters.advanced?.min_storage_total) {
+      result = result.filter((p) => (p.camper_data?.storage_total_l || 0) >= filters.advanced.min_storage_total);
+    }
+
+    if (filters.advanced?.popup_roof === 'yes') {
+      result = result.filter((p) => p.camper_data?.popup_roof === 'yes');
+    }
+
+    if (filters.advanced?.min_battery) {
+      result = result.filter((p) => (p.base_vehicle?.battery_size_kwh || 0) >= filters.advanced.min_battery);
+    }
+
+    if (filters.advanced?.min_sleeps) {
+      result = result.filter((p) => (p.sleeping?.sleeps || 0) >= filters.advanced.min_sleeps);
+    }
+
+    if (filters.advanced?.min_fridge) {
+      result = result.filter((p) => (p.kitchen?.fridge_l || 0) >= filters.advanced.min_fridge);
+    }
+
+    if (filters.advanced?.stove_type && filters.advanced.stove_type !== 'all') {
+      result = result.filter((p) => p.kitchen?.stove_type === filters.advanced.stove_type);
+    }
+
+    if (filters.advanced?.toilet_type && filters.advanced.toilet_type !== 'all') {
+      result = result.filter((p) => p.bathroom?.toilet_type === filters.advanced.toilet_type);
+    }
+
+    if (filters.advanced?.warm_shower === 'yes') {
+      result = result.filter((p) => p.bathroom?.warm_shower === 'yes');
+    }
+
+    if (filters.advanced?.solar_panel_available === 'yes') {
+      result = result.filter((p) => p.energy?.solar_panel_available === 'yes');
+    }
+
+    if (filters.advanced?.ac === 'yes') {
+      result = result.filter((p) => p.climate?.ac === 'yes');
+    }
+
+    if (filters.advanced?.carplay && filters.advanced.carplay !== 'all') {
+      result = result.filter((p) => p.smart_connected?.apple_carplay_android_auto === filters.advanced.carplay);
+    }
+
+    if (filters.advanced?.remote_app_access === 'yes') {
+      result = result.filter((p) => p.smart_connected?.remote_app_access === 'yes');
+    }
+
+    if (filters.advanced?.parking_sensors && filters.advanced.parking_sensors !== 'all') {
+      result = result.filter((p) => {
+        const sensors = p.smart_connected?.parking_sensors;
+        return sensors === filters.advanced.parking_sensors || sensors === 'front & rear';
+      });
+    }
+
+    if (filters.advanced?.stand_heating && filters.advanced.stand_heating !== 'all') {
+      result = result.filter((p) => p.climate?.stand_heating === filters.advanced.stand_heating);
     }
 
     switch (filters.sortBy) {
@@ -203,7 +223,8 @@ export default function Home() {
     });
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -252,7 +273,8 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxBuyPrice={maxPrice}
+          maxBuyPrice={maxBuyPrice}
+          maxRentPrice={maxRentPrice}
           products={products} />
 
 
