@@ -180,7 +180,8 @@ export default function Home() {
         <ProductFilters
           filters={filters}
           setFilters={setFilters}
-          maxPrice={maxPrice} />
+          maxBuyPrice={maxPrice}
+          products={products} />
 
 
         <div className="mt-6">
