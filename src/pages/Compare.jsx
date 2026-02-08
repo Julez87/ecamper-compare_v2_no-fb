@@ -86,12 +86,15 @@ export default function Compare() {
         if (p.kitchen?.stove_type === 'electric') value++;
         if (p.climate?.vehicle_heating === 'electric') value++;
         if (p.climate?.stand_heating === 'electric') value++;
+        if (p.climate?.vehicle_cooling === 'electric') value++;
         if (p.energy?.solar_panel_available === 'yes') value++;
         if (p.climate?.seat_heating === 'yes') value++;
+        if (p.climate?.steering_wheel_heating === 'yes') value++;
         if (p.eco_scoring?.furniture_materials_eco) value++;
         if (p.eco_scoring?.flooring_material_eco) value++;
         if (p.eco_scoring?.insulation_material_eco) value++;
         if (p.eco_scoring?.textile_material_eco) value++;
+        if (p.bathroom?.toilet_type === 'separation') value++;
       }
       values.push({ id: p.id, value });
     });
@@ -150,12 +153,15 @@ export default function Compare() {
     if (product.kitchen?.stove_type === 'electric') count++;
     if (product.climate?.vehicle_heating === 'electric') count++;
     if (product.climate?.stand_heating === 'electric') count++;
+    if (product.climate?.vehicle_cooling === 'electric') count++;
     if (product.energy?.solar_panel_available === 'yes') count++;
     if (product.climate?.seat_heating === 'yes') count++;
+    if (product.climate?.steering_wheel_heating === 'yes') count++;
     if (product.eco_scoring?.furniture_materials_eco) count++;
     if (product.eco_scoring?.flooring_material_eco) count++;
     if (product.eco_scoring?.insulation_material_eco) count++;
     if (product.eco_scoring?.textile_material_eco) count++;
+    if (product.bathroom?.toilet_type === 'separation') count++;
     return count;
   };
 
