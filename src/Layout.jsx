@@ -15,10 +15,12 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link to={createPageUrl('Home')} className="flex items-center gap-2 shrink-0">
-              <div className="w-9 h-9 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl flex items-center justify-center shrink-0">
-                <Scale className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-bold text-xl text-slate-900 whitespace-nowrap">⚡ CamperCompare</span>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69821ce2e60eda0e750871ab/459fb4fd6_MinimalistKompassimLiquidGlassStil.png" 
+                alt="eC@mpass" 
+                className="w-9 h-9 shrink-0 rounded-lg"
+              />
+              <span className="font-bold text-xl text-slate-900 whitespace-nowrap">eC@mpass</span>
             </Link>
 
             {/* Desktop Navigation */}
