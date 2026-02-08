@@ -1,9 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 export default function PolaroidGallery({ products }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);
+
+  // Calculate positions once and reuse for both layers
+  const positions = useMemo(() => {
+    return products.slice(0, 12).map((_, index) => ({
+      rotation: (Math.random() - 0.5) * 45,
+      x: Math.random() * 75,
+      y: Math.random() * 65
+    }));
+  }, [products]);
 
   const handleClick = (productId) => {
     const element = document.getElementById(`product-${productId}`);
@@ -24,18 +33,16 @@ export default function PolaroidGallery({ products }) {
 
   const renderPolaroids = (blurred = false) => {
     return products.slice(0, 12).map((product, index) => {
-      const randomRotation = (Math.random() - 0.5) * 45;
-      const randomX = Math.random() * 75;
-      const randomY = Math.random() * 65;
+      const pos = positions[index];
       
       return (
         <motion.div
           key={`${product.id}-${blurred ? 'blur' : 'clear'}`}
           className="absolute cursor-pointer"
           style={{
-            left: `${randomX}%`,
-            top: `${randomY}%`,
-            transform: `rotate(${randomRotation}deg)`,
+            left: `${pos.x}%`,
+            top: `${pos.y}%`,
+            transform: `rotate(${pos.rotation}deg)`,
           }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -80,12 +87,14 @@ export default function PolaroidGallery({ products }) {
   };
 
   return (
-    <div 
-      ref={containerRef}
-      className="absolute inset-0 overflow-hidden"
-      onMouseMove={handleMouseMove}
-      style={{ position: 'relative' }}
-    >
+    <>
+      <link href="https://fonts.googleapis.com/css2?family=Nothing+You+Could+Do&display=swap" rel="stylesheet" />
+      <div 
+        ref={containerRef}
+        className="absolute inset-0 overflow-hidden"
+        onMouseMove={handleMouseMove}
+        style={{ position: 'relative' }}
+      >
       {/* Blurred layer */}
       <div 
         className="absolute inset-0 overflow-hidden"
@@ -106,6 +115,7 @@ export default function PolaroidGallery({ products }) {
           {renderPolaroids(false)}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
