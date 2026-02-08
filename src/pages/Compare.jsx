@@ -48,7 +48,9 @@ export default function Compare() {
     window.history.replaceState(null, '', newIds.length > 0 ? `${createPageUrl('Compare')}?ids=${newIds.join(',')}` : createPageUrl('Compare'));
   };
 
-  const availableProducts = allProducts.filter(p => !selectedIds.includes(p.id));
+  const availableProducts = allProducts
+    .filter(p => !selectedIds.includes(p.id))
+    .sort((a, b) => (a.model_name || '').localeCompare(b.model_name || ''));
 
   const getBestValue = (key, higherIsBetter = true) => {
     if (compareProducts.length < 2) return [];
