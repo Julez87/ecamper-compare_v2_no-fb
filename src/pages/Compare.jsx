@@ -51,7 +51,7 @@ export default function Compare() {
   const availableProducts = allProducts.filter(p => !selectedIds.includes(p.id));
 
   const getBestValue = (key, higherIsBetter = true) => {
-    if (compareProducts.length < 2) return null;
+    if (compareProducts.length < 2) return [];
     
     let values = [];
     compareProducts.forEach(p => {
@@ -83,13 +83,13 @@ export default function Compare() {
     });
 
     const validValues = values.filter(v => v.value != null).map(v => v.value);
-    if (validValues.length === 0) return null;
+    if (validValues.length === 0) return [];
 
     const target = higherIsBetter ? Math.max(...validValues) : Math.min(...validValues);
     const allEqualTarget = validValues.every(v => v === target);
-    if (allEqualTarget) return null;
+    if (allEqualTarget) return [];
     
-    return values.find(v => v.value === target)?.id;
+    return values.filter(v => v.value === target).map(v => v.id);
   };
 
   const getHighlights = (product) => {
@@ -236,135 +236,135 @@ export default function Compare() {
                     {/* Specs */}
                     <div className="divide-y divide-slate-100">
                       {/* Buy Price */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('buy_from_price', false).includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Buy Price</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-slate-900">
                             {product.buy_from_price ? `€${product.buy_from_price.toLocaleString()}` : '—'}
                           </span>
-                          {getBestValue('buy_from_price', false) === product.id && (
+                          {getBestValue('buy_from_price', false).includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Rent Price */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false) === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('rent_from_price', false).includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Rent per Day</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-emerald-600">
                             {product.rent_from_price ? `€${product.rent_from_price}` : '—'}
                           </span>
-                          {getBestValue('rent_from_price', false) === product.id && (
+                          {getBestValue('rent_from_price', false).includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Actual Range */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('actual_range_km') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('actual_range_km').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Actual Range</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
                             {product.camper_data?.camper_range_km ? `${product.camper_data.camper_range_km} km` : '—'}
                           </span>
-                          {getBestValue('actual_range_km') === product.id && (
+                          {getBestValue('actual_range_km').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Seats */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('seats') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('seats').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Seats</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{product.camper_data?.seats || '—'}</span>
-                          {getBestValue('seats') === product.id && (
+                          {getBestValue('seats').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Sleeps */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('sleeps') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('sleeps').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Sleeps</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{product.sleeping?.sleeps || '—'}</span>
-                          {getBestValue('sleeps') === product.id && (
+                          {getBestValue('sleeps').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Solar Panel */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('solar_panel_max_w').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Solar Panel</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
                             {product.energy?.solar_panel_max_w ? `${product.energy.solar_panel_max_w} W` : '—'}
                           </span>
-                          {getBestValue('solar_panel_max_w') === product.id && (
+                          {getBestValue('solar_panel_max_w').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Camping Battery */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('camping_battery_wh').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Camping Battery</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
                             {product.energy?.camping_battery_wh ? `${product.energy.camping_battery_wh} Wh` : '—'}
                           </span>
-                          {getBestValue('camping_battery_wh') === product.id && (
+                          {getBestValue('camping_battery_wh').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Fridge */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('fridge_l') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('fridge_l').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Fridge Size</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
                             {product.kitchen?.fridge_l ? `${product.kitchen.fridge_l} L` : '—'}
                           </span>
-                          {getBestValue('fridge_l') === product.id && (
+                          {getBestValue('fridge_l').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Amount Stoves */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('stove_plates') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('stove_plates').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Amount Stoves</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{product.kitchen?.stove_plates || '—'}</span>
-                          {getBestValue('stove_plates') === product.id && (
+                          {getBestValue('stove_plates').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Fresh Water */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('fresh_water_l') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('fresh_water_l').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Fresh Water</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">
                             {product.bathroom?.fresh_water_l ? `${product.bathroom.fresh_water_l} L` : '—'}
                           </span>
-                          {getBestValue('fresh_water_l') === product.id && (
+                          {getBestValue('fresh_water_l').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
                       </div>
 
                       {/* Eco-Tags */}
-                      <div className={`p-4 flex justify-between items-center ${getBestValue('eco_tags') === product.id ? 'bg-green-50' : ''}`}>
+                      <div className={`p-4 flex justify-between items-center ${getBestValue('eco_tags').includes(product.id) ? 'bg-green-50' : ''}`}>
                         <span className="text-sm text-slate-600">Eco-Tags</span>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{getEcoTagCount(product)}</span>
-                          {getBestValue('eco_tags') === product.id && (
+                          {getBestValue('eco_tags').includes(product.id) && (
                             <Trophy className="w-4 h-4 text-green-600" />
                           )}
                         </div>
