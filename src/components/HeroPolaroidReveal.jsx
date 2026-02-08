@@ -137,7 +137,7 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <div className="text-center max-w-3xl mx-auto">
             {/* pill */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 bg-violet-900/50 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
               <Sparkles className="w-4 h-4 text-violet-400" />
               <span className="text-sm font-medium text-violet-200">
                 Compare Before You Buy
