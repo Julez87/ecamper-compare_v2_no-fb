@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import CamperAdminForm from '../components/campers/CamperAdminForm';
 import RentalCompanyForm from '../components/rental/RentalCompanyForm';
 import RequestDetailModal from '../components/requests/RequestDetailModal';
+import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,6 +27,7 @@ export default function Admin() {
   const [companyForm, setCompanyForm] = useState({});
   const [viewingRequest, setViewingRequest] = useState(null);
   const [isRequestDetailOpen, setIsRequestDetailOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, type: null, item: null });
 
   const queryClient = useQueryClient();
 
@@ -167,6 +169,19 @@ export default function Admin() {
     }
   };
 
+  const handleDeleteClick = (type, item) => {
+    setDeleteConfirm({ isOpen: true, type, item });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirm.type === 'camper') {
+      deleteProduct.mutate(deleteConfirm.item.id);
+    } else if (deleteConfirm.type === 'company') {
+      deleteCompany.mutate(deleteConfirm.item.id);
+    }
+    setDeleteConfirm({ isOpen: false, type: null, item: null });
+  };
+
   const pendingRequests = requests.filter(r => r.status === 'pending');
 
   if (!isAuthenticated) {
@@ -273,7 +288,7 @@ export default function Admin() {
                         <Button variant="ghost" size="icon" onClick={() => openProductModal(product)}>
                           <Pencil className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => deleteProduct.mutate(product.id)}>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteClick('camper', product)}>
                           <Trash2 className="w-4 h-4 text-red-500" />
                         </Button>
                       </TableCell>
@@ -407,7 +422,7 @@ export default function Admin() {
                         <Button variant="ghost" size="icon" onClick={() => openCompanyModal(company)}>
                           <Pencil className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => deleteCompany.mutate(company.id)}>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteClick('company', company)}>
                           <Trash2 className="w-4 h-4 text-red-500" />
                         </Button>
                       </TableCell>
@@ -467,6 +482,16 @@ export default function Admin() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDeleteDialog
+        isOpen={deleteConfirm.isOpen}
+        onClose={() => setDeleteConfirm({ isOpen: false, type: null, item: null })}
+        onConfirm={handleConfirmDelete}
+        title={deleteConfirm.type === 'camper' ? 'Delete Camper' : 'Delete Rental Company'}
+        itemName={deleteConfirm.item?.model_name || deleteConfirm.item?.name}
+        itemType={deleteConfirm.type === 'camper' ? 'camper' : 'rental company'}
+      />
     </div>
   );
 }
