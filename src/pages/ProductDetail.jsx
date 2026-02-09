@@ -84,7 +84,7 @@ export default function ProductDetail() {
 
   }
 
-  if (!product) {
+  if (!product || product.released !== true) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
