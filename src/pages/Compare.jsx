@@ -246,11 +246,13 @@ export default function Compare() {
                         )}
                       </div>
 
-                      <Badge className="bg-slate-900 text-white text-xs mb-2">{product.size_category}</Badge>
-                      <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">
-                        {product.base_vehicle?.brand} {product.base_vehicle?.model}
-                      </p>
-                      <h3 className="font-semibold text-slate-900 text-lg leading-tight">{product.model_name}</h3>
+                      <div className="min-h-[120px]">
+                        <Badge className="bg-slate-900 text-white text-xs mb-2">{product.size_category}</Badge>
+                        <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">
+                          {product.base_vehicle?.brand} {product.base_vehicle?.model}
+                        </p>
+                        <h3 className="font-semibold text-slate-900 text-lg leading-tight">{product.model_name}</h3>
+                      </div>
                     </div>
 
                     {/* Specs */}
