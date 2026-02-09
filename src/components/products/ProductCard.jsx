@@ -139,7 +139,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           
           {/* Rental Companies */}
           {productCompanies.length > 0 && (
-            <div className="space-y-2 mb-4 pt-3 border-t">
+            <div className="space-y-2 pt-3 border-t">
               <p className="text-xs text-slate-500 font-medium">Available at:</p>
               <div className="flex flex-wrap gap-2">
                 {productCompanies.map((company) => {
@@ -169,7 +169,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           <Button
             size="sm"
             variant={isInCompare ? "default" : "outline"}
-            className={`w-full rounded-full transition-all duration-200 ${
+            className={`w-full rounded-full transition-all duration-200 mt-auto ${
               isInCompare 
                 ? 'bg-violet-600 hover:bg-violet-700 text-white' 
                 : 'border-slate-200 hover:border-violet-600 hover:text-violet-600'
