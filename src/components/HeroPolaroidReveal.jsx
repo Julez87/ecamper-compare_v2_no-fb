@@ -164,10 +164,10 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
               Compare specs, prices, and features across electric camper vans. Make informed decisions with our comprehensive comparison tool.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button type="button" className="inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors" onClick={onBrowseClick}>
+              <button type="button" className="relative inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors before:absolute before:inset-0 before:-m-3 before:rounded-full before:content-['']" onClick={(e) => { e.stopPropagation(); onBrowseClick(); }}>
                 Browse Campers <ArrowRight className="w-5 h-5 ml-2" />
               </button>
-              <button type="button" className="inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-white/90 text-slate-700 border border-white/30 shadow-sm hover:bg-white hover:text-slate-900 transition-colors" onClick={onRequestClick}>
+              <button type="button" className="relative inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-white/90 text-slate-700 border border-white/30 shadow-sm hover:bg-white hover:text-slate-900 transition-colors before:absolute before:inset-0 before:-m-3 before:rounded-full before:content-['']" onClick={(e) => { e.stopPropagation(); onRequestClick(); }}>
                 <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
               </button>
             </div>
