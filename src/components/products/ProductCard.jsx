@@ -17,6 +17,15 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
     company.available_campers?.some(c => c.camper_id === product.id)
   );
 
+  const minRentPrice = (() => {
+    const prices = allCompanies
+      .flatMap((company) => company.available_campers || [])
+      .filter((c) => c.camper_id === product.id)
+      .map((c) => c.rent_price)
+      .filter((p) => p != null);
+    return prices.length > 0 ? Math.min(...prices) : null;
+  })();
+
   // Check which smart filters apply
   const smartFilters = [];
   
@@ -122,27 +131,26 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             </div>
           )}
           
-          <div className="space-y-2 mb-4 mt-auto">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs text-slate-500">Buy from</span>
-              <span className="text-xl font-bold text-slate-900">
-                €{product.buy_from_price?.toLocaleString() || '—'}
-              </span>
+          {(product.buy_from_price || minRentPrice) && (
+            <div className="space-y-2 mb-4 mt-auto">
+              {product.buy_from_price && (
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xs text-slate-500">Buy from</span>
+                  <span className="text-xl font-bold text-slate-900">
+                    €{product.buy_from_price.toLocaleString()}
+                  </span>
+                </div>
+              )}
+              {minRentPrice && (
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xs text-slate-500">Rent from</span>
+                  <span className="text-lg font-semibold text-emerald-600">
+                    €{minRentPrice}/day
+                  </span>
+                </div>
+              )}
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs text-slate-500">Rent from</span>
-              <span className="text-lg font-semibold text-emerald-600">
-                €{(() => {
-                  const prices = allCompanies
-                    .flatMap((company) => company.available_campers || [])
-                    .filter((c) => c.camper_id === product.id)
-                    .map((c) => c.rent_price)
-                    .filter((p) => p != null);
-                  return prices.length > 0 ? Math.min(...prices).toLocaleString() : '—';
-                })()}/day
-              </span>
-            </div>
-          </div>
+          )}
           
           {/* Rental Companies */}
           {productCompanies.length > 0 && (

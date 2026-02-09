@@ -951,11 +951,21 @@ export default function ProductDetail() {
                     <div className="p-4">
                       <p className="text-xs text-slate-500">{p.base_vehicle?.brand} {p.base_vehicle?.model}</p>
                       <p className="font-medium text-slate-900 truncate">{p.model_name}</p>
-                      {(p.rent_from_price || allCompanies.flatMap((c) => c.available_campers || []).filter((ac) => ac.camper_id === p.id).map((ac) => ac.rent_price).filter((pr) => pr != null)[0]) &&
-                  <p className="font-bold text-emerald-600 mt-1">
-                          €{p.rent_from_price || Math.min(...allCompanies.flatMap((c) => c.available_campers || []).filter((ac) => ac.camper_id === p.id).map((ac) => ac.rent_price).filter((pr) => pr != null))}/day
-                        </p>
-                  }
+                      {(() => {
+                        const prices = allCompanies
+                          .flatMap((c) => c.available_campers || [])
+                          .filter((ac) => ac.camper_id === p.id)
+                          .map((ac) => ac.rent_price)
+                          .filter((pr) => pr != null);
+                        if (prices.length > 0) {
+                          return (
+                            <p className="font-bold text-emerald-600 mt-1">
+                              €{Math.min(...prices)}/day
+                            </p>
+                          );
+                        }
+                        return null;
+                      })()}
                     </div>
                   </Card>
                 </Link>
