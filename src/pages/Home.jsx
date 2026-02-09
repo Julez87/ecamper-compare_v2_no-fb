@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +13,7 @@ import RequestProductModal from '@/components/products/RequestProductModal';
 import { motion } from 'framer-motion';
 
 export default function Home() {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     search: '',
     sizeCategory: 'All',
@@ -36,6 +37,9 @@ export default function Home() {
     queryFn: () => base44.entities.Product.list()
   });
 
+  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
+  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
     const adv = filters.advanced || {};
@@ -48,15 +52,12 @@ export default function Home() {
         p.description?.toLowerCase().includes(search)
       );
     }
-
     if (filters.sizeCategory !== 'All') {
       result = result.filter((p) => p.size_category === filters.sizeCategory);
     }
     if (filters.brand !== 'All') {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
-
-    // Price ranges
     if (filters.purchasePrice) {
       result = result.filter((p) => {
         const price = p.buy_from_price || 0;
@@ -69,8 +70,6 @@ export default function Home() {
         return price >= filters.rentalPrice[0] && price <= filters.rentalPrice[1];
       });
     }
-
-    // Quick filters
     if (filters.gasFree) {
       result = result.filter((p) =>
         p.kitchen?.stove_type?.toLowerCase() !== 'gas' &&
@@ -172,7 +171,6 @@ export default function Home() {
       return true;
     });
 
-    // Sorting
     switch (filters.sortBy) {
       case 'price-buy-low':
         result.sort((a, b) => (a.buy_from_price || 0) - (b.buy_from_price || 0));
@@ -207,9 +205,6 @@ export default function Home() {
       return [...prev, product];
     });
   };
-
-  const maxBuyPrice = Math.max(...products.map((p) => p.buy_from_price || 0), 150000);
-  const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   return (
     <div className="min-h-screen bg-slate-50">
