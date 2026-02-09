@@ -40,7 +40,7 @@ const LabeledSelect = ({ label, value, onValueChange, children, placeholder, val
         </>
       )}
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className={`${value ? '[&>span]:text-transparent text-right' : 'text-right'} ${isInvalid ? 'bg-red-50' : ''}`}>
+        <SelectTrigger className={`${value ? '[&>span]:text-transparent text-right' : 'text-right'} ${isInvalid ? 'bg-red-100 border-red-400 ring-1 ring-red-300' : ''}`}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         {children}
