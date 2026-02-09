@@ -99,12 +99,12 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             </div>
         
         <div className="p-5 flex-1 flex flex-col">
-          <div className="flex items-center gap-2 mb-1">
-            <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
-              {sizeLabel}
-            </Badge>
-          </div>
-          <div className="flex-1">
+          <div className="min-h-[184px] flex flex-col">
+            <div className="flex items-center gap-2 mb-1">
+              <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
+                {sizeLabel}
+              </Badge>
+            </div>
             <p className="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">
               {product.base_vehicle?.brand || 'Electric Camper'}
             </p>
