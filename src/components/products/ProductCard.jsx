@@ -99,49 +99,45 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             </div>
         
         <div className="p-5 flex-1 flex flex-col">
-          <div className="flex items-center gap-2 mb-1">
-            <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
-              {sizeLabel}
-            </Badge>
+          {/* Top section - variable height content */}
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
+                {sizeLabel}
+              </Badge>
+            </div>
+            <p className="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">
+              {product.base_vehicle?.brand || 'Electric Camper'}
+            </p>
+            <h3 className="font-semibold text-slate-900 text-lg leading-tight mb-3 line-clamp-2">
+              {product.model_name}
+            </h3>
+            
+            {/* Top Features Pills */}
+            {product.top_features?.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {product.top_features.slice(0, 5).map((feature, i) => (
+                  <Badge key={i} variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
+                    <Award className="w-3 h-3" /> {feature}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
-          <p className="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">
-            {product.base_vehicle?.brand || 'Electric Camper'}
-          </p>
-          <h3 className="font-semibold text-slate-900 text-lg leading-tight mb-3 line-clamp-2">
-            {product.model_name}
-          </h3>
           
-          {/* Top Features Pills */}
-          {product.top_features?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {product.top_features.slice(0, 5).map((feature, i) => (
-                <Badge key={i} variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
-                  <Award className="w-3 h-3" /> {feature}
-                </Badge>
-              ))}
+          {/* Bottom section - always pinned to bottom */}
+          <div className="space-y-2 mb-4">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xs text-slate-500">Buy from</span>
+              <span className="text-xl font-bold text-slate-900">
+                €{product.buy_from_price?.toLocaleString() || '—'}
+              </span>
             </div>
-          )}
-          
-          <div className="space-y-1 mb-4 mt-auto">
-            <div className="flex items-center gap-2 h-7">
-              <span className="text-xs text-slate-500 w-16 shrink-0">Buy from</span>
-              {product.buy_from_price ? (
-                <span className="text-xl font-bold text-slate-900">
-                  €{product.buy_from_price.toLocaleString()}
-                </span>
-              ) : (
-                <span className="text-xl font-bold text-slate-300">—</span>
-              )}
-            </div>
-            <div className="flex items-center gap-2 h-7">
-              <span className="text-xs text-slate-500 w-16 shrink-0">Rent from</span>
-              {product.rent_from_price ? (
-                <span className="text-lg font-semibold text-emerald-600">
-                  €{product.rent_from_price.toLocaleString()}/day
-                </span>
-              ) : (
-                <span className="text-lg font-semibold text-slate-300">—</span>
-              )}
+            <div className="flex items-baseline gap-2">
+              <span className="text-xs text-slate-500">Rent from</span>
+              <span className="text-lg font-semibold text-emerald-600">
+                €{product.rent_from_price?.toLocaleString() || '—'}/day
+              </span>
             </div>
           </div>
           
