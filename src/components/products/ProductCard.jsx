@@ -99,32 +99,30 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             </div>
         
         <div className="p-5 flex-1 flex flex-col">
-          <div className="min-h-[184px] flex flex-col">
-            <div className="flex items-center gap-2 mb-1">
-              <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
-                {sizeLabel}
-              </Badge>
-            </div>
-            <p className="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">
-              {product.base_vehicle?.brand || 'Electric Camper'}
-            </p>
-            <h3 className="font-semibold text-slate-900 text-lg leading-tight mb-3 line-clamp-2">
-              {product.model_name}
-            </h3>
-            
-            {/* Top Features Pills */}
-            {product.top_features?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {product.top_features.slice(0, 5).map((feature, i) => (
-                  <Badge key={i} variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
-                    <Award className="w-3 h-3" /> {feature}
-                  </Badge>
-                ))}
-              </div>
-            )}
+          <div className="flex items-center gap-2 mb-1">
+            <Badge className="bg-slate-900 text-white text-xs font-medium px-2 py-0.5">
+              {sizeLabel}
+            </Badge>
           </div>
+          <p className="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">
+            {product.base_vehicle?.brand || 'Electric Camper'}
+          </p>
+          <h3 className="font-semibold text-slate-900 text-lg leading-tight mb-3 line-clamp-2">
+            {product.model_name}
+          </h3>
           
-          <div className="space-y-2 mb-4">
+          {/* Top Features Pills */}
+          {product.top_features?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {product.top_features.slice(0, 5).map((feature, i) => (
+                <Badge key={i} variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
+                  <Award className="w-3 h-3" /> {feature}
+                </Badge>
+              ))}
+            </div>
+          )}
+          
+          <div className="space-y-2 mb-4 mt-auto">
             <div className="flex items-baseline gap-2">
               <span className="text-xs text-slate-500">Buy from</span>
               <span className="text-xl font-bold text-slate-900">
@@ -141,7 +139,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           
           {/* Rental Companies */}
           {productCompanies.length > 0 && (
-            <div className="space-y-2 mb-4 pt-3 border-t">
+            <div className="space-y-2 pt-3 border-t">
               <p className="text-xs text-slate-500 font-medium">Available at:</p>
               <div className="flex flex-wrap gap-2">
                 {productCompanies.map((company) => {
@@ -171,7 +169,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           <Button
             size="sm"
             variant={isInCompare ? "default" : "outline"}
-            className={`w-full rounded-full transition-all duration-200 ${
+            className={`w-full rounded-full transition-all duration-200 mt-auto ${
               isInCompare 
                 ? 'bg-violet-600 hover:bg-violet-700 text-white' 
                 : 'border-slate-200 hover:border-violet-600 hover:text-violet-600'
