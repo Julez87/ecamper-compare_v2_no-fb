@@ -375,6 +375,12 @@ export default function ProductDetail() {
                             <p className="font-semibold text-slate-900 capitalize">{product.extras.trailer_hitch}</p>
                           </div>
                     }
+                        {product.base_vehicle?.towing_capacity_kg &&
+                    <div className="p-3 bg-slate-50 rounded-xl">
+                            <p className="text-xs text-slate-500 uppercase">Towing capacity</p>
+                            <p className="font-semibold text-slate-900">{product.base_vehicle.towing_capacity_kg} kg</p>
+                          </div>
+                    }
                       </div>
                     </>
                 }
