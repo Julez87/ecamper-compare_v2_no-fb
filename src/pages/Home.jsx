@@ -110,12 +110,21 @@ export default function Home() {
             <p className="text-lg text-slate-300 mb-8 max-w-xl mx-auto">
               Compare specs, prices, and features across electric camper vans. Make informed decisions with our comprehensive comparison tool.
             </p>
-            <div className="flex justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
                 className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8"
                 onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
+
                 Browse Campers <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline" className="bg-background text-slate-700 px-8 text-sm font-medium rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-10 border-white/30 hover:bg-white/10"
+
+                onClick={() => setIsRequestModalOpen(true)}>
+
+                <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
               </Button>
             </div>
           </motion.div>
@@ -184,30 +193,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Request Camper Section */}
-      <div className="bg-gradient-to-br from-violet-50 to-emerald-50 py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
-            Are you missing any Electric (BEV) Camper model that is available to rent or to buy in Europe right now or coming to the market this year?
-          </h2>
-          <p className="text-lg text-slate-600 mb-8">
-            Thank you for let us know and everyone can compare it with all the other Campers!
-          </p>
-          <Button
-            size="lg"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8"
-            onClick={() => setIsRequestModalOpen(true)}>
-            <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
-          </Button>
-        </div>
-      </div>
-
       {/* Compare Bar */}
       <div className={compareList.length > 0 ? 'pb-24' : ''}>
         <CompareBar
           compareList={compareList}
           onRemove={(id) => setCompareList((prev) => prev.filter((p) => p.id !== id))}
           onClear={() => setCompareList([])} />
+
       </div>
 
       {/* Request Modal */}
