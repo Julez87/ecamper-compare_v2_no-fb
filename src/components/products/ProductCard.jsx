@@ -113,7 +113,7 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
           
           {/* Top Features Pills */}
           {product.top_features?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-4">
+            <div className="flex flex-wrap gap-1.5">
               {product.top_features.slice(0, 5).map((feature, i) => (
                 <Badge key={i} variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
                   <Award className="w-3 h-3" /> {feature}
@@ -122,59 +122,63 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             </div>
           )}
           
-          <div className="space-y-2 mb-4">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs text-slate-500 w-16 shrink-0">Buy from</span>
-              {product.buy_from_price ? (
-                <span className="text-xl font-bold text-slate-900 whitespace-nowrap">
-                  €{product.buy_from_price.toLocaleString()}
-                </span>
-              ) : (
-                <span className="text-xl font-bold text-slate-300">—</span>
-              )}
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs text-slate-500 w-16 shrink-0">Rent from</span>
-              {product.rent_from_price ? (
-                <span className="text-lg font-semibold text-emerald-600 whitespace-nowrap">
-                  €{product.rent_from_price.toLocaleString()}/day
-                </span>
-              ) : (
-                <span className="text-lg font-semibold text-slate-300">—</span>
-              )}
-            </div>
-          </div>
-          
-          {/* Rental Companies */}
-          {productCompanies.length > 0 && (
-            <div className="space-y-2 mb-4 pt-3 border-t">
-              <p className="text-xs text-slate-500 font-medium">Available at:</p>
-              <div className="flex flex-wrap gap-2">
-                {productCompanies.map((company) => {
-                  const companyData = company.available_campers?.find(c => c.camper_id === product.id);
-                  return (
-                    <button
-                      key={company.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (company.website_url) window.open(company.website_url, '_blank');
-                      }}
-                      className="text-xs text-white px-3 py-1.5 rounded-full font-medium transition-all hover:scale-105 hover:shadow-md"
-                      style={{ backgroundColor: company.color || '#3B82F6' }}
-                      title={companyData?.rent_price ? `€${companyData.rent_price}/day` : company.name}
-                    >
-                      {company.name}
-                      {companyData?.rent_price && (
-                        <span className="ml-1 opacity-90">€{companyData.rent_price}</span>
-                      )}
-                    </button>
-                  );
-                })}
+          {/* Bottom pinned section */}
+          <div className="mt-auto pt-4">
+            <div className="space-y-2 mb-4">
+              <div className="flex items-baseline gap-2">
+                <span className="text-xs text-slate-500 w-16 shrink-0">Buy from</span>
+                {product.buy_from_price ? (
+                  <span className="text-xl font-bold text-slate-900 whitespace-nowrap">
+                    €{product.buy_from_price.toLocaleString()}
+                  </span>
+                ) : (
+                  <span className="text-xl font-bold text-slate-300">—</span>
+                )}
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-xs text-slate-500 w-16 shrink-0">Rent from</span>
+                {product.rent_from_price ? (
+                  <span className="text-lg font-semibold text-emerald-600 whitespace-nowrap">
+                    €{product.rent_from_price.toLocaleString()}/day
+                  </span>
+                ) : (
+                  <span className="text-lg font-semibold text-slate-300">—</span>
+                )}
               </div>
             </div>
-          )}
-          
-          <Button
+            
+            {/* Rental Companies - fixed height container */}
+            <div className="min-h-[3.5rem] mb-4 pt-3 border-t">
+              {productCompanies.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs text-slate-500 font-medium">Available at:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {productCompanies.map((company) => {
+                      const companyData = company.available_campers?.find(c => c.camper_id === product.id);
+                      return (
+                        <button
+                          key={company.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (company.website_url) window.open(company.website_url, '_blank');
+                          }}
+                          className="text-xs text-white px-3 py-1.5 rounded-full font-medium transition-all hover:scale-105 hover:shadow-md"
+                          style={{ backgroundColor: company.color || '#3B82F6' }}
+                          title={companyData?.rent_price ? `€${companyData.rent_price}/day` : company.name}
+                        >
+                          {company.name}
+                          {companyData?.rent_price && (
+                            <span className="ml-1 opacity-90">€{companyData.rent_price}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <Button
             size="sm"
             variant={isInCompare ? "default" : "outline"}
             className={`w-full rounded-full transition-all duration-200 ${
