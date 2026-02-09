@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink, Building2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
 import CamperAdminForm from '../components/campers/CamperAdminForm';
 import RentalCompanyForm from '../components/rental/RentalCompanyForm';
@@ -66,6 +67,11 @@ export default function Admin() {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       closeProductModal();
     }
+  });
+
+  const toggleReleased = useMutation({
+    mutationFn: ({ id, released }) => base44.entities.Product.update(id, { released }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] })
   });
 
   const deleteProduct = useMutation({
@@ -375,14 +381,20 @@ export default function Admin() {
                         <SortIcon active={camperSort.field === 'is_featured'} direction={camperSort.direction} />
                       </button>
                     </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'released')} className="flex items-center gap-2 hover:text-slate-900">
+                        Released
+                        <SortIcon active={camperSort.field === 'released'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {productsLoading ? (
-                    <TableRow><TableCell colSpan={7} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
+                    <TableRow><TableCell colSpan={8} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
                   ) : sortedProducts.length === 0 ? (
-                    <TableRow><TableCell colSpan={7} className="text-center py-8 text-slate-500">No campers yet</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={8} className="text-center py-8 text-slate-500">No campers yet</TableCell></TableRow>
                   ) : sortedProducts.map(product => (
                     <TableRow key={product.id}>
                       <TableCell>
@@ -400,6 +412,12 @@ export default function Admin() {
                       <TableCell>€{product.buy_from_price?.toLocaleString()}</TableCell>
                       <TableCell>€{product.rent_from_price}/day</TableCell>
                       <TableCell>{product.is_featured ? <Check className="w-4 h-4 text-green-600" /> : <X className="w-4 h-4 text-slate-300" />}</TableCell>
+                      <TableCell>
+                        <Switch 
+                          checked={product.released || false} 
+                          onCheckedChange={(checked) => toggleReleased.mutate({ id: product.id, released: checked })}
+                        />
+                      </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" onClick={() => openProductModal(product)}>
                           <Pencil className="w-4 h-4" />
