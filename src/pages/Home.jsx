@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   const navigate = useNavigate();
+
   const [filters, setFilters] = useState({
     search: '',
     sizeCategory: 'All',
@@ -41,7 +42,7 @@ export default function Home() {
   const maxRentPrice = Math.max(...products.map((p) => p.rent_from_price || 0), 250);
 
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = products.filter(p => p.released);
     const adv = filters.advanced || {};
 
     if (filters.search) {
@@ -58,6 +59,8 @@ export default function Home() {
     if (filters.brand !== 'All') {
       result = result.filter((p) => p.base_vehicle?.brand === filters.brand);
     }
+
+    // Price ranges
     if (filters.purchasePrice) {
       result = result.filter((p) => {
         const price = p.buy_from_price || 0;
@@ -70,6 +73,8 @@ export default function Home() {
         return price >= filters.rentalPrice[0] && price <= filters.rentalPrice[1];
       });
     }
+
+    // Quick filters
     if (filters.gasFree) {
       result = result.filter((p) =>
         p.kitchen?.stove_type?.toLowerCase() !== 'gas' &&
@@ -193,7 +198,7 @@ export default function Home() {
     }
 
     return result;
-  }, [products, filters, maxBuyPrice, maxRentPrice]);
+  }, [products, filters]);
 
   const handleCompare = (product) => {
     setCompareList((prev) => {
@@ -232,15 +237,13 @@ export default function Home() {
                 size="lg"
                 className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8"
                 onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
-
                 Browse Campers <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button
                 size="lg"
-                variant="outline" className="bg-background text-slate-700 px-8 text-sm font-medium rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-10 border-white/30 hover:bg-white/10"
-
+                variant="outline"
+                className="bg-background text-slate-700 px-8 text-sm font-medium rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-10 border-white/30 hover:bg-white/10"
                 onClick={() => setIsRequestModalOpen(true)}>
-
                 <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
               </Button>
             </div>
@@ -256,7 +259,6 @@ export default function Home() {
           maxBuyPrice={maxBuyPrice}
           maxRentPrice={maxRentPrice}
           products={products} />
-
 
         <div className="mt-6">
           <div className="flex items-center justify-between mb-6">
@@ -292,7 +294,6 @@ export default function Home() {
               <Button
               variant="outline"
               onClick={() => setIsRequestModalOpen(true)}>
-
                 <PlusCircle className="w-4 h-4 mr-2" /> Request a Camper
               </Button>
             </div> :
@@ -318,14 +319,12 @@ export default function Home() {
           compareList={compareList}
           onRemove={(id) => setCompareList((prev) => prev.filter((p) => p.id !== id))}
           onClear={() => setCompareList([])} />
-
       </div>
 
       {/* Request Modal */}
       <RequestProductModal
         isOpen={isRequestModalOpen}
         onClose={() => setIsRequestModalOpen(false)} />
-
-    </div>);
-
+    </div>
+  );
 }
