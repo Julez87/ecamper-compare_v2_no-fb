@@ -54,7 +54,7 @@ export default function Compare() {
   };
 
   const availableProducts = allProducts
-    .filter(p => !selectedIds.includes(p.id))
+    .filter(p => p.released === true && !selectedIds.includes(p.id))
     .sort((a, b) => (a.model_name || '').localeCompare(b.model_name || ''));
 
   const getBestValue = (key, higherIsBetter = true) => {
