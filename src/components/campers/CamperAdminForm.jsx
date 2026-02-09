@@ -46,7 +46,7 @@ const LabeledSelect = ({ label, value, onValueChange, children, placeholder }) =
 );
 
 const SIZE_CATEGORIES = ["Compact", "Standard", "Large", "XL"];
-const BRANDS = ["VW", "Mercedes", "Fiat", "Peugeot", "Citroën", "Ford", "Renault", "Other"];
+const BRANDS = ["Citroën", "Fiat", "Ford", "Mercedes-Benz", "Peugeot", "Renault", "VW", "Other"];
 const YEARS = Array.from({length: 10}, (_, i) => 2020 + i);
 const YES_NO = ["yes", "no", "unknown"];
 const YES_NO_ONLY = ["yes", "no"];
