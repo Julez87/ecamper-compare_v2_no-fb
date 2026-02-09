@@ -49,16 +49,16 @@
  */
 import Admin from './pages/Admin';
 import Compare from './pages/Compare';
-import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Admin": Admin,
     "Compare": Compare,
-    "Home": Home,
     "ProductDetail": ProductDetail,
+    "Home": Home,
 }
 
 export const pagesConfig = {
