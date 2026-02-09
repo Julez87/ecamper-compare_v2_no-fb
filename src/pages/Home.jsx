@@ -161,6 +161,24 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Request Camper Section */}
+      <div className="bg-gradient-to-br from-violet-50 to-emerald-50 py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
+            Are you missing any Electric (BEV) Camper model that is available to rent or to buy in Europe right now or coming to the market this year?
+          </h2>
+          <p className="text-lg text-slate-600 mb-8">
+            Thank you for let us know and everyone can compare it with all the other Campers!
+          </p>
+          <Button
+            size="lg"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8"
+            onClick={() => setIsRequestModalOpen(true)}>
+            <PlusCircle className="w-5 h-5 mr-2" /> Request a Camper
+          </Button>
+        </div>
+      </div>
+      
       {/* Compare Bar */}
       <div className={compareList.length > 0 ? 'pb-24' : ''}>
         <CompareBar
