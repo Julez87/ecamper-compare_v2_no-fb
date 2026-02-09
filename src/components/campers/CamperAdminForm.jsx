@@ -68,6 +68,7 @@ const TOILET_TYPES = ["chemical", "separation", "no", "unknown"];
 const WINDOW_OPENING_OPTIONS = ["electric", "manual", "no", "unknown"];
 const TRAILER_HITCH_OPTIONS = ["yes", "no", "retractable", "unknown"];
 const BACKDOOR_OPTIONS = ["top-hinged", "side-hinged", "unknown"];
+const SLIDING_DOORS_OPTIONS = ["1", "2", "none", "unknown"];
 const CARPLAY_OPTIONS = ["yes", "no", "cable", "wireless", "unknown"];
 const NAVIGATION_OPTIONS = ["yes", "no", "optional", "unknown"];
 const VEHICLE_COOLING_OPTIONS = ["no", "electric", "unknown"];
@@ -254,7 +255,7 @@ export default function CamperAdminForm({ formData, setFormData }) {
             </LabeledSelect>
             <LabeledInput label="Towing capacity (in kg)" type="number" placeholder="Towing capacity (kg)" value={formData.base_vehicle?.towing_capacity_kg || ''} onChange={(e) => updateNested('base_vehicle', 'towing_capacity_kg', parseInt(e.target.value))} />
             <LabeledSelect label="Sliding Doors" value={formData.extras?.sliding_doors || ''} onValueChange={(v) => updateNested('extras', 'sliding_doors', v)} placeholder="Sliding Doors">
-              <SelectContent>{YES_NO.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+              <SelectContent>{SLIDING_DOORS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </LabeledSelect>
             <LabeledSelect label="Backdoor" value={formData.extras?.backdoor || ''} onValueChange={(v) => updateNested('extras', 'backdoor', v)} placeholder="Backdoor">
               <SelectContent>{BACKDOOR_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
