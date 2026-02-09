@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink, Building2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink, Building2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { format } from 'date-fns';
 import CamperAdminForm from '../components/campers/CamperAdminForm';
 import RentalCompanyForm from '../components/rental/RentalCompanyForm';
@@ -28,6 +28,9 @@ export default function Admin() {
   const [viewingRequest, setViewingRequest] = useState(null);
   const [isRequestDetailOpen, setIsRequestDetailOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, type: null, item: null });
+  const [camperSort, setCamperSort] = useState({ field: 'created_date', direction: 'desc' });
+  const [requestSort, setRequestSort] = useState({ field: 'created_date', direction: 'desc' });
+  const [companySort, setCompanySort] = useState({ field: 'name', direction: 'asc' });
 
   const queryClient = useQueryClient();
 
@@ -182,6 +185,89 @@ export default function Admin() {
     setDeleteConfirm({ isOpen: false, type: null, item: null });
   };
 
+  const handleSort = (table, field) => {
+    if (table === 'camper') {
+      setCamperSort(prev => ({
+        field,
+        direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+      }));
+    } else if (table === 'request') {
+      setRequestSort(prev => ({
+        field,
+        direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+      }));
+    } else if (table === 'company') {
+      setCompanySort(prev => ({
+        field,
+        direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+      }));
+    }
+  };
+
+  const SortIcon = ({ active, direction }) => {
+    if (!active) return <ArrowUpDown className="w-4 h-4 text-slate-400" />;
+    return direction === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
+  };
+
+  const sortedProducts = [...products].sort((a, b) => {
+    const { field, direction } = camperSort;
+    let aVal = field === 'brand' ? a.base_vehicle?.brand : a[field];
+    let bVal = field === 'brand' ? b.base_vehicle?.brand : b[field];
+    
+    if (aVal == null) aVal = '';
+    if (bVal == null) bVal = '';
+    
+    if (typeof aVal === 'string') {
+      return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+    }
+    return direction === 'asc' ? aVal - bVal : bVal - aVal;
+  });
+
+  const sortedRequests = [...requests].sort((a, b) => {
+    const { field, direction } = requestSort;
+    let aVal = a[field];
+    let bVal = b[field];
+    
+    if (aVal == null) aVal = '';
+    if (bVal == null) bVal = '';
+    
+    if (field === 'created_date') {
+      return direction === 'asc' 
+        ? new Date(aVal) - new Date(bVal)
+        : new Date(bVal) - new Date(aVal);
+    }
+    
+    if (typeof aVal === 'string') {
+      return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+    }
+    return direction === 'asc' ? aVal - bVal : bVal - aVal;
+  });
+
+  const sortedCompanies = [...companies].sort((a, b) => {
+    const { field, direction } = companySort;
+    let aVal = a[field];
+    let bVal = b[field];
+    
+    if (field === 'countries') {
+      aVal = a.countries?.length || 0;
+      bVal = b.countries?.length || 0;
+    } else if (field === 'cities') {
+      aVal = Object.values(a.locations || {}).reduce((acc, cities) => acc + cities.length, 0);
+      bVal = Object.values(b.locations || {}).reduce((acc, cities) => acc + cities.length, 0);
+    } else if (field === 'campers') {
+      aVal = a.available_campers?.length || 0;
+      bVal = b.available_campers?.length || 0;
+    }
+    
+    if (aVal == null) aVal = '';
+    if (bVal == null) bVal = '';
+    
+    if (typeof aVal === 'string') {
+      return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+    }
+    return direction === 'asc' ? aVal - bVal : bVal - aVal;
+  });
+
   const pendingRequests = requests.filter(r => r.status === 'pending');
 
   if (!isAuthenticated) {
@@ -253,21 +339,51 @@ export default function Admin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Model</TableHead>
-                    <TableHead>Size</TableHead>
-                    <TableHead>Brand</TableHead>
-                    <TableHead>Buy Price</TableHead>
-                    <TableHead>Rent Price</TableHead>
-                    <TableHead>Featured</TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'model_name')} className="flex items-center gap-2 hover:text-slate-900">
+                        Model
+                        <SortIcon active={camperSort.field === 'model_name'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'size_category')} className="flex items-center gap-2 hover:text-slate-900">
+                        Size
+                        <SortIcon active={camperSort.field === 'size_category'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'brand')} className="flex items-center gap-2 hover:text-slate-900">
+                        Brand
+                        <SortIcon active={camperSort.field === 'brand'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'buy_from_price')} className="flex items-center gap-2 hover:text-slate-900">
+                        Buy Price
+                        <SortIcon active={camperSort.field === 'buy_from_price'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'rent_from_price')} className="flex items-center gap-2 hover:text-slate-900">
+                        Rent Price
+                        <SortIcon active={camperSort.field === 'rent_from_price'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('camper', 'is_featured')} className="flex items-center gap-2 hover:text-slate-900">
+                        Featured
+                        <SortIcon active={camperSort.field === 'is_featured'} direction={camperSort.direction} />
+                      </button>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {productsLoading ? (
                     <TableRow><TableCell colSpan={7} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
-                  ) : products.length === 0 ? (
+                  ) : sortedProducts.length === 0 ? (
                     <TableRow><TableCell colSpan={7} className="text-center py-8 text-slate-500">No campers yet</TableCell></TableRow>
-                  ) : products.map(product => (
+                  ) : sortedProducts.map(product => (
                     <TableRow key={product.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -307,20 +423,45 @@ export default function Admin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Model</TableHead>
-                    <TableHead>Size</TableHead>
-                    <TableHead>Requester</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('request', 'model_name')} className="flex items-center gap-2 hover:text-slate-900">
+                        Model
+                        <SortIcon active={requestSort.field === 'model_name'} direction={requestSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('request', 'size_category')} className="flex items-center gap-2 hover:text-slate-900">
+                        Size
+                        <SortIcon active={requestSort.field === 'size_category'} direction={requestSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('request', 'requester_email')} className="flex items-center gap-2 hover:text-slate-900">
+                        Requester
+                        <SortIcon active={requestSort.field === 'requester_email'} direction={requestSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('request', 'created_date')} className="flex items-center gap-2 hover:text-slate-900">
+                        Date
+                        <SortIcon active={requestSort.field === 'created_date'} direction={requestSort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('request', 'status')} className="flex items-center gap-2 hover:text-slate-900">
+                        Status
+                        <SortIcon active={requestSort.field === 'status'} direction={requestSort.direction} />
+                      </button>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {requestsLoading ? (
                     <TableRow><TableCell colSpan={6} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
-                  ) : requests.length === 0 ? (
+                  ) : sortedRequests.length === 0 ? (
                     <TableRow><TableCell colSpan={6} className="text-center py-8 text-slate-500">No requests yet</TableCell></TableRow>
-                  ) : requests.map(request => (
+                  ) : sortedRequests.map(request => (
                    <TableRow key={request.id} className="cursor-pointer hover:bg-slate-50" onClick={() => {
                      setViewingRequest(request);
                      setIsRequestDetailOpen(true);
@@ -383,19 +524,39 @@ export default function Admin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Countries</TableHead>
-                    <TableHead>Cities</TableHead>
-                    <TableHead>Campers</TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('company', 'name')} className="flex items-center gap-2 hover:text-slate-900">
+                        Company
+                        <SortIcon active={companySort.field === 'name'} direction={companySort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('company', 'countries')} className="flex items-center gap-2 hover:text-slate-900">
+                        Countries
+                        <SortIcon active={companySort.field === 'countries'} direction={companySort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('company', 'cities')} className="flex items-center gap-2 hover:text-slate-900">
+                        Cities
+                        <SortIcon active={companySort.field === 'cities'} direction={companySort.direction} />
+                      </button>
+                    </TableHead>
+                    <TableHead>
+                      <button onClick={() => handleSort('company', 'campers')} className="flex items-center gap-2 hover:text-slate-900">
+                        Campers
+                        <SortIcon active={companySort.field === 'campers'} direction={companySort.direction} />
+                      </button>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {companiesLoading ? (
                     <TableRow><TableCell colSpan={5} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
-                  ) : companies.length === 0 ? (
+                  ) : sortedCompanies.length === 0 ? (
                     <TableRow><TableCell colSpan={5} className="text-center py-8 text-slate-500">No rental companies yet</TableCell></TableRow>
-                  ) : companies.map(company => (
+                  ) : sortedCompanies.map(company => (
                     <TableRow key={company.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
