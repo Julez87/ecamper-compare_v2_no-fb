@@ -122,9 +122,9 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
             </div>
           )}
           
-          <div className="space-y-2 mb-4 mt-auto">
-            <div className="flex items-baseline gap-2 h-7">
-              <span className="text-xs text-slate-500">Buy from</span>
+          <div className="space-y-1 mb-4 mt-auto">
+            <div className="flex items-center gap-2 h-7">
+              <span className="text-xs text-slate-500 w-16 shrink-0">Buy from</span>
               {product.buy_from_price ? (
                 <span className="text-xl font-bold text-slate-900">
                   €{product.buy_from_price.toLocaleString()}
@@ -133,8 +133,8 @@ export default function ProductCard({ product, onCompare, isInCompare, onClick }
                 <span className="text-xl font-bold text-slate-300">—</span>
               )}
             </div>
-            <div className="flex items-baseline gap-2 h-6">
-              <span className="text-xs text-slate-500">Rent from</span>
+            <div className="flex items-center gap-2 h-7">
+              <span className="text-xs text-slate-500 w-16 shrink-0">Rent from</span>
               {product.rent_from_price ? (
                 <span className="text-lg font-semibold text-emerald-600">
                   €{product.rent_from_price.toLocaleString()}/day
