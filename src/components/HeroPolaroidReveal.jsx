@@ -201,11 +201,12 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
         <PolaroidField photos={photos} layout={layout} blurred />
       </div>
 
-      {/* Polaroids (sharp) - spotlight */}
+      {/* Polaroids (sharp) - spotlight with soft edge */}
       <div className="absolute inset-0" style={{
-        zIndex: 2, clipPath: clip, WebkitClipPath: clip,
-        transition: spot.active ? "none" : "clip-path 220ms ease",
-        willChange: "clip-path",
+        zIndex: 2,
+        WebkitMaskImage: mask,
+        maskImage: mask,
+        willChange: "mask-image",
       }}>
         <PolaroidField photos={photos} layout={layout} blurred={false} />
       </div>
