@@ -187,15 +187,12 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
       ref={wrapRef}
       className="relative w-full min-h-[80vh] overflow-hidden"
       style={{ touchAction: "none" }}
-      onPointerEnter={(e) => { const { x, y } = getLocalXY(e); setSpot(s => ({ ...s, active: true, x, y })); }}
-      onPointerMove={(e) => { const { x, y } = getLocalXY(e); scheduleSpotUpdate(x, y); }}
-      onPointerLeave={() => setSpot(s => ({ ...s, active: false }))}
-      onPointerDown={(e) => { const { x, y } = getLocalXY(e); setSpot(s => ({ ...s, active: true, x, y })); }}
-      onPointerUp={(e) => {
-        handleClick(e);
-        setSpot(s => ({ ...s, active: false }));
-      }}
-      onPointerCancel={() => setSpot(s => ({ ...s, active: false }))}
+      onPointerEnter={(e) => { const { x, y } = getLocalXY(e); setUserActive(true); driftCurrentRef.current = { x, y }; setSpot(s => ({ ...s, active: true, x, y })); }}
+      onPointerMove={(e) => { const { x, y } = getLocalXY(e); driftCurrentRef.current = { x, y }; scheduleSpotUpdate(x, y); }}
+      onPointerLeave={() => { setUserActive(false); driftTargetRef.current = pickRandomTarget(); }}
+      onPointerDown={(e) => { const { x, y } = getLocalXY(e); setUserActive(true); driftCurrentRef.current = { x, y }; setSpot(s => ({ ...s, active: true, x, y })); }}
+      onPointerUp={(e) => { handleClick(e); }}
+      onPointerCancel={() => { setUserActive(false); driftTargetRef.current = pickRandomTarget(); }}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900" />
 
