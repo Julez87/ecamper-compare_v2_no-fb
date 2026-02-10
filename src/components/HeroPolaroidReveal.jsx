@@ -218,7 +218,10 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
       </div>
 
       {/* Hero content */}
-      <div className="relative z-10">
+      <div className="relative z-10" style={{
+        opacity: userActive ? 0.2 : 1,
+        transition: "opacity 400ms ease",
+      }}>
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-violet-900/50 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
