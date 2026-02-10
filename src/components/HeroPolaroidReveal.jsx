@@ -122,7 +122,7 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
       setSpot(s => ({ ...s, active: true }));
     }
 
-    const speed = 0.024; // lerp factor per frame
+    const speed = 0.072; // lerp factor per frame
     let pickTimer = 0;
 
     const animate = () => {
@@ -218,23 +218,22 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
       </div>
 
       {/* Hero content */}
-      <div className="relative z-10" style={{
-        opacity: userActive ? 0.2 : 1,
-        transition: "opacity 400ms ease",
-      }}>
+      <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-violet-900/50 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <Sparkles className="w-4 h-4 text-violet-400" />
-              <span className="text-sm font-medium text-violet-200">Compare Before You Buy</span>
+            <div style={{ opacity: userActive ? 0.2 : 1, transition: "opacity 400ms ease" }}>
+              <div className="inline-flex items-center gap-2 bg-violet-900/50 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+                <Sparkles className="w-4 h-4 text-violet-400" />
+                <span className="text-sm font-medium text-violet-200">Compare Before You Buy</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
+                Find Your Perfect{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Electric Camper</span>
+              </h1>
+              <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto" style={{ textShadow: '0 0 8px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5)' }}>
+                Compare specs, prices, and features across electric camper vans. Make informed decisions with our comprehensive comparison tool.
+              </p>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
-              Find Your Perfect{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Electric Camper</span>
-            </h1>
-            <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto" style={{ textShadow: '0 0 8px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5)' }}>
-              Compare specs, prices, and features across electric camper vans. Make informed decisions with our comprehensive comparison tool.
-            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 type="button" 
@@ -248,6 +247,7 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
               <button 
                 type="button" 
                 className="relative inline-flex items-center justify-center rounded-full px-8 h-12 font-semibold bg-white/90 text-slate-700 border border-white/30 shadow-sm hover:bg-white hover:text-slate-900 transition-colors before:absolute before:inset-0 before:-m-3 before:rounded-full before:content-['']" 
+                style={{ opacity: userActive ? 0.2 : 1, transition: "opacity 400ms ease" }}
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
                 onClick={(e) => { e.stopPropagation(); onRequestClick(); }}
