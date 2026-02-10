@@ -122,7 +122,7 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
       setSpot(s => ({ ...s, active: true }));
     }
 
-    const speed = 0.008; // lerp factor per frame — slow drift
+    const speed = 0.024; // lerp factor per frame
     let pickTimer = 0;
 
     const animate = () => {
