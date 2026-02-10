@@ -9,8 +9,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import FeedbackTrigger from '@/components/feedback/FeedbackTrigger';
-import FeedbackModal from '@/components/feedback/FeedbackModal';
 
 const SIZE_CATEGORIES = [
   { value: "All", label: "All Sizes" },
@@ -82,13 +80,6 @@ function SectionHead({ children }) {
 export default function ProductFilters({ filters, setFilters, maxBuyPrice = 150000, maxRentPrice = 250, products = [] }) {
   const [openSections, setOpenSections] = useState({});
   const [showMore, setShowMore] = useState({});
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [feedbackSentiment, setFeedbackSentiment] = useState(null);
-
-  const openFeedback = (sentiment) => {
-    setFeedbackSentiment(sentiment);
-    setFeedbackOpen(true);
-  };
 
   const toggle = key => setOpenSections(p => ({ ...p, [key]: !p[key] }));
   const toggleMore = key => setShowMore(p => ({ ...p, [key]: !p[key] }));
@@ -377,18 +368,6 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           <X className="w-4 h-4 mr-2" /> Clear all filters
         </Button>
       )}
-
-      {/* Feedback at bottom of filters panel */}
-      <div className="flex justify-center pt-4 border-t border-slate-100">
-        <FeedbackTrigger topic="Filters" onOpen={openFeedback} />
-      </div>
-
-      <FeedbackModal
-        isOpen={feedbackOpen}
-        onClose={() => setFeedbackOpen(false)}
-        sentiment={feedbackSentiment}
-        defaultTopic="Filters"
-      />
     </div>
   );
 
@@ -477,9 +456,6 @@ export default function ProductFilters({ filters, setFilters, maxBuyPrice = 1500
           className={filters.heightUnder2m ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
           <ArrowDown className="w-4 h-4 mr-1" /> Height &lt;2m
         </Button>
-        <div className="ml-auto shrink-0">
-          <FeedbackTrigger topic="Browsing Campers" onOpen={openFeedback} />
-        </div>
       </div>
     </div>
   );
