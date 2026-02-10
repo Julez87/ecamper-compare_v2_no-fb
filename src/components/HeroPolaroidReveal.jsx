@@ -177,9 +177,8 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
     }
   };
 
-  const clip = spot.active
-    ? `circle(${spot.radius}px at ${spot.x}px ${spot.y}px)`
-    : `circle(0px at ${spot.x}px ${spot.y}px)`;
+  // Use radial-gradient mask for soft fading edge
+  const mask = `radial-gradient(circle ${spot.radius}px at ${spot.x}px ${spot.y}px, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)`;
 
   if (photos.length === 0) return null;
 
