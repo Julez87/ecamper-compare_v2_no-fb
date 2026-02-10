@@ -13,21 +13,12 @@ import {
   Utensils, Smartphone, Zap, Sofa, Sparkles } from
 'lucide-react';
 import { motion } from 'framer-motion';
-import FeedbackTrigger from '@/components/feedback/FeedbackTrigger';
-import FeedbackModal from '@/components/feedback/FeedbackModal';
 
 export default function ProductDetail() {
   const location = useLocation();
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(location.search);
   const productId = urlParams.get('id');
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [feedbackSentiment, setFeedbackSentiment] = useState(null);
-
-  const openFeedback = (sentiment, topic) => {
-    setFeedbackSentiment(sentiment);
-    setFeedbackOpen(true);
-  };
 
   useEffect(() => {
     if (productId) {
@@ -945,18 +936,6 @@ export default function ProductDetail() {
               </TabsContent>
             </Tabs>
         </motion.div>
-
-        {/* Feedback above related products */}
-        <div className="flex justify-center pt-8">
-          <FeedbackTrigger topic="Camper Details" onOpen={openFeedback} />
-        </div>
-
-        <FeedbackModal
-          isOpen={feedbackOpen}
-          onClose={() => setFeedbackOpen(false)}
-          sentiment={feedbackSentiment}
-          defaultTopic="Camper Details"
-        />
 
         {/* Related Products */}
         {relatedProducts.length > 0 &&

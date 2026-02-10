@@ -9,15 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink, Building2, ArrowUpDown, ArrowUp, ArrowDown, MessageCircle, ThumbsUp, ThumbsDown, HelpCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, Package, MessageSquare, Loader2, ExternalLink, Building2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from 'date-fns';
 import CamperAdminForm from '../components/campers/CamperAdminForm';
 import RentalCompanyForm from '../components/rental/RentalCompanyForm';
 import RequestDetailModal from '../components/requests/RequestDetailModal';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
-import FeedbackDetailModal from '../components/feedback/FeedbackDetailModal';
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,9 +32,6 @@ export default function Admin() {
   const [camperSort, setCamperSort] = useState({ field: 'created_date', direction: 'desc' });
   const [requestSort, setRequestSort] = useState({ field: 'created_date', direction: 'desc' });
   const [companySort, setCompanySort] = useState({ field: 'name', direction: 'asc' });
-  const [feedbackSort, setFeedbackSort] = useState({ field: 'created_date', direction: 'desc' });
-  const [viewingFeedback, setViewingFeedback] = useState(null);
-  const [isFeedbackDetailOpen, setIsFeedbackDetailOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -56,17 +51,6 @@ export default function Admin() {
     queryKey: ['companies'],
     queryFn: () => base44.entities.RentalCompany.list(),
     enabled: isAuthenticated,
-  });
-
-  const { data: feedbacks = [], isLoading: feedbacksLoading } = useQuery({
-    queryKey: ['feedbacks'],
-    queryFn: () => base44.entities.Feedback.list('-created_date'),
-    enabled: isAuthenticated,
-  });
-
-  const updateFeedback = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Feedback.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feedbacks'] })
   });
 
   const createProduct = useMutation({
@@ -223,11 +207,6 @@ export default function Admin() {
         field,
         direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
       }));
-    } else if (table === 'feedback') {
-      setFeedbackSort(prev => ({
-        field,
-        direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
-      }));
     }
   };
 
@@ -295,22 +274,6 @@ export default function Admin() {
     return direction === 'asc' ? aVal - bVal : bVal - aVal;
   });
 
-  const sortedFeedbacks = [...feedbacks].sort((a, b) => {
-    const { field, direction } = feedbackSort;
-    let aVal = a[field];
-    let bVal = b[field];
-    if (aVal == null) aVal = '';
-    if (bVal == null) bVal = '';
-    if (field === 'created_date') {
-      return direction === 'asc' ? new Date(aVal) - new Date(bVal) : new Date(bVal) - new Date(aVal);
-    }
-    if (typeof aVal === 'string') {
-      return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    }
-    return direction === 'asc' ? aVal - bVal : bVal - aVal;
-  });
-
-  const openFeedbacks = feedbacks.filter(f => f.status === 'open');
   const pendingRequests = requests.filter(r => r.status === 'pending');
 
   if (!isAuthenticated) {
@@ -368,12 +331,6 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="companies" className="rounded-lg px-6 data-[state=active]:bg-emerald-900 data-[state=active]:text-white">
               <Building2 className="w-4 h-4 mr-2" /> Rental Companies ({companies.length})
-            </TabsTrigger>
-            <TabsTrigger value="feedback" className="rounded-lg px-6 data-[state=active]:bg-emerald-900 data-[state=active]:text-white">
-              <MessageCircle className="w-4 h-4 mr-2" /> Feedback
-              {openFeedbacks.length > 0 && (
-                <Badge className="ml-2 bg-violet-600">{openFeedbacks.length}</Badge>
-              )}
             </TabsTrigger>
           </TabsList>
 
@@ -654,78 +611,6 @@ export default function Admin() {
               </Table>
             </Card>
           </TabsContent>
-          <TabsContent value="feedback">
-            <Card className="border-0 shadow-sm">
-              <div className="p-4 border-b">
-                <h2 className="font-semibold text-slate-900">User Feedback</h2>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>
-                      <button onClick={() => handleSort('feedback', 'created_date')} className="flex items-center gap-2 hover:text-slate-900">
-                        Date
-                        <SortIcon active={feedbackSort.field === 'created_date'} direction={feedbackSort.direction} />
-                      </button>
-                    </TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>
-                      <button onClick={() => handleSort('feedback', 'topic')} className="flex items-center gap-2 hover:text-slate-900">
-                        Topic
-                        <SortIcon active={feedbackSort.field === 'topic'} direction={feedbackSort.direction} />
-                      </button>
-                    </TableHead>
-                    <TableHead>
-                      <button onClick={() => handleSort('feedback', 'email')} className="flex items-center gap-2 hover:text-slate-900">
-                        Email
-                        <SortIcon active={feedbackSort.field === 'email'} direction={feedbackSort.direction} />
-                      </button>
-                    </TableHead>
-                    <TableHead>Reach Out</TableHead>
-                    <TableHead>
-                      <button onClick={() => handleSort('feedback', 'status')} className="flex items-center gap-2 hover:text-slate-900">
-                        Status
-                        <SortIcon active={feedbackSort.field === 'status'} direction={feedbackSort.direction} />
-                      </button>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {feedbacksLoading ? (
-                    <TableRow><TableCell colSpan={6} className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
-                  ) : sortedFeedbacks.length === 0 ? (
-                    <TableRow><TableCell colSpan={6} className="text-center py-8 text-slate-500">No feedback yet</TableCell></TableRow>
-                  ) : sortedFeedbacks.map(fb => (
-                    <TableRow key={fb.id} className="cursor-pointer hover:bg-slate-50" onClick={() => { setViewingFeedback(fb); setIsFeedbackDetailOpen(true); }}>
-                      <TableCell className="text-sm">{fb.created_date ? format(new Date(fb.created_date), 'MMM d, yyyy') : '—'}</TableCell>
-                      <TableCell>
-                        {fb.sentiment === 'positive' && <ThumbsUp className="w-4 h-4 text-emerald-500" />}
-                        {fb.sentiment === 'negative' && <ThumbsDown className="w-4 h-4 text-red-500" />}
-                        {fb.sentiment === 'question' && <HelpCircle className="w-4 h-4 text-violet-500" />}
-                      </TableCell>
-                      <TableCell><Badge variant="outline">{fb.topic}</Badge></TableCell>
-                      <TableCell className="text-sm">{fb.email || '—'}</TableCell>
-                      <TableCell>
-                        {fb.reach_out ? <Check className="w-4 h-4 text-green-600" /> : <X className="w-4 h-4 text-slate-300" />}
-                      </TableCell>
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        <Select value={fb.status || 'open'} onValueChange={(val) => updateFeedback.mutate({ id: fb.id, data: { status: val } })}>
-                          <SelectTrigger className="w-32 h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="open">Open</SelectItem>
-                            <SelectItem value="replied">Replied</SelectItem>
-                            <SelectItem value="implemented">Implemented</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Card>
-          </TabsContent>
         </Tabs>
       </div>
 
@@ -776,14 +661,6 @@ export default function Admin() {
           </form>
         </DialogContent>
       </Dialog>
-
-      {/* Feedback Detail Modal */}
-      <FeedbackDetailModal
-        feedback={viewingFeedback}
-        isOpen={isFeedbackDetailOpen}
-        onClose={() => setIsFeedbackDetailOpen(false)}
-        onStatusChange={(id, status) => updateFeedback.mutate({ id, data: { status } })}
-      />
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDeleteDialog
