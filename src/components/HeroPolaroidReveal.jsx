@@ -62,10 +62,17 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
 
   const wrapRef = useRef(null);
   const rafRef = useRef(null);
+  const driftRef = useRef(null);
+  const driftTargetRef = useRef(null);
+  const driftCurrentRef = useRef({ x: 0, y: 0 });
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const baseRadius = isMobile ? 75 : 150;
 
   const [spot, setSpot] = useState({
-    x: 0, y: 0, active: false, radius: 150,
+    x: 0, y: 0, active: false, radius: baseRadius,
   });
+  const [userActive, setUserActive] = useState(false);
 
   const getLocalXY = (e) => {
     const el = wrapRef.current;
@@ -81,8 +88,73 @@ export default function HeroPolaroidRevealStyled({ onBrowseClick, onRequestClick
     });
   };
 
+  // Pick a random polaroid center in px
+  const pickRandomTarget = () => {
+    const el = wrapRef.current;
+    if (!el || layout.length === 0) return { x: 0, y: 0 };
+    const rect = el.getBoundingClientRect();
+    const idx = Math.floor(Math.random() * layout.length);
+    return {
+      x: (layout[idx].left / 100) * rect.width,
+      y: (layout[idx].top / 100) * rect.height,
+    };
+  };
+
+  // Idle drift animation: slowly move circle between polaroids
   useEffect(() => {
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    if (userActive || layout.length === 0) {
+      if (driftRef.current) cancelAnimationFrame(driftRef.current);
+      return;
+    }
+
+    // Initialize positions
+    const el = wrapRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (!driftTargetRef.current) {
+      const startIdx = Math.floor(Math.random() * layout.length);
+      const startX = (layout[startIdx].left / 100) * rect.width;
+      const startY = (layout[startIdx].top / 100) * rect.height;
+      driftCurrentRef.current = { x: startX, y: startY };
+      driftTargetRef.current = pickRandomTarget();
+      setSpot(s => ({ ...s, x: startX, y: startY, active: true }));
+    } else {
+      setSpot(s => ({ ...s, active: true }));
+    }
+
+    const speed = 0.008; // lerp factor per frame — slow drift
+    let pickTimer = 0;
+
+    const animate = () => {
+      const cur = driftCurrentRef.current;
+      const tgt = driftTargetRef.current;
+      cur.x += (tgt.x - cur.x) * speed;
+      cur.y += (tgt.y - cur.y) * speed;
+
+      setSpot(s => ({ ...s, x: cur.x, y: cur.y, active: true }));
+
+      // If close to target, pick a new one
+      const dist = Math.hypot(tgt.x - cur.x, tgt.y - cur.y);
+      if (dist < 10) {
+        pickTimer++;
+        if (pickTimer > 60) { // small pause at target
+          driftTargetRef.current = pickRandomTarget();
+          pickTimer = 0;
+        }
+      }
+
+      driftRef.current = requestAnimationFrame(animate);
+    };
+
+    driftRef.current = requestAnimationFrame(animate);
+    return () => { if (driftRef.current) cancelAnimationFrame(driftRef.current); };
+  }, [userActive, layout]);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (driftRef.current) cancelAnimationFrame(driftRef.current);
+    };
   }, []);
 
   // Detect click on a polaroid by checking pointer position against layout
