@@ -10,12 +10,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Plus, X, Trophy, Scale, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import FeedbackTrigger from '@/components/feedback/FeedbackTrigger';
+import FeedbackModal from '@/components/feedback/FeedbackModal';
 
 export default function Compare() {
   const urlParams = new URLSearchParams(window.location.search);
   const initialIds = urlParams.get('ids')?.split(',').filter(Boolean) || [];
   
   const [selectedIds, setSelectedIds] = useState(initialIds);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackSentiment, setFeedbackSentiment] = useState(null);
+
+  const openFeedback = (sentiment, topic) => {
+    setFeedbackSentiment(sentiment);
+    setFeedbackOpen(true);
+  };
 
   const { data: allProducts = [] } = useQuery({
     queryKey: ['allProducts'],
@@ -460,7 +469,18 @@ export default function Compare() {
             </Link>
           </div>
         )}
+        {/* Feedback at bottom */}
+        <div className="flex justify-center pt-12 pb-4">
+          <FeedbackTrigger topic="Comparison" onOpen={openFeedback} />
+        </div>
       </div>
+
+      <FeedbackModal
+        isOpen={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+        sentiment={feedbackSentiment}
+        defaultTopic="Comparison"
+      />
     </div>
   );
 }
