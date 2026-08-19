@@ -1,0 +1,47 @@
+{
+  "name": "ProductRequest",
+  "type": "object",
+  "properties": {
+    "model_name": {
+      "type": "string",
+      "description": "Requested camper model name"
+    },
+    "size_category": {
+      "type": "string",
+      "enum": [
+        "Compact",
+        "Standard",
+        "Large",
+        "XL"
+      ],
+      "description": "Size category"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why this model should be added"
+    },
+    "product_url": {
+      "type": "string",
+      "description": "Link to product page"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "requester_email": {
+      "type": "string"
+    },
+    "expert_mode_data": {
+      "type": "object",
+      "description": "All detailed fields if expert mode was used"
+    }
+  },
+  "required": [
+    "model_name"
+  ]
+}

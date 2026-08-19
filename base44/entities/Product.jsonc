@@ -1,0 +1,709 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "model_name": {
+      "type": "string",
+      "description": "Model name"
+    },
+    "size_category": {
+      "type": "string",
+      "enum": [
+        "Compact",
+        "Standard",
+        "Large",
+        "XL"
+      ],
+      "description": "Size category"
+    },
+    "buy_from_price": {
+      "type": "number",
+      "description": "Buy Price from (\u20ac)"
+    },
+    "rent_from_price": {
+      "type": "number",
+      "description": "Rent Price from (\u20ac/day)"
+    },
+    "released": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether camper is visible on website"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Main product image URL"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "top_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Top 5 features where it ranks best"
+    },
+    "rental_companies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of rental companies"
+    },
+    "base_vehicle": {
+      "type": "object",
+      "properties": {
+        "brand": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "model_year": {
+          "type": "number"
+        },
+        "wltp_range_km": {
+          "type": "number"
+        },
+        "kw": {
+          "type": "number"
+        },
+        "battery_size_kwh": {
+          "type": "number"
+        },
+        "consumption_kwh_100km": {
+          "type": "number"
+        },
+        "charging_speed_ac_kw": {
+          "type": "number"
+        },
+        "charging_speed_dc_kw": {
+          "type": "number"
+        },
+        "charger_types": {
+          "type": "string",
+          "enum": [
+            "Type2",
+            "CCS",
+            "Type2 / CCS",
+            "unknown"
+          ]
+        },
+        "dc_fast_charging_20_80_min": {
+          "type": "number"
+        },
+        "dc_fast_charging_10_80_min": {
+          "type": "number"
+        },
+        "dc_fast_charging_10_90_min": {
+          "type": "number"
+        },
+        "drive": {
+          "type": "string",
+          "enum": [
+            "front",
+            "rear",
+            "4x4",
+            "unknown"
+          ]
+        },
+        "weight_empty_kg": {
+          "type": "number"
+        },
+        "max_additional_weight_kg": {
+          "type": "number"
+        },
+        "b_license_approved": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "max_speed_kmh": {
+          "type": "number",
+          "description": "Max. Speed (in km/h)"
+        },
+        "turning_circle_m": {
+          "type": "number",
+          "description": "Turning circle (in m)"
+        },
+        "ac_slow_charging_min": {
+          "type": "number",
+          "description": "AC Slow-Charging (in min)"
+        },
+        "towing_capacity_kg": {
+          "type": "number",
+          "description": "Towing capacity (in kg)"
+        }
+      }
+    },
+    "camper_data": {
+      "type": "object",
+      "properties": {
+        "camper_range_km": {
+          "type": "number",
+          "description": "Range (realistic) (in km)"
+        },
+        "length_mm": {
+          "type": "number",
+          "description": "Length (in mm)"
+        },
+        "height_mm": {
+          "type": "number",
+          "description": "Height (in mm)"
+        },
+        "width_mm": {
+          "type": "number",
+          "description": "Max. width (in mm)"
+        },
+        "seats": {
+          "type": "number"
+        },
+        "storage_total_l": {
+          "type": "number"
+        },
+        "storage_shelves_l": {
+          "type": "number"
+        },
+        "storage_trunk_l": {
+          "type": "number"
+        },
+        "storage_other_l": {
+          "type": "number"
+        },
+        "popup_roof": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no"
+          ],
+          "description": "Pop-Up-Roof"
+        }
+      }
+    },
+    "sleeping": {
+      "type": "object",
+      "properties": {
+        "sleeps": {
+          "type": "number"
+        },
+        "bed_size_bottom_cm": {
+          "type": "string"
+        },
+        "bed_size_rooftop_cm": {
+          "type": "string"
+        },
+        "rooftop_mosquito_nets": {
+          "type": "string",
+          "enum": [
+            "no",
+            "rooftent",
+            "side windows",
+            "entry",
+            "all",
+            "unknown"
+          ]
+        },
+        "ventilation": {
+          "type": "string",
+          "enum": [
+            "no",
+            "front window",
+            "rear windows",
+            "rooftop window",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "sit_lounge": {
+      "type": "object",
+      "properties": {
+        "indoor_table": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "outdoor_table": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "swivel_front_seats": {
+          "type": "string",
+          "enum": [
+            "no",
+            "1",
+            "2",
+            "3",
+            "unknown"
+          ]
+        },
+        "indoor_lights": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "dimmable",
+            "unknown"
+          ]
+        },
+        "curtains": {
+          "type": "string",
+          "enum": [
+            "no",
+            "front cabin",
+            "everywhere",
+            "unknown"
+          ]
+        },
+        "awning": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "keder pre-installed",
+            "no",
+            "unknown"
+          ]
+        },
+        "tinted_windows": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "partially",
+            "no",
+            "unknown"
+          ]
+        },
+        "iso_fix": {
+          "type": "string",
+          "enum": [
+            "front",
+            "rear",
+            "front & rear",
+            "no",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "kitchen": {
+      "type": "object",
+      "properties": {
+        "fridge_l": {
+          "type": "number"
+        },
+        "fridge_type": {
+          "type": "string",
+          "enum": [
+            "no",
+            "electric",
+            "gas",
+            "unknown"
+          ]
+        },
+        "stove_type": {
+          "type": "string",
+          "enum": [
+            "no",
+            "electric",
+            "gas",
+            "unknown"
+          ]
+        },
+        "stove_plates": {
+          "type": "number"
+        },
+        "stove_energy_w": {
+          "type": "number"
+        },
+        "indoor_cooking": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "outdoor_cooking": {
+          "type": "string",
+          "enum": [
+            "side",
+            "rear",
+            "no",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "energy": {
+      "type": "object",
+      "properties": {
+        "camping_battery_wh": {
+          "type": "number",
+          "description": "Camping Battery (in Wh)"
+        },
+        "solar_panel_max_w": {
+          "type": "number"
+        },
+        "solar_panel_available": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ],
+          "description": "Solar Panel"
+        },
+        "battery_charging_solar_wh": {
+          "type": "number"
+        },
+        "battery_charging_hv_wh": {
+          "type": "number"
+        },
+        "battery_charging_driving_wh": {
+          "type": "number",
+          "description": "Charge while driving (in W)"
+        },
+        "battery_charging_landline_wh": {
+          "type": "number"
+        },
+        "max_battery_output_ac_12v_w": {
+          "type": "number",
+          "description": "Max. Output AC 12V (in W)"
+        },
+        "battery_output_plugs_ac": {
+          "type": "number"
+        },
+        "max_battery_output_dc_230v_w": {
+          "type": "number",
+          "description": "Max. Output DC 230V (in W)"
+        },
+        "battery_output_plugs_dc": {
+          "type": "number"
+        },
+        "usb_c_plugs_front": {
+          "type": "number"
+        },
+        "usb_c_plugs_livingroom": {
+          "type": "number"
+        }
+      }
+    },
+    "bathroom": {
+      "type": "object",
+      "properties": {
+        "toilet_type": {
+          "type": "string",
+          "enum": [
+            "chemical",
+            "separation",
+            "no",
+            "unknown"
+          ]
+        },
+        "fresh_water_l": {
+          "type": "number"
+        },
+        "waste_water_l": {
+          "type": "number"
+        },
+        "warm_water_l": {
+          "type": "number"
+        },
+        "warm_water_available": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ],
+          "description": "Warm water"
+        },
+        "shower": {
+          "type": "string",
+          "enum": [
+            "indoor",
+            "outdoor",
+            "no",
+            "unknown"
+          ]
+        },
+        "warm_shower": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "climate": {
+      "type": "object",
+      "properties": {
+        "ac": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "vehicle_climate_programming": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "vehicle_heating": {
+          "type": "string",
+          "enum": [
+            "no",
+            "electric",
+            "gas",
+            "unknown"
+          ]
+        },
+        "vehicle_cooling": {
+          "type": "string",
+          "enum": [
+            "no",
+            "electric",
+            "unknown"
+          ]
+        },
+        "stand_heating": {
+          "type": "string",
+          "enum": [
+            "no",
+            "electric",
+            "gas",
+            "unknown"
+          ]
+        },
+        "living_room_heating": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "insulation": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "seat_heating": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "steering_wheel_heating": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "front_windows_opening_electric": {
+          "type": "string",
+          "enum": [
+            "electric",
+            "manual",
+            "no",
+            "unknown"
+          ]
+        },
+        "rear_windows_opening": {
+          "type": "string",
+          "enum": [
+            "electric",
+            "manual",
+            "no",
+            "unknown"
+          ]
+        },
+        "back_window_opening": {
+          "type": "string",
+          "enum": [
+            "electric",
+            "manual",
+            "no",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "smart_connected": {
+      "type": "object",
+      "properties": {
+        "remote_app_access": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "apple_carplay_android_auto": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "cable",
+            "wireless",
+            "unknown"
+          ]
+        },
+        "navigation_software": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "optional",
+            "unknown"
+          ]
+        },
+        "cruise_control": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "ACC",
+            "no",
+            "unknown"
+          ],
+          "description": "Cruise Control"
+        },
+        "lane_assist": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "sign_recognition": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "rear_camera": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "parking_sensors": {
+          "type": "string",
+          "enum": [
+            "no",
+            "front",
+            "rear",
+            "front & rear",
+            "unknown"
+          ],
+          "description": "Parking Sensors"
+        }
+      }
+    },
+    "extras": {
+      "type": "object",
+      "properties": {
+        "trailer_hitch": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "retractable",
+            "unknown"
+          ]
+        },
+        "sliding_doors": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "none",
+            "unknown"
+          ]
+        },
+        "backdoor": {
+          "type": "string",
+          "enum": [
+            "top-hinged",
+            "side-hinged",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "eco_scoring": {
+      "type": "object",
+      "properties": {
+        "furniture_materials": {
+          "type": "string"
+        },
+        "furniture_materials_eco": {
+          "type": "boolean",
+          "default": false
+        },
+        "flooring_material": {
+          "type": "string"
+        },
+        "flooring_material_eco": {
+          "type": "boolean",
+          "default": false
+        },
+        "insulation_material": {
+          "type": "string"
+        },
+        "insulation_material_eco": {
+          "type": "boolean",
+          "default": false
+        },
+        "textile_material": {
+          "type": "string"
+        },
+        "textile_material_eco": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "required": [
+    "model_name"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "name": "RentalCompany",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Rental company name"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Company logo URL"
+    },
+    "website_url": {
+      "type": "string",
+      "description": "Company website URL"
+    },
+    "color": {
+      "type": "string",
+      "enum": [
+        "#EF4444",
+        "#F59E0B",
+        "#10B981",
+        "#06B6D4",
+        "#3B82F6",
+        "#8B5CF6",
+        "#EC4899",
+        "#F97316",
+        "#84CC16",
+        "#14B8A6",
+        "#6366F1",
+        "#A855F7"
+      ],
+      "default": "#3B82F6",
+      "description": "Brand color for pills and badges"
+    },
+    "countries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "EU countries where company operates"
+    },
+    "locations": {
+      "type": "object",
+      "description": "Cities by country code",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "available_campers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "camper_id": {
+            "type": "string"
+          },
+          "rent_price": {
+            "type": "number",
+            "description": "Daily rent price in EUR"
+          }
+        }
+      },
+      "description": "List of campers with rent prices"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
